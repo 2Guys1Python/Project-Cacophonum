@@ -13,7 +13,7 @@ def tamedMonster_Init(indexName):
 			'string': 1, 'wind': 1, 'percussion': 1
 	}
 	tempdict['curr'] = {
-			'curHP': 4500, 'bond': 0,
+			'curHP': masterlist[indexName][0], 'bond': 0,
 			'notegain': 2, 'notes': 4
 	}
 	tempdict['bonus'] = {
@@ -34,5 +34,30 @@ def tamedMonster_Init(indexName):
 			'tp': 0,'totaltp': 0,'nexttp': 100,
 			'mult': 1.035
 	}
+	return tempdict
+
+def wildMonster_Init(indexName):
+	tempdict = {}
+	masterlist = {
+		'Little Bitch': [4500, 3000, 3000, 3000, 3000, 3000, 3000]
+	}
+	tempdict['base'] = {
+			'maxHP': masterlist[indexName][0], 'atk': masterlist[indexName][1], 'def': masterlist[indexName][2],
+			'mus': masterlist[indexName][3], 'foc': masterlist[indexName][4], 'cla': masterlist[indexName][5], 'rhy': masterlist[indexName][6],
+	}
+	tempdict['curr'] = {
+			'curHP': masterlist[indexName][0]
+	}
+	tempdict['bonus'] = {
+			'bonusHP': 0, 'bonusatk': 0, 'bonusdef': 0,
+			'bonusmus': 0, 'bonusfoc': 0, 'bonuscla': 0, 'bonusrhy': 0,
+			'bonusnotegain': 0
+	}
+	tempdict['penalty'] = {
+			'penaltyHP': 0,'penaltyatk': 0,'penaltydef': 0,
+			'penaltymus': 0,'penaltyfoc': 0,'penaltycla': 0,'penaltyrhy': 0,
+			'penaltynotegain': 0
+	}
+
 	return tempdict
 	

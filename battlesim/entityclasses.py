@@ -1,6 +1,18 @@
 import pygame, sys, init
 
-class Entity:
+class WildMonster:
+	def __init__(self, name, index):
+		self.name = name
+		self.index = index
+		self.stats = init.wildMonster_Init(name)
+		self.itemDrops = []
+		self.skills = []
+		self.status = []
+		self.AI = None
+		
+	
+
+class TamedMonster:
 	def __init__(self, name, index):
 		self.name = name
 		self.index = index
@@ -50,29 +62,44 @@ class Entity:
 class Conductor:
 	def __init__(self, name):
 		self.name = name
+		self.monsterLimit = 1
 		self.monsters = []
 		self.items = []
 		self.conductorskill = None
 		self.aptitude = {
-			'hp': 5,
-			'atk': 5,
-			'def': 5,
-			'mus': 5,
-			'foc': 5,
-			'cla': 5,
-			'rhy': 5,
-			'string': 8,
-			'wind': 5,
-			'percussion': 2
+			'hp': 5, 'atk': 5, 'def': 5,
+			'mus': 5,'foc': 5,'cla': 5,'rhy': 5,
+			'string': 8,'wind': 5,'percussion': 2
 		}
 		
-	def setMonster(self, monster):
-		self.monsters.append(monster)
+	def addMonster(self, monster):
+		if self.monsterLimit > len(self.monsters):
+			self.monsters.append(monster)
 		
+	def addMonsterLimit(self):
+		if self.monsterLimit < 3:
+			monsterLimit += 1
+			return True
+		else:
+			return False
+		
+	def subtractMonsterLimit(self):
+		if self.monsterLimit > 1:
+			monsterLimit -= 1
+			return True
+		else:
+			return False
+			
+	
 	def addItem(self, item):
 		if len(self.items) < 64:
 			self.items.append(item)
-		
+			return True
+		else:
+			return False
+	
+	
+	
 	'''	
 	def useItem(self, itemIndex, target):
 		self.items[itemIndex].use(target)
