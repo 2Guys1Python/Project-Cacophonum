@@ -69,3 +69,21 @@ def wildMonster_Init(indexName):
 
 	return tempdict
 
+def itemPrice_Init(indexName):
+	masterlist = {
+		'Potion': [50, 25]
+		
+	}
+	
+	tempdict = {}
+	tempdict['buy'] = masterlist[indexName][0]
+	tempdict['sell'] = masterlist[indexName][1]
+	return tempdict
+	
+def consumableEffect_Init(indexName):
+	masterlist = {
+		'Potion': {
+			'rec_HP': 100
+		}
+	}
+	return masterlist[indexName]

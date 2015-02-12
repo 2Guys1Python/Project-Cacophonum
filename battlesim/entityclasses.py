@@ -29,14 +29,10 @@ class TamedMonster:
 	def printstats(self):
 		print "Name: %s" % (self.name)
 		print "Index: %s" % (self.index)
-		print self.stats['base'].keys()
-		print self.stats['base'].values()
-		print self.stats['curr'].keys()
-		print self.stats['curr'].values()
-		print self.stats['bonus'].keys()
-		print self.stats['bonus'].values()
-		print self.stats['penalty'].keys()
-		print self.stats['penalty'].values()
+		print sorted(self.stats['base'].iteritems())
+		print sorted(self.stats['curr'].iteritems())
+		print sorted(self.stats['bonus'].iteritems())
+		print sorted(self.stats['penalty'].iteritems())
 		
 	def gainTP(self, gainedtp):
 		storedtp = 0;

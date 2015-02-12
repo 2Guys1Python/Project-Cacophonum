@@ -13,7 +13,7 @@ modelWildMonsterList = {
 }
 
 modelItemList = {
-	'Potion': Item("Potion", 1, False)
+	'Potion': Consumable("Potion", 1)
 }
 '''
 modelEquipmentList = {
@@ -36,4 +36,5 @@ players[0].addItem(copy.deepcopy(modelItemList['Potion']))
 print players[0].monsters[0].name #testing monster list reference in Conductor
 print players[0].monsters[0].master.name #testing master reference in TamedMonster
 print players[0].items[0].name
-print players[0].items[0].isKeyItem
+print players[0].items[0].itemEffect
+print players[0].items[0].__class__.__name__
