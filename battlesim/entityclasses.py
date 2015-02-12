@@ -21,7 +21,7 @@ class TamedMonster:
 		self.equipment = {
 			'instrument': None,
 			'accessory1': None,
-			'accessory2': None,
+			'accessory2': None
 		}
 		self.skills = []
 		self.status = []

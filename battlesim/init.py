@@ -1,12 +1,19 @@
 import pygame, sys
 from entityclasses import *
+from compositeclasses import *
 
 def tamedMonster_Init(indexName):
-	tempdict = {}
+	'''
+	masterlist format:
+	'Name': [maxHP, atk, def, mus, foc, cla, rhy <- base (1-9999, combined max 50000?)
+			maxHP, atk, def, mus, foc, cla, rhy] <- gain modifiers (1-10) 
+	'''
 	masterlist = {
-		'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000,
-						5,4,3,5,5,5,6]
+		'Kobold': [4500, 3000, 3000, 3000, 3000, 3000, 3000,
+					5,4,3,5,5,5,6]
 	}
+	
+	tempdict = {}
 	tempdict['base'] = {
 			'maxHP': masterlist[indexName][0], 'atk': masterlist[indexName][1], 'def': masterlist[indexName][2],
 			'mus': masterlist[indexName][3], 'foc': masterlist[indexName][4], 'cla': masterlist[indexName][5], 'rhy': masterlist[indexName][6],
@@ -34,12 +41,13 @@ def tamedMonster_Init(indexName):
 			'tp': 0,'totaltp': 0,'nexttp': 100,
 			'mult': 1.035
 	}
+	
 	return tempdict
 
 def wildMonster_Init(indexName):
 	tempdict = {}
 	masterlist = {
-		'Little Bitch': [4500, 3000, 3000, 3000, 3000, 3000, 3000]
+		'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000]
 	}
 	tempdict['base'] = {
 			'maxHP': masterlist[indexName][0], 'atk': masterlist[indexName][1], 'def': masterlist[indexName][2],
@@ -60,4 +68,4 @@ def wildMonster_Init(indexName):
 	}
 
 	return tempdict
-	
+
