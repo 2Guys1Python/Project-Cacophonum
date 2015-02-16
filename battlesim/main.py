@@ -29,12 +29,11 @@ modelStatusList = {
 }
 '''
 
-players[0].addMonster(copy.deepcopy(modelTamedMonsterList['Kobold'])) #assigns a TamedMonster to a Conductor
-players[0].monsters[0].setMaster(players[0]) #assigns the Conductor to the TamedMonster
-players[0].monsters[0].printstats() #prints all stats of a given TamedMonster (NOT IN ORDER)
+players[0].addMonster(copy.deepcopy(modelTamedMonsterList['Kobold'])) 
+players[0].monsters[0].setMaster(players[0]) 
 players[0].addItem(copy.deepcopy(modelItemList['Potion']))
-print players[0].monsters[0].name #testing monster list reference in Conductor
-print players[0].monsters[0].master.name #testing master reference in TamedMonster
+players[0].monsters[0].printstats() 
+print "%s's conductor is %s" %(players[0].monsters[0].name, players[0].monsters[0].master.name)
 print players[0].items[0].name
-print players[0].items[0].itemEffect
+print "%s's effects are: %s" %(players[0].items[0].name, str(players[0].items[0].itemEffect))
 print players[0].items[0].__class__.__name__
