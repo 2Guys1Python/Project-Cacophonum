@@ -15,13 +15,34 @@ class Item(KeyItem):
 		self.itemType = "Loot"
 		self.prices = init.itemPrice_Init(name)
 		
-class Equipment(Item):
+class Instrument(Item):
 	def __init__(self, name, index):
-		super(Equipment, self).__init__(name, index)
-		self.itemType = "Equipment"
+		super(Instrument, self).__init__(name, index)
+		self.itemType = "Instrument"
+		self.stats = init.instrument_Init(name)
+	'''	
+	def attack(self, 
+	'''
 	
 class Consumable(Item):
 	def __init__(self, name, index):
 		super(Consumable, self).__init__(name, index)
 		self.itemEffect = init.consumableEffect_Init(name)
 		self.itemType = "Consumable"
+		
+class Inventory(object):
+	def __init__(self):
+		self.items = []
+	
+	def getSize(self):
+		return len(self.items)
+	
+	def addItem(self, item):
+		self.items.append(item)
+		
+	def getItem(self, index):
+		return self.items[index]
+	
+	def removeItem(self, index):
+		return self.items.pop(index)
+		

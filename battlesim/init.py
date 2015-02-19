@@ -28,7 +28,8 @@ Item price masterlist format:
 '''
 
 masterlist_price = {
-	'Potion': [50, 25]
+	'Potion': [50, 25],
+	'Flute': [600, 300]
 }
 
 '''
@@ -42,6 +43,21 @@ masterlist_item = {
 	'Potion': {
 		'rec_HP': 100
 	}
+}
+
+'''
+Instrument masterlist format:
+	'Name':[hits, bhp, batk, bdef, bmus, bfoc, bcla, brhy, bng,
+				  php, patk, pdef, pmus, pfoc, pcla, prhy, png,
+				  type, atk multiplier, crit chance, crit multiplier, proration per hit,
+				  {effects}]
+'''
+
+masterlist_instrument = {
+	'Flute': [8,0,60,0,30,0,0,0,0,
+				0,0,0,0,0,0,0,0,
+				'wind', 0.2, 15, 2.5, 0.9,
+				None]
 }
 
 def tamedMonster_Init(indexName):
@@ -109,3 +125,22 @@ def itemPrice_Init(indexName):
 	
 def consumableEffect_Init(indexName):
 	return masterlist_item[indexName]
+	
+def instrument_Init(indexName):
+	tempdict = {}
+	tempdict['base'] = {
+			'hits': masterlist_instrument[indexName][0], 'type': masterlist_instrument[indexName][17],
+			'atkmult': masterlist_instrument[indexName][18],'critchance': masterlist_instrument[indexName][19], 'critmult': masterlist_instrument[indexName][20],
+			'proration': masterlist_instrument[indexName][21],'effects': masterlist_instrument[indexName][22]
+	}
+	tempdict['bonus'] = {
+			'bonusHP': masterlist_instrument[indexName][1], 'bonusatk': masterlist_instrument[indexName][2], 'bonusdef': masterlist_instrument[indexName][3],
+			'bonusmus': masterlist_instrument[indexName][4], 'bonusfoc': masterlist_instrument[indexName][5], 'bonuscla': masterlist_instrument[indexName][6], 'bonusrhy': masterlist_instrument[indexName][7],
+			'bonusnotegain': masterlist_instrument[indexName][8]
+	}
+	tempdict['penalty'] = {
+			'penaltyHP': masterlist_instrument[indexName][9],'penaltyatk': masterlist_instrument[indexName][10],'penaltydef': masterlist_instrument[indexName][11],
+			'penaltymus': masterlist_instrument[indexName][12],'penaltyfoc': masterlist_instrument[indexName][13],'penaltycla': masterlist_instrument[indexName][14],'penaltyrhy': masterlist_instrument[indexName][15],
+			'penaltynotegain': masterlist_instrument[indexName][16]
+	}
+	return tempdict
