@@ -27,9 +27,6 @@ class Instrument(Item):
 		super(Instrument, self).__init__(name, index)
 		self.itemType = "Instrument"
 		self.stats = init.instrument_Init(name)
-	'''	
-	def attack(self, 
-	'''
 	
 class Consumable(Item):
 	def __init__(self, name, index):
@@ -37,6 +34,12 @@ class Consumable(Item):
 		self.itemEffect = init.consumableEffect_Init(name)
 		self.itemType = "Consumable"
 		
+	'''
+	def useItem(self,target):
+		
+	'''
+
+	
 class Inventory(object):
 	def __init__(self):
 		self.items = []

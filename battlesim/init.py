@@ -97,8 +97,7 @@ def tamedMonster_Init(indexName):
 			'mus': masterlist_tm[indexName][10],'foc': masterlist_tm[indexName][11],'cla': masterlist_tm[indexName][12],'rhy': masterlist_tm[indexName][13]
 	}
 	tempdict['tp'] = {
-			'tp': 0,'totaltp': 0,'nexttp': 100,
-			'mult': 1.035
+			'tp': 0,'totaltp': 0,'tpprog': 0, 'nexttp': 100
 	}
 	
 	return tempdict

@@ -46,21 +46,31 @@ class TamedMonster:
 		print sorted(self.stats['bonus'].iteritems())
 		print sorted(self.stats['penalty'].iteritems())
 		
-	def gainTP(self, gainedtp):
-		storedtp = 0;
-		self.stats['tp'].totaltp += 1;
-		if (gainedtp > (nexttp - tp)):
-			storedtp = gainedtp - (nexttp - tp)
-			gainedtp -= storedtp
-		self.stats['tp'].tp += gainedtp
-		if (self.stats['tp'].totaltp >= 500):
-			self.stats['tp'].mult = 1.005
-		elif (self.stats['tp'].totaltp >= 250):
-			self.stats['tp'].mult = 1.015
-		elif (self.stats['tp'].totaltp >= 100):
-			self.stats['tp'].mult = 1.025
-		nexttp *= mult
-		self.stats['tp'].tp += storedtp
+	def gainTP(self, gainedprog):
+		storedprog = 0
+		while(gainedprog != 0):
+			if (gainedprog > (self.stats['tp']['nexttp'] - self.stats['tp']['tpprog'])):
+				storedprog = gainedprog - (self.stats['tp']['nexttp'] - self.stats['tp']['tpprog'])
+				gainedprog -= storedprog
+			else:
+				storedprog = gainedprog
+				gainedprog = 0
+		
+			self.stats['tp']['tpprog'] += storedprog
+			
+			#when leveling up
+			if self.stats['tp']['tpprog'] ==  self.stats['tp']['nexttp']:
+				self.stats['tp'] += 1
+				self.stats['totaltp'] += 1
+				if (self.stats['tp']['totaltp'] >= 500):
+					self.stats['tp']['nexttp'] *= 1.005
+				elif (self.stats['tp']['totaltp'] >= 250):
+					self.stats['tp']['nexttp'] *= 1.015
+				elif (self.stats['tp']['totaltp'] >= 100):
+					self.stats['tp']['nexttp'] *= 1.025
+				else:
+					self.stats['tp']['nexttp'] *= 1.035
+		
 		
 	def setMaster(self, newmaster):
 		self.master = newmaster
