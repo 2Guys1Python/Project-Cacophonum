@@ -4,7 +4,7 @@ class Spell:
 	def __init__(self, name, index):
 		self.name = name
 		self.index = index
-		self.cost, self.stats = init.spell_Init(name)
+		self.cost, self.type, self.inst, self.target, self.effectsList = init.spell_Init(name)
 
 #Item related stuff
 class KeyItem(object):

@@ -1,6 +1,6 @@
 import pygame, sys, init, random
 import compositeclasses
-import itemhandler
+import itemhandler, spellhandler
 
 class WildMonster:
 	def __init__(self, name, index):
@@ -162,6 +162,7 @@ class TamedMonster:
 				
 	def useItem(self, index, target):
 		item = self.master.removeItem(index)
+		print "%s used %s on %s!" %(self.name, item.name, target.name)
 		if item.itemType == "Consumable":
 			if item.target == "one":
 				itemhandler.useItem(item, target)

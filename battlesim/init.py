@@ -57,13 +57,7 @@ masterlist_instrument = {
 }
 
 masterlist_spell = {
-	'Black Aria': ['off', 'wind', 2,
-					{
-					'base_dmg': 50,
-					'scale_mus': 0.3,
-					'hits': 5,
-					'aim': 'aoe'
-					}]
+	'Black Aria': [2, 'off', 'wind', 'aoe', [['dmg_HP', [5, 'mus', 0.14]]]]
 }
 
 def tamedMonster_Init(indexName):
@@ -151,9 +145,4 @@ def instrument_Init(indexName):
 	return tempdict
 	
 def spell_Init(indexName):
-	tempdict = {}
-	tempdict['info'] = {
-		'type': masterlist_spell[indexName][0], 'inst': masterlist_spell[indexName][1] 
-	}
-	tempdict['effects'] = masterlist_spell[indexName][3]
-	return masterlist_spell[indexName][2], tempdict
+	return masterlist_spell[indexName][0], masterlist_spell[indexName][1], masterlist_spell[indexName][2], masterlist_spell[indexName][3], masterlist_spell[indexName][4]
