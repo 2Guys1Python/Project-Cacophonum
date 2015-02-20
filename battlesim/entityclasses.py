@@ -9,11 +9,18 @@ class WildMonster:
 		self.itemDrops = []
 		self.skills = []
 		self.status = []
+		self.isDead = False
 		self.AI = None
 	
 	def damage(self, num):
-		self.stats['curr']['curHP'] -= num
+		if num <= self.stats['curr']['curHP']:
+			self.stats['curr']['curHP'] -= num
+		else:
+			self.stats['curr']['curHP'] = 0
 		print "%d dealt! %d HP left." %(num, self.stats['curr']['curHP'])
+		if self.stats['curr']['curHP'] == 0:
+			self.isDead = True
+			print "%s died" %self.name
 	
 
 class TamedMonster:
@@ -29,6 +36,7 @@ class TamedMonster:
 		}
 		self.skills = []
 		self.status = []
+		self.isDead = False
 	
 	def printstats(self):
 		print "Name: %s" % (self.name)
@@ -77,17 +85,26 @@ class TamedMonster:
 		self.stats['penalty']['penaltynotegain'] += instrument.stats['penalty']['penaltynotegain']
 	
 	def damage(self, num):
-		self.stats['curr']['curHP'] -= num
+		if num <= self.stats['curr']['curHP']:
+			self.stats['curr']['curHP'] -= num
+		else:
+			self.stats['curr']['curHP'] = 0
 		print "%d dealt! %d HP left." %(num, self.stats['curr']['curHP'])
+		if self.stats['curr']['curHP'] == 0:
+			self.isDead = True
+			print "%s died" %self.name
 	
 	def attack(self, target):
 		print "%s attacked %s!" %(self.name, target.name)
-		currentDamage = (self.stats['base']['atk'] + self.stats['bonus']['bonusatk'] - self.stats['penalty']['penaltyatk']) * self.equipment['instrument'].stats['base']['atkmult']
+		atk = (self.stats['base']['atk'] + self.stats['bonus']['bonusatk'] - self.stats['penalty']['penaltyatk'])
+		equipmentmultiplier = self.equipment['instrument'].stats['base']['atkmult']
+		enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1000))
+		currentDamage = atk * equipmentmultiplier * enemydefmod
 		for x in range(0, self.equipment['instrument'].stats['base']['hits']):
 			print "Hit %d:" %(x+1)
 			if self.equipment['instrument'].stats['base']['critchance'] > random.randint(0, 100):
 				print "Critical!"
-				target.damage(currentDamage*self.equipment['instrument'].stats['base']['critmult'])
+				target.damage(atk*equipmentmultiplier*self.equipment['instrument'].stats['base']['critmult']*enemydefmod)
 			else:
 				target.damage(currentDamage)
 			currentDamage *= self.equipment['instrument'].stats['base']['proration']
