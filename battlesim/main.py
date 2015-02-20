@@ -18,8 +18,8 @@ modelInstrumentList = {
 	'Flute': Instrument("Flute", 1)
 }
 '''
-modelSkillList = {
-	'Black Aria': Skill("Black Aria", 1)
+modelSpellList = {
+	'Black Aria': Spell("Black Aria", 1)
 }
 
 modelStatusList = {

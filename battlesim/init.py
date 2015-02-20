@@ -19,7 +19,7 @@ Wild Monster masterlist format:
 '''
 
 masterlist_wm = {
-	'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000]
+	'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000, 4, 0.85]
 }
 
 '''
@@ -58,6 +58,16 @@ masterlist_instrument = {
 				0,0,0,0,0,0,0,0,
 				'wind', 0.2, 15, 2.5, 0.9,
 				None]
+}
+
+masterlist_spell = {
+	'Black Aria': ['off', 'wind', 2,
+					{
+					'base_dmg': 50,
+					'scale_mus': 0.3,
+					'hits': 5,
+					'aim': 'aoe'
+					}]
 }
 
 def tamedMonster_Init(indexName):
@@ -101,7 +111,7 @@ def wildMonster_Init(indexName):
 			'mus': masterlist_wm[indexName][3], 'foc': masterlist_wm[indexName][4], 'cla': masterlist_wm[indexName][5], 'rhy': masterlist_wm[indexName][6],
 	}
 	tempdict['curr'] = {
-			'curHP': masterlist_wm[indexName][0]
+			'curHP': masterlist_wm[indexName][0], 'hits': masterlist_wm[indexName][7], 'proration': masterlist_wm[indexName][8]
 	}
 	tempdict['bonus'] = {
 			'bonusHP': 0, 'bonusatk': 0, 'bonusdef': 0,
@@ -143,4 +153,12 @@ def instrument_Init(indexName):
 			'penaltymus': masterlist_instrument[indexName][12],'penaltyfoc': masterlist_instrument[indexName][13],'penaltycla': masterlist_instrument[indexName][14],'penaltyrhy': masterlist_instrument[indexName][15],
 			'penaltynotegain': masterlist_instrument[indexName][16]
 	}
+	return tempdict
+	
+def spell_Init(indexName):
+	tempdict = {}
+	tempdict['info'] = {
+		'type': masterlist_spell[indexName][0], 'inst': masterlist_spell[indexName][1], 'cost': masterlist_spell[indexName][2], 
+	}
+	tempdict['effects'] = masterlist_spell[indexName][3]
 	return tempdict
