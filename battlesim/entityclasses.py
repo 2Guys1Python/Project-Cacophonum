@@ -1,5 +1,6 @@
 import pygame, sys, init, random
 import compositeclasses
+import itemhandler
 
 class WildMonster:
 	def __init__(self, name, index):
@@ -50,7 +51,7 @@ class TamedMonster:
 		storedprog = 0
 		while(gainedprog != 0):
 			if (gainedprog > (self.stats['tp']['nexttp'] - self.stats['tp']['tpprog'])):
-				storedprog = gainedprog - (self.stats['tp']['nexttp'] - self.stats['tp']['tpprog'])
+				storedprog = self.stats['tp']['nexttp'] - self.stats['tp']['tpprog']
 				gainedprog -= storedprog
 			else:
 				storedprog = gainedprog
@@ -147,6 +148,12 @@ class TamedMonster:
 				print "Hit %d:" %(x+1)
 				target.damage(currentDamage)
 				currentDamage *= self.equipment['instrument'].stats['base']['proration']
+				
+		def useItem(self, index, target):
+			item = self.master.removeItem(index)
+			if item.itemType == "Consumable":
+				if item.itemEffect['target'] == "one"
+					itemhandler.useItem(item, target)
 	
 class Conductor:
 	def __init__(self, name):

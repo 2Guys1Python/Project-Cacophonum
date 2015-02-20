@@ -33,11 +33,6 @@ class Consumable(Item):
 		super(Consumable, self).__init__(name, index)
 		self.itemEffect = init.consumableEffect_Init(name)
 		self.itemType = "Consumable"
-		
-	'''
-	def useItem(self,target):
-		
-	'''
 
 	
 class Inventory(object):

@@ -41,6 +41,7 @@ Item effect masterlist format:
 
 masterlist_item = {
 	'Potion': {
+		'target': 'one'
 		'rec_HP': 100
 	}
 }
