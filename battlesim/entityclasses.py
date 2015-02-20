@@ -8,7 +8,7 @@ class WildMonster:
 		self.index = index
 		self.stats = init.wildMonster_Init(name)
 		self.itemDrops = []
-		self.skills = []
+		self.spells = []
 		self.status = []
 		self.isDead = False
 		self.AI = None
@@ -41,7 +41,7 @@ class TamedMonster:
 			'accessory1': None,
 			'accessory2': None
 		}
-		self.skills = []
+		self.spells = []
 		self.status = []
 		self.isDead = False
 	
@@ -100,6 +100,9 @@ class TamedMonster:
 		self.stats['penalty']['penaltycla'] += instrument.stats['penalty']['penaltycla']
 		self.stats['penalty']['penaltyrhy'] += instrument.stats['penalty']['penaltyrhy']
 		self.stats['penalty']['penaltynotegain'] += instrument.stats['penalty']['penaltynotegain']
+		
+	def addSpell(self, spell):
+		self.spells.append(spell)
 	
 	def damage(self, num):
 		if num <= self.stats['curr']['curHP']:
@@ -168,6 +171,13 @@ class TamedMonster:
 				itemhandler.useItem(item, target)
 			else:
 				itemhandler.useItemAoE(item, target)
+				
+	def useSpell(self, index, target):
+		spell = self.spells[index]
+		if spell.target == "one":
+			spellhandler.useSpell(spell, self, target)
+		else:
+			spellhandler.useSpellAoE(spell, self, target)
 	
 class Conductor:
 	def __init__(self, name):

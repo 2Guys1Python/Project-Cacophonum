@@ -3,13 +3,13 @@ from entityclasses import *
 from compositeclasses import *
 
 def useSpell(spell, source, target):
-	for func in item.effectsList:
+	for func in spell.effectsList:
 		funcdict[func[0]](func[1], source, target)
 
 def useSpellAoE(spell, source, target):
-	for ent in target:
-		for func in item.effectsList:
-			funcdict[func[0]](func[1], source, target[ent])
+	for x in range(0, len(target)):
+		for func in spell.effectsList:
+			funcdict[func[0]](func[1], source, target[x])
 
 
 			

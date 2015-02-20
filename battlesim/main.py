@@ -17,11 +17,11 @@ modelItemList = {
 modelInstrumentList = {
 	'Flute': Instrument("Flute", 1)
 }
-'''
+
 modelSpellList = {
 	'Black Aria': Spell("Black Aria", 1)
 }
-
+'''
 modelStatusList = {
 	'Poison': Status("Poison", 1)
 }
@@ -33,6 +33,7 @@ wildmon = [copy.deepcopy(modelWildMonsterList['Swamp Thing'])]
 
 players[0].addMonster(copy.deepcopy(modelTamedMonsterList['Kobold'])) 
 players[0].monsters[0].setMaster(players[0]) 
+players[0].monsters[0].addSpell(copy.deepcopy(modelSpellList['Black Aria']))
 players[0].addItem(copy.deepcopy(modelItemList['Potion']))
 players[0].addItem(copy.deepcopy(modelInstrumentList['Flute']))
 players[0].monsters[0].printstats()
@@ -47,3 +48,4 @@ print players[0].monsters[0].equipment['instrument'].name
 players[0].monsters[0].attack(wildmon[0])
 players[0].monsters[0].useItem(0, wildmon[0])
 print wildmon[0].stats['curr']['curHP']
+players[0].monsters[0].useSpell(0, [wildmon[0]])

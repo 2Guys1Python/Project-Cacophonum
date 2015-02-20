@@ -7,9 +7,9 @@ def useItem(item, target):
 		funcdict[func[0]](func[1], target)
 
 def useItemAoE(item, target):
-	for ent in target:
+	for x in range(0,len(target)):
 		for func in item.effectsList:
-			funcdict[func[0]](func[1], target[ent])
+			funcdict[func[0]](func[1], target[x])
 	
 def rec_HP(args, target):
 	target.heal(args[0])
