@@ -34,16 +34,11 @@ masterlist_price = {
 
 '''
 Item effect masterlist format:
-	'Name':{
-		'effect_name': <whatever>
-	}
+	'Name': ['one/aoe/col/row', [['eff1', [arg1]], ['eff2', [arg1, arg2]], ...]]
 '''
 
 masterlist_item = {
-	'Potion': {
-		'target': 'one'
-		'rec_HP': 100
-	}
+	'Potion': ['one', [['rec_HP', [100]]]]
 }
 
 '''
@@ -134,7 +129,7 @@ def itemPrice_Init(indexName):
 	return tempdict
 	
 def consumableEffect_Init(indexName):
-	return masterlist_item[indexName]
+	return masterlist_item[indexName][0], masterlist_item[indexName][1]
 	
 def instrument_Init(indexName):
 	tempdict = {}
@@ -158,7 +153,7 @@ def instrument_Init(indexName):
 def spell_Init(indexName):
 	tempdict = {}
 	tempdict['info'] = {
-		'type': masterlist_spell[indexName][0], 'inst': masterlist_spell[indexName][1], 'cost': masterlist_spell[indexName][2], 
+		'type': masterlist_spell[indexName][0], 'inst': masterlist_spell[indexName][1] 
 	}
 	tempdict['effects'] = masterlist_spell[indexName][3]
-	return tempdict
+	return masterlist_spell[indexName][2], tempdict

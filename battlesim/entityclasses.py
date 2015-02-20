@@ -15,13 +15,19 @@ class WildMonster:
 	
 	def damage(self, num):
 		if num <= self.stats['curr']['curHP']:
-			self.stats['curr']['curHP'] -= num
+			self.stats['curr']['curHP'] -= int(num)
 		else:
 			self.stats['curr']['curHP'] = 0
 		print "%d dealt! %d HP left." %(num, self.stats['curr']['curHP'])
 		if self.stats['curr']['curHP'] == 0:
 			self.isDead = True
 			print "%s died" %self.name
+	
+	def heal(self, num):
+		self.stats['curr']['curHP'] += int(num)
+		if self.stats['curr']['curHP'] > (self.stats['base']['maxHP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP']):
+			self.stats['curr']['curHP'] = (self.stats['base']['maxHP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP'])
+	
 	
 
 class TamedMonster:
@@ -97,13 +103,18 @@ class TamedMonster:
 	
 	def damage(self, num):
 		if num <= self.stats['curr']['curHP']:
-			self.stats['curr']['curHP'] -= num
+			self.stats['curr']['curHP'] -= int(num)
 		else:
 			self.stats['curr']['curHP'] = 0
 		print "%d dealt! %d HP left." %(num, self.stats['curr']['curHP'])
 		if self.stats['curr']['curHP'] == 0:
 			self.isDead = True
 			print "%s died" %self.name
+			
+	def heal(self, num):
+		self.stats['curr']['curHP'] += int(num)
+		if self.stats['curr']['curHP'] > (self.stats['base']['maxHP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP']):
+			self.stats['curr']['curHP'] = (self.stats['base']['maxHP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP'])
 	
 	def attack(self, target):
 		print "%s attacked %s!" %(self.name, target.name)
@@ -149,11 +160,13 @@ class TamedMonster:
 				target.damage(currentDamage)
 				currentDamage *= self.equipment['instrument'].stats['base']['proration']
 				
-		def useItem(self, index, target):
-			item = self.master.removeItem(index)
-			if item.itemType == "Consumable":
-				if item.itemEffect['target'] == "one"
-					itemhandler.useItem(item, target)
+	def useItem(self, index, target):
+		item = self.master.removeItem(index)
+		if item.itemType == "Consumable":
+			if item.target == "one":
+				itemhandler.useItem(item, target)
+			else:
+				itemhandler.useItemAoE(item, target)
 	
 class Conductor:
 	def __init__(self, name):

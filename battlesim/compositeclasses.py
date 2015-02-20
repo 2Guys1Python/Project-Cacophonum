@@ -4,7 +4,7 @@ class Spell:
 	def __init__(self, name, index):
 		self.name = name
 		self.index = index
-		self.stats = init.spell_Init(name)
+		self.cost, self.stats = init.spell_Init(name)
 
 #Item related stuff
 class KeyItem(object):
@@ -31,7 +31,7 @@ class Instrument(Item):
 class Consumable(Item):
 	def __init__(self, name, index):
 		super(Consumable, self).__init__(name, index)
-		self.itemEffect = init.consumableEffect_Init(name)
+		self.target, self.effectsList = init.consumableEffect_Init(name)
 		self.itemType = "Consumable"
 
 	
