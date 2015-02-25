@@ -175,8 +175,14 @@ class TamedMonster:
 	def useSpell(self, index, target):
 		spell = self.spells[index]
 		if spell.target == "one":
+			print "%s used %s on %s!" %(self.name, spell.name, target.name)
 			spellhandler.useSpell(spell, self, target)
 		else:
+			namecoll = []
+			for x in range(0,len(target)):
+				namecoll.append(target[x].name)
+			print "%s used %s on " %(self.name, spell.name)
+			print namecoll
 			spellhandler.useSpellAoE(spell, self, target)
 	
 class Conductor:
