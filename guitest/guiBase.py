@@ -31,3 +31,24 @@ class Square(guiElement):
 			self.rect.y = 0
 		elif self.rect.y >= (graphics.SCHEIGHT-self.height):
 			self.rect.y = (graphics.SCHEIGHT-self.height)
+			
+class OverworldSprite(guiElement):
+	def __init__(self,x,y,imagename):
+		guiElement.__init__(self)
+		self.image = pygame.image.load(imagename)
+		self.width, self.height = self.image.get_size()
+		self.rect = self.image.get_rect()
+		self.rect.x = x
+		self.rect.y = y
+		
+	def move(self,x,y):
+		self.rect.x += x
+		if self.rect.x < 0:
+			self.rect.x = 0
+		elif self.rect.x >= (graphics.SCWIDTH-self.width):
+			self.rect.x = (graphics.SCWIDTH-self.width)
+		self.rect.y += y
+		if self.rect.y < 0:
+			self.rect.y = 0
+		elif self.rect.y >= (graphics.SCHEIGHT-self.height):
+			self.rect.y = (graphics.SCHEIGHT-self.height)

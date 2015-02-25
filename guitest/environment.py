@@ -27,20 +27,20 @@ class Environment(SceneBase):
 		self.mapgraphic = pygame.image.load("Bazaar.jpg").convert()
 		# simply throw objects into a Group of sprites and they'll be drawn when you render them later
 		self.gui_group = pygame.sprite.Group()
-		self.square = guiBase.Square(40,40,40,40,(0,0,0))
-		self.gui_group.add(self.square)
+		self.spr1 = guiBase.OverworldSprite(0,0,"Ape.png")
+		self.gui_group.add(self.spr1)
 		
 	def process_input(self):
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_UP:
-					self.square.move(0,-40)
+					self.spr1.move(0,-40)
 				elif event.key == pygame.K_DOWN:
-					self.square.move(0,40)
+					self.spr1.move(0,40)
 				if event.key == pygame.K_LEFT:
-					self.square.move(-40,0)
+					self.spr1.move(-40,0)
 				elif event.key == pygame.K_RIGHT:
-					self.square.move(40,0)
+					self.spr1.move(40,0)
 			if event.type == pygame.QUIT:
 				self.terminate()
 				
