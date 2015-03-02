@@ -56,8 +56,22 @@ masterlist_instrument = {
 				None]
 }
 
+'''
+Spell masterlist format:
+	'Name': [cost, type, inst, target, [[eff1, [args]], [eff2, [args]], ...]]
+'''
+
 masterlist_spell = {
 	'Black Aria': [2, 'off', 'wind', 'aoe', [['dmg_HP', [5, 'mus', 0.14]]]]
+}
+
+'''
+Status masterlist format:
+	'Name': [type, [[eff1, [args]], [eff2, [args]], ...]]
+'''
+
+masterlist_status = {
+	'Poison': ['off', [['dmg_HP', [1, 'ecurHP', 0.05]]]]
 }
 
 def tamedMonster_Init(indexName):
@@ -146,3 +160,6 @@ def instrument_Init(indexName):
 	
 def spell_Init(indexName):
 	return masterlist_spell[indexName][0], masterlist_spell[indexName][1], masterlist_spell[indexName][2], masterlist_spell[indexName][3], masterlist_spell[indexName][4]
+	
+def status_Init(indexName):
+	return masterlist_status[indexName][0], masterlist_status[indexName][1]

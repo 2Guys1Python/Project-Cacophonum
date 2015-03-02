@@ -6,6 +6,12 @@ class Spell:
 		self.index = index
 		self.cost, self.type, self.inst, self.target, self.effectsList = init.spell_Init(name)
 
+class Status:
+	def __init__(self, name, index):
+		self.name = name
+		self.index = index
+		self.type, self.effects = init.status_Init(name)
+		
 #Item related stuff
 class KeyItem(object):
 	def __init__(self, name, index):
