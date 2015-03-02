@@ -34,13 +34,13 @@ class Environment(SceneBase):
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_UP:
-					self.spr1.move(0,-40)
+					self.spr1.move(0,-32)
 				elif event.key == pygame.K_DOWN:
-					self.spr1.move(0,40)
+					self.spr1.move(0,32)
 				if event.key == pygame.K_LEFT:
-					self.spr1.move(-40,0)
+					self.spr1.move(-32,0)
 				elif event.key == pygame.K_RIGHT:
-					self.spr1.move(40,0)
+					self.spr1.move(32,0)
 			if event.type == pygame.QUIT:
 				self.terminate()
 				
@@ -48,9 +48,7 @@ class Environment(SceneBase):
 		pass
 		
 	def render(self):
-		#redraw BG
-		self.surface.fill((0,0,250))
-		#self.surface.blit(self.square.image, (self.square.rect.x,self.square.rect.y))
+		#redraw map
 		self.surface.blit(self.mapgraphic,(0,0))
 		#draw objects in the group on the BG we created
 		self.gui_group.draw(self.surface)

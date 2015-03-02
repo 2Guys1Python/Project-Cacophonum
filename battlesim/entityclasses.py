@@ -27,7 +27,9 @@ class WildMonster:
 		self.stats['curr']['curHP'] += int(num)
 		if self.stats['curr']['curHP'] > (self.stats['base']['maxHP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP']):
 			self.stats['curr']['curHP'] = (self.stats['base']['maxHP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP'])
-	
+			
+	def addStatus(self, status):
+		self.status.append(status)
 	
 
 class TamedMonster:

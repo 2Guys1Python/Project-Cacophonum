@@ -62,7 +62,9 @@ Spell masterlist format:
 '''
 
 masterlist_spell = {
-	'Black Aria': [2, 'off', 'wind', 'aoe', [['dmg_HP', [5, 'mus', 0.14]]]]
+	'Black Aria': [2, 'off', 'wind', 'aoe', 
+					[['dmg_HP', [5, 'mus', 0.14]],
+					['apply_debuff', ['Poison', 25, 2]]]]
 }
 
 '''

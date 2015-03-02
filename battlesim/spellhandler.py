@@ -1,6 +1,7 @@
-import pygame, sys, copy
+import pygame, sys, copy, random
 from entityclasses import *
 from compositeclasses import *
+#from statushandler import *
 
 def useSpell(spell, source, target):
 	for func in spell.effectsList:
@@ -54,8 +55,31 @@ def dmg_HP(args, source, target):
 		print "Hit %d" %(x+1)
 		target.damage(scalingstat*args[2])
 
+# args: [status name, base proc chance, base duration]		
+def apply_debuff(args, source, target):
+	status = copy.deepcopy(Status(args[0], 1))
+	duration = args[2]
+	ratio = getStat('cla', source.stats, target.stats) / getStat('erhy', source.stats, target.stats)
+	procchance = args[1] * ratio
+	if ratio > 1:
+		if ratio >= 2:
+			# 1% to add 2 duration at 2x, 10% at 3x
+			chance = 9*ratio - 17
+			if random.randint(0,100) < chance:
+				duration += 2
+			else:
+				duration += 1
+		else:
+			duration += 1
+	status.duration = duration
+	if procchance > random.randint(0,100):
+		target.addStatus(status)
+		print "Applied %s on %s for %d turns!" %(args[0], target.name, duration)
+	
+
 
 # Function dictionary should be at the bottom because Python will think the functions haven't been defined otherwise
 funcdict = {
-	'dmg_HP': dmg_HP
+	'dmg_HP': dmg_HP,
+	'apply_debuff': apply_debuff
 }
