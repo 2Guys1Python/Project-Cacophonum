@@ -124,6 +124,7 @@ class TamedMonster:
 	
 	def attack(self, target):
 		print "%s attacked %s!" %(self.name, target.name)
+		self.stats['curr']['notes'] -= 2
 		atk = (self.stats['base']['atk'] + self.stats['bonus']['bonusatk'] - self.stats['penalty']['penaltyatk'])
 		equipmentmultiplier = self.equipment['instrument'].stats['base']['atkmult']
 		enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1000))
@@ -132,6 +133,7 @@ class TamedMonster:
 			for x in range(0,hits):
 				print "Hit %d:" %(x+1)
 				target.damage(atk*0.25*enemydefmod)
+		
 				
 		elif self.equipment['instrument'].stats['base']['type'] == 'wind':
 		#Wind instruments ignore proration and some defense when critting
@@ -174,6 +176,7 @@ class TamedMonster:
 				itemhandler.useItem(item, target)
 			else:
 				itemhandler.useItemAoE(item, target)
+		self.stats['curr']['notes'] -= 1
 				
 	def useSpell(self, index, target):
 		spell = self.spells[index]
@@ -187,6 +190,7 @@ class TamedMonster:
 			print "%s used %s on " %(self.name, spell.name)
 			print namecoll
 			spellhandler.useSpellAoE(spell, self, target)
+		self.stats['curr']['notes'] -= spell.cost
 	
 class Conductor:
 	def __init__(self, name):

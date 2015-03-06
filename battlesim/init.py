@@ -120,13 +120,11 @@ def wildMonster_Init(indexName):
 	}
 	tempdict['bonus'] = {
 			'bonusHP': 0, 'bonusatk': 0, 'bonusdef': 0,
-			'bonusmus': 0, 'bonusfoc': 0, 'bonuscla': 0, 'bonusrhy': 0,
-			'bonusnotegain': 0
+			'bonusmus': 0, 'bonusfoc': 0, 'bonuscla': 0, 'bonusrhy': 0
 	}
 	tempdict['penalty'] = {
 			'penaltyHP': 0,'penaltyatk': 0,'penaltydef': 0,
-			'penaltymus': 0,'penaltyfoc': 0,'penaltycla': 0,'penaltyrhy': 0,
-			'penaltynotegain': 0
+			'penaltymus': 0,'penaltyfoc': 0,'penaltycla': 0,'penaltyrhy': 0
 	}
 
 	return tempdict
