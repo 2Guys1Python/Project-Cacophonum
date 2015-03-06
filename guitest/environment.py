@@ -28,6 +28,7 @@ class Environment(SceneBase):
 		# simply throw objects into a Group of sprites and they'll be drawn when you render them later
 		self.gui_group = pygame.sprite.Group()
 		self.spr1 = guiBase.OverworldSprite(0,0,"Ape.png")
+		self.spr1.sprite_sheet((32,32), "spr2.png", (0,0))
 		self.gui_group.add(self.spr1)
 		
 	def process_input(self):

@@ -55,6 +55,11 @@ def dmg_HP(args, source, target):
 		print "Hit %d" %(x+1)
 		target.damage(scalingstat*args[2])
 
+# args: [scaling stat, scalar]		
+def rec_HP(args, source, target):
+	scalingstat = getStat(args[0], source.stats, target.stats)
+	target.heal(scalingstat*args[1])
+
 # args: [status name, base proc chance, base duration]		
 def apply_debuff(args, source, target):
 	status = copy.deepcopy(Status(args[0], 1))
@@ -74,7 +79,6 @@ def apply_debuff(args, source, target):
 	status.duration = duration
 	if procchance > random.randint(0,100):
 		target.addStatus(status)
-		print "Applied %s on %s for %d turns!" %(args[0], target.name, duration)
 	
 
 

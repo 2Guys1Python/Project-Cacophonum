@@ -30,6 +30,7 @@ class WildMonster:
 			
 	def addStatus(self, status):
 		self.status.append(status)
+		print "Applied %s on %s for %d turns!" %(status.name, self.name, status.duration)
 	
 
 class TamedMonster:

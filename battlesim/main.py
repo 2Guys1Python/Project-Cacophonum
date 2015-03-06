@@ -1,6 +1,7 @@
 import pygame, sys, copy
 from entityclasses import *
 from compositeclasses import *
+from battle import *
 	
 
 modelTamedMonsterList = {
@@ -21,11 +22,11 @@ modelInstrumentList = {
 modelSpellList = {
 	'Black Aria': Spell("Black Aria", 1)
 }
-'''
+
 modelStatusList = {
 	'Poison': Status("Poison", 1)
 }
-'''	
+	
 	
 players = [Conductor("MC1")]
 wildmon = [copy.deepcopy(modelWildMonsterList['Swamp Thing'])]
@@ -45,7 +46,5 @@ print "Equipping %s" %(players[0].getItem(1).name)
 players[0].monsters[0].setInstrument(players[0].removeItem(1))
 players[0].monsters[0].printstats()
 print players[0].monsters[0].equipment['instrument'].name
-players[0].monsters[0].attack(wildmon[0])
-players[0].monsters[0].useItem(0, wildmon[0])
-print wildmon[0].stats['curr']['curHP']
-players[0].monsters[0].useSpell(0, [wildmon[0]])
+b = BattleInstance(players, players[0].monsters, wildmon)
+b.loop()
