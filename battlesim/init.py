@@ -73,7 +73,8 @@ Status masterlist format:
 '''
 
 masterlist_status = {
-	'Poison': ['off', [['dmg_HP', [1, 'ecurHP', 0.05]]]]
+	'Poison': ['off', [['dmg_HP', [1, 'ecurHP', 0.05]]]],
+	'Paralysis': ['off', [['set_Paralysis', [True]]]]
 }
 
 def tamedMonster_Init(indexName):

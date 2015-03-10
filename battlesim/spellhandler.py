@@ -12,7 +12,9 @@ def useSpellAoE(spell, source, target):
 		for func in spell.effectsList:
 			funcdict[func[0]](func[1], source, target[x])
 
-
+def statusTick(status):
+	for e in status.effects:
+		funcdict[e[0]](e[1], status.source, status.target)
 			
 def getStat(str, s, t):
 	if str == 'maxHP':
@@ -63,6 +65,8 @@ def rec_HP(args, source, target):
 # args: [status name, base proc chance, base duration]		
 def apply_debuff(args, source, target):
 	status = copy.deepcopy(Status(args[0], 1))
+	status.source = source
+	status.target = target
 	duration = args[2]
 	ratio = getStat('cla', source.stats, target.stats) / getStat('erhy', source.stats, target.stats)
 	procchance = args[1] * ratio
@@ -80,10 +84,13 @@ def apply_debuff(args, source, target):
 	if procchance > random.randint(0,100):
 		target.addStatus(status)
 	
-
+# args: [bool]
+def set_Paralysis(args, source, target):
+	target.canMove = (not bool)
 
 # Function dictionary should be at the bottom because Python will think the functions haven't been defined otherwise
 funcdict = {
 	'dmg_HP': dmg_HP,
-	'apply_debuff': apply_debuff
+	'apply_debuff': apply_debuff,
+	'set_Paralysis': set_Paralysis
 }

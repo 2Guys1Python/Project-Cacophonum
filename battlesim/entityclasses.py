@@ -2,15 +2,20 @@ import pygame, sys, init, random
 import compositeclasses
 import itemhandler, spellhandler
 
-class WildMonster:
+class Monster(object):
 	def __init__(self, name, index):
 		self.name = name
 		self.index = index
-		self.stats = init.wildMonster_Init(name)
-		self.itemDrops = []
 		self.spells = []
 		self.status = []
 		self.isDead = False
+		self.canMove = True
+
+class WildMonster(Monster):
+	def __init__(self, name, index):
+		super(WildMonster, self).__init__(name, index)
+		self.stats = init.wildMonster_Init(name)
+		self.itemDrops = []
 		self.AI = None
 	
 	def damage(self, num):
@@ -33,10 +38,9 @@ class WildMonster:
 		print "Applied %s on %s for %d turns!" %(status.name, self.name, status.duration)
 	
 
-class TamedMonster:
+class TamedMonster(Monster):
 	def __init__(self, name, index):
-		self.name = name
-		self.index = index
+		super(TamedMonster, self).__init__(name, index)
 		self.master = None
 		self.stats = init.tamedMonster_Init(name)
 		self.equipment = {
@@ -44,9 +48,6 @@ class TamedMonster:
 			'accessory1': None,
 			'accessory2': None
 		}
-		self.spells = []
-		self.status = []
-		self.isDead = False
 	
 	def printstats(self):
 		print "Name: %s" % (self.name)
