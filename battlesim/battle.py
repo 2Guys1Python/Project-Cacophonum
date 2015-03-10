@@ -12,15 +12,30 @@ class BattleInstance:
 		self.wildmonsters = wildmonsters
 		for t in tamedmonsters:
 			t.stats['curr']['notes'] = 4
-		print "initialized"
+		
+	def nameDiff(self):
+		uniquelist = []
+		for w in self.wildmonsters:
+			if not (w.name in uniquelist):
+				uniquelist.append(w.name)
+				
+		for n in uniquelist:
+			num = 1
+			for w in self.wildmonsters:
+				if w.name == n:
+					w.name += " " + str(num)
+					num+=1
+					
 		
 	def loop(self):
 		print "Controls: [A]ttack, [S]pell, [I]tem, [W]ait"
 		
 		while not self.over:
+		
 			#tamed monsters go first
 			for t in self.tamedmonsters:
 				if t.canMove:
+					print "%s has %d notes." %(t.name, t.stats['curr']['notes'])
 					action = raw_input("Input action: ")
 					
 					# attack (2 notes)
@@ -30,7 +45,7 @@ class BattleInstance:
 							print "%d: %s" %(c, w.name)
 							c += 1
 						targetnum = input("Input number of desired target: ")
-						t.attack(self.wildmonsters[targetnum])\
+						t.attack(self.wildmonsters[targetnum])
 					
 					# spell (n notes, n = spell cost)
 					elif action == "s" or action == "S":
@@ -76,6 +91,9 @@ class BattleInstance:
 			#player action loop end
 			
 			#wild monsters go next
+			for w in self.wildmonsters:
+				if w.canMove:
+					w.processAI(self.turn, self.wildmonsters, self.tamedmonsters)
 			#wild monster action loop end
 			
 			#status ticks
@@ -91,6 +109,27 @@ class BattleInstance:
 					statusTick(s)
 					s.duration -= 1
 					if s.duration == 0:
-						print ("%s ran out!") %w.status.remove(s).name
+						print "%s ran out!" %s.name
+						w.status.remove(s)
+						
+			# death checks
+			deathlist = []	
+				
+			for w in self.wildmonsters:
+				if w.isDead:
+					deathlist.append(w)
 			
-			self.over = True
+			for w in deathlist:
+				self.wildmonsters.remove(w)
+
+			for t in self.tamedmonsters:
+				allTamedMonstersDead = True
+				if not t.isDead:
+					allTamedMonstersDead = False
+					break
+			
+			if len(self.wildmonsters) == 0 or allTamedMonstersDead:
+				self.over = True
+				
+		# battle loop end
+		print "Battle ended!"	

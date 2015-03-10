@@ -4,7 +4,7 @@ from compositeclasses import *
 
 '''
 Tamed Monster masterlist format:
-	'Name': [maxHP, atk, def, mus, foc, cla, rhy <- base (1-9999, combined max 50000?)
+	'Name': [maxHP, atk, def, mus, foc, cla, rhy, <- base (1-9999, combined max 50000?)
 			maxHP, atk, def, mus, foc, cla, rhy] <- gain modifiers (1-10) 
 '''
 
@@ -15,11 +15,13 @@ masterlist_tm = {
 
 '''
 Wild Monster masterlist format:
-	'Name': [maxHP, atk, def, mus, foc, cla, rhy] <- base, no max
+	'Name': [maxHP, atk, def, mus, foc, cla, rhy, <- base, no max
+			[AIstring1, AIstring2, AIstring3...]]
 '''
 
 masterlist_wm = {
-	'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000, 4, 0.85]
+	'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000, 4, 0.85,
+					['random', 'random', 'random']]
 }
 
 '''
@@ -128,7 +130,7 @@ def wildMonster_Init(indexName):
 			'penaltymus': 0,'penaltyfoc': 0,'penaltycla': 0,'penaltyrhy': 0
 	}
 
-	return tempdict
+	return masterlist_wm[indexName][9], tempdict
 
 def itemPrice_Init(indexName):
 	

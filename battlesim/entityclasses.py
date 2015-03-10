@@ -14,9 +14,8 @@ class Monster(object):
 class WildMonster(Monster):
 	def __init__(self, name, index):
 		super(WildMonster, self).__init__(name, index)
-		self.stats = init.wildMonster_Init(name)
+		self.AI, self.stats = init.wildMonster_Init(name)
 		self.itemDrops = []
-		self.AI = None
 	
 	def damage(self, num):
 		if num <= self.stats['curr']['curHP']:
@@ -26,6 +25,7 @@ class WildMonster(Monster):
 		print "%d dealt! %d HP left." %(num, self.stats['curr']['curHP'])
 		if self.stats['curr']['curHP'] == 0:
 			self.isDead = True
+			self.canMove = False
 			print "%s died" %self.name
 	
 	def heal(self, num):
@@ -37,6 +37,9 @@ class WildMonster(Monster):
 		self.status.append(status)
 		print "Applied %s on %s for %d turns!" %(status.name, self.name, status.duration)
 	
+	def processAI(self, turn, wildmonsters, tamedmonsters):
+		act = self.AI[turn % len(self.AI)]
+		print ("%s will use %s here") %(self.name, act)
 
 class TamedMonster(Monster):
 	def __init__(self, name, index):
