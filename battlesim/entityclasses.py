@@ -16,6 +16,16 @@ class WildMonster(Monster):
 		super(WildMonster, self).__init__(name, index)
 		self.AI, self.stats = init.wildMonster_Init(name)
 		self.itemDrops = []
+		
+	def attack(self, target):
+		atk = (self.stats['base']['atk'] + self.stats['bonus']['bonusatk'] - self.stats['penalty']['penaltyatk'])
+		enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1000))
+		hits = random.randint(1, 5)
+		currentdamage = atk*0.25
+		for x in range(0,self.stats['curr']['hits']):
+			print "Hit %d:" %(x+1)
+			target.damage(currentdamage*enemydefmod)
+			currentdamage *= self.proration
 	
 	def damage(self, num):
 		if num <= self.stats['curr']['curHP']:
@@ -38,8 +48,52 @@ class WildMonster(Monster):
 		print "Applied %s on %s for %d turns!" %(status.name, self.name, status.duration)
 	
 	def processAI(self, turn, wildmonsters, tamedmonsters):
-		act = self.AI[turn % len(self.AI)]
-		print ("%s will use %s here") %(self.name, act)
+		act = []
+		for action in self.AI:
+			if action[4] > random.randint(0, 100):	# will the action occur at all by probability
+				print "Passed probability test"
+				if action[2] is not None:			# does the action have a specific condition
+					if action[2].endswith(('<', '>', '=')):	# is it an absolute comparison action, thus using action[3]
+						if action[2] == 'turn>':
+							comparison = (turn>action[3])
+						elif action[2] == 'turn<':
+							comparison = (turn<action[3])
+						elif action[2] == 'turn=':
+							comparison = (turn==action[3])
+						elif action[2].startswith('self'):
+							comparison, target = spellhandler.compareStat(action[2], action[3], self, [self])
+						elif action[2].startswith('ally'):
+							comparison, target = spellhandler.compareStat(action[2], action[3], self, wildmonsters)
+						elif action[2].startswith('enemy'):
+							comparison, target = spellhandler.compareStat(action[2], action[3], self, tamedmonsters)
+						
+						if comparison:
+							act = [action[0], target]
+							print "Loop broken!"
+							break
+					
+					else:									# if finding extreme or mean rather than hard comparison
+						pass
+						
+				else:								# if the action has no specific condition
+					act = [action[0], tamedmonsters[random.randint(0,len(tamedmonsters)-1)]]
+					
+		print ("%s will use %s here") %(self.name, act[0])
+		'''
+		if act == 'attack':
+			
+		
+		elif act == 'offspell':
+			pass
+		
+		elif act == 'defspell':
+			pass
+		
+		elif act == 'debspell':
+			pass
+			
+		else
+		'''
 
 class TamedMonster(Monster):
 	def __init__(self, name, index):

@@ -113,7 +113,7 @@ class BattleInstance:
 						w.status.remove(s)
 						
 			# death checks
-			deathlist = []	
+			deathlist = []
 				
 			for w in self.wildmonsters:
 				if w.isDead:

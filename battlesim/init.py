@@ -15,13 +15,34 @@ masterlist_tm = {
 
 '''
 Wild Monster masterlist format:
-	'Name': [maxHP, atk, def, mus, foc, cla, rhy, <- base, no max
-			[AIstring1, AIstring2, AIstring3...]]
+	'Name': [maxHP, atk, def, mus, foc, cla, rhy,				<- base, no max
+			hits, proration,									<- attack stats
+			[[command1, target1, condition1, conditionNum1, probability1] , [command2, target2, condition2, conditionNum2, probability2], ...]]
+																^ possible AI actions, list by priority
+																
+	[!] Only generic command strings are attack, offspell, defspell, and debspell. [!]
+	[!] All other names straight up call the word as a spell [!]
+
+	
+	[!] example AI: [!]
+	Suicide to damage enemy party if self HP is <30% (prob 100)
+	At turn 3, attack enemy with lowest hp (prob 100)
+	Use Healing Howl to heal ally with lowest HP (prob 75)
+	Use spell on random enemy, no condition (prob 60)
+	Attack someone from enemy party, no condition (prob 100)
+	
+	[['suicide', 'enemy', 'selfcurHP<', '30', 100],
+	['attack', 'enemy', 'turn=', 3, 100],
+	['Healing Howl', 'ally', 'lowestHP', None, 60],
+	['offspell', 'enemy', 'enemycurHP>', 500, 60],
+	['attack', 'enemy', None, None, 100]]
 '''
 
 masterlist_wm = {
-	'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000, 4, 0.85,
-					['random', 'random', 'random']]
+	'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000,
+					4, 0.85,
+					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
+					['attack', 'enemy', None, None, 100]]]
 }
 
 '''
@@ -61,6 +82,8 @@ masterlist_instrument = {
 '''
 Spell masterlist format:
 	'Name': [cost, type, inst, target, [[eff1, [args]], [eff2, [args]], ...]]
+	
+	[!] type = off/def/buf/deb [!]
 '''
 
 masterlist_spell = {
@@ -72,6 +95,8 @@ masterlist_spell = {
 '''
 Status masterlist format:
 	'Name': [type, [[eff1, [args]], [eff2, [args]], ...]]
+	
+	[!] type = off/def/buf/deb [!]
 '''
 
 masterlist_status = {

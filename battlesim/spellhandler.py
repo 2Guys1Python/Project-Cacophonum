@@ -1,4 +1,4 @@
-import pygame, sys, copy, random
+import pygame, sys, copy, random, operator
 from entityclasses import *
 from compositeclasses import *
 #from statushandler import *
@@ -50,6 +50,37 @@ def getStat(str, s, t):
 	elif str == 'erhy':
 		return t['base']['rhy'] + t['bonus']['bonusrhy'] - t['penalty']['penaltyrhy']
 		
+def compareStat(str, comparate, source, targetgroup):
+	bool = False
+	if str.startswith("self"):
+		if "cur" in str:
+			mode = "curr"
+		elif str.contains("bonus"):
+			mode = "bonus"
+		elif str.contains("penalty"):
+			mode = "penalty"
+		else:
+			mode = "base"
+		bool = ops[str[len(str)-1]](source.stats[mode][str[4:len(str)-1]], comparate)
+		return bool, targetgroup
+		
+	else:						#ally or enemy
+		if "cur" in str:
+			mode = "curr"
+		elif str.contains("bonus"):
+			mode = "bonus"
+		elif str.contains("penalty"):
+			mode = "penalty"
+		else:
+			mode = "base"
+			
+		for c in range(0, len(targetgroup)):
+			target = targetgroup[random.randint(0, len(targetgroup)-1)]
+			bool = ops[str[len(str)-1]](targetgroup[c].stats[mode][str[str.find('y')+1:len(str)-1]], comparate)
+
+			return bool, target
+		
+		
 # args: [hits, scaling stat, scalar]
 def dmg_HP(args, source, target):
 	scalingstat = getStat(args[1], source.stats, target.stats)
@@ -93,4 +124,16 @@ funcdict = {
 	'dmg_HP': dmg_HP,
 	'apply_debuff': apply_debuff,
 	'set_Paralysis': set_Paralysis
+}
+
+ops = {
+	'+' : operator.add,
+	'-' : operator.sub,
+	'*' : operator.mul,
+	'/' : operator.div,
+	'%' : operator.mod,
+	'^' : operator.xor,
+	'>' : operator.gt,
+	'<' : operator.lt,
+	'=' : operator.eq
 }
