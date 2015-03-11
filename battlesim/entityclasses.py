@@ -50,35 +50,52 @@ class WildMonster(Monster):
 	def processAI(self, turn, wildmonsters, tamedmonsters):
 		act = []
 		for action in self.AI:
-			if action[4] > random.randint(0, 100):	# will the action occur at all by probability
-				print "Passed probability test"
+			if action[4] > random.randint(0, 99):	# will the action occur at all by probability
+				print ("%s passed probability test") %(action[0])
 				if action[2] is not None:			# does the action have a specific condition
 					if action[2].endswith(('<', '>', '=')):	# is it an absolute comparison action, thus using action[3]
+						if action[1] == 'enemy':
+							targetgroup = tamedmonsters
+						elif action[1] == 'ally':
+							targetgroup = wildmonsters
+						elif action[1] == 'self':
+							targetgroup = [self]
+					
 						if action[2] == 'turn>':
 							comparison = (turn>action[3])
 						elif action[2] == 'turn<':
 							comparison = (turn<action[3])
 						elif action[2] == 'turn=':
 							comparison = (turn==action[3])
-						elif action[2].startswith('self'):
+						elif action[2].startswith("self"):
 							comparison, target = spellhandler.compareStat(action[2], action[3], self, [self])
-						elif action[2].startswith('ally'):
+						elif action[2].startswith("ally"):
 							comparison, target = spellhandler.compareStat(action[2], action[3], self, wildmonsters)
-						elif action[2].startswith('enemy'):
+						elif action[2].startswith("enemy"):
 							comparison, target = spellhandler.compareStat(action[2], action[3], self, tamedmonsters)
+						else:									# default, no prefix
+							comparison, target = spellhandler.compareStat(action[2], action[3], self, targetgroup)
 						
 						if comparison:
 							act = [action[0], target]
-							print "Loop broken!"
 							break
 					
-					else:									# if finding extreme or mean rather than hard comparison
-						pass
+					else:							# if finding extreme value rather than simple comparison
+						if action[1] == "ally":
+							targetgroup = wildmonsters
+						elif action[1] == "enemy":
+							targetgroup = tamedmonsters
+						
+						target = spellhandler.findExtreme(action[2], targetgroup)
+						act = [action[0], target]
+						break
+							
+						
 						
 				else:								# if the action has no specific condition
 					act = [action[0], tamedmonsters[random.randint(0,len(tamedmonsters)-1)]]
 					
-		print ("%s will use %s here") %(self.name, act[0])
+		print ("%s will use %s on %s here") %(self.name, act[0], act[1].name)
 		'''
 		if act == 'attack':
 			

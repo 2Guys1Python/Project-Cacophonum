@@ -55,31 +55,61 @@ def compareStat(str, comparate, source, targetgroup):
 	if str.startswith("self"):
 		if "cur" in str:
 			mode = "curr"
-		elif str.contains("bonus"):
+		elif "bonus" in str:
 			mode = "bonus"
-		elif str.contains("penalty"):
+		elif "penalty" in str:
 			mode = "penalty"
 		else:
 			mode = "base"
 		bool = ops[str[len(str)-1]](source.stats[mode][str[4:len(str)-1]], comparate)
 		return bool, targetgroup
 		
-	else:						#ally or enemy
+	elif str.startswith("ally") or str.startswith("enemy"):						#ally or enemy
 		if "cur" in str:
 			mode = "curr"
-		elif str.contains("bonus"):
+		elif "bonus" in str:
 			mode = "bonus"
-		elif str.contains("penalty"):
+		elif "penalty" in str:
 			mode = "penalty"
 		else:
 			mode = "base"
-			
-		for c in range(0, len(targetgroup)):
-			target = targetgroup[random.randint(0, len(targetgroup)-1)]
-			bool = ops[str[len(str)-1]](targetgroup[c].stats[mode][str[str.find('y')+1:len(str)-1]], comparate)
-
-			return bool, target
 		
+		num = random.randint(0, len(targetgroup)-1)
+		
+		for c in range(0, len(targetgroup)):
+			target = targetgroup[num]
+			bool = ops[str[len(str)-1]](targetgroup[c].stats[mode][str[str.find('y')+1:len(str)-1]], comparate)
+			num += 1
+			if num > (len(targetgroup)-1):
+				num = 0
+			if bool:
+				return bool, target
+		return bool, target
+
+def findExtreme(str, targetgroup):
+	if "cur" in str:
+		mode = "curr"
+	elif "bonus" in str:
+		mode = "bonus"
+	elif "penalty" in str:
+		mode = "penalty"
+	else:
+		mode = "base"
+			
+	ex = targetgroup[0].stats[mode][str[str.find('t')+1:len(str)]]
+	mon = targetgroup[0]
+	
+	for t in targetgroup:
+		if str.startswith("highest"):
+			if t.stats[mode][str[str.find('t')+1:len(str)]] > ex:
+				ex = t.stats[mode][str[str.find('t')+1:len(str)]]
+				mon = t
+		elif str.startswith("lowest"):
+			if t.stats[mode][str[str.find('t')+1:len(str)]] < ex:
+				ex = t.stats[mode][str[str.find('t')+1:len(str)]]
+				mon = t
+	
+	return mon
 		
 # args: [hits, scaling stat, scalar]
 def dmg_HP(args, source, target):
