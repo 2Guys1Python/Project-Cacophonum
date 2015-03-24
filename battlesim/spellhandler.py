@@ -95,6 +95,8 @@ def findExtreme(str, targetgroup):
 		mode = "penalty"
 	else:
 		mode = "base"
+		
+	print str
 			
 	ex = targetgroup[0].stats[mode][str[str.find('t')+1:len(str)]]
 	mon = targetgroup[0]

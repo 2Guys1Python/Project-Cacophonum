@@ -33,15 +33,38 @@ Wild Monster masterlist format:
 	
 	[['suicide', 'enemy', 'selfcurHP<', '30', 100],
 	['attack', 'enemy', 'turn=', 3, 100],
-	['Healing Howl', 'ally', 'lowestHP', None, 60],
+	['Healing Howl', 'ally', 'lowestcurHP', None, 60],
 	['offspell', 'enemy', 'curHP>', 500, 60],
 	['attack', 'enemy', None, None, 100]]
+	
+	again, an AI entry consists of this 5 tuple:
+	[ACTION, TARGET, CONDITION, CONDITION COMPARATE (if applicable), PROBABILITY]
 '''
 
 masterlist_wm = {
 	'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000,
 					4, 0.85,
 					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
+					['attack', 'enemy', None, None, 100]]],
+	'Slime': [2500, 1500, 1500, 1500, 1500, 3000, 3000,
+					4, 0.85,
+					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
+					['attack', 'enemy', None, None, 100]]],
+	'Wolf': [5500, 3500, 4500, 3500, 3500, 3500, 3500,
+					4, 0.85,
+					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
+					['Healing Howl', 'ally','lowestcurHP' ,None, 95],
+					['attack', 'enemy', None, None, 100]]],
+	'Husk': [6500, 6000, 4000, 2500, 2500, 2500, 3000,
+					4, 0.85,
+					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
+					['Healing Howl', 'ally','lowestcurHP' ,None, 60],
+					['attack', 'enemy', None, None, 100]]],
+	'Orthrus': [7000, 7000, 3000, 7000, 7000, 7000, 7000,
+					4, 0.85,
+					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
+					['Healing Howl', 'ally','lowestcurHP' ,None, 60],
+					['suicide', 'enemy', 'selfcurHP<', '20', 100],
 					['attack', 'enemy', None, None, 100]]]
 }
 

@@ -5,7 +5,7 @@ from battle import *
 from model import *
 
 players = [Conductor("MC1")]
-wildmon = [copy.deepcopy(modelWildMonsterList['Swamp Thing']), copy.deepcopy(modelWildMonsterList['Swamp Thing'])]
+wildmon = [copy.deepcopy(modelWildMonsterList['Swamp Thing']), copy.deepcopy(modelWildMonsterList['Wolf'])]
 
 
 players[0].addMonster(copy.deepcopy(modelTamedMonsterList['Kobold'])) 

@@ -7,7 +7,11 @@ modelTamedMonsterList = {
 	'Kobold': TamedMonster("Kobold", 1)
 }
 modelWildMonsterList = {
-	'Swamp Thing': WildMonster("Swamp Thing", 1)
+	'Swamp Thing': WildMonster("Swamp Thing", 1),
+	'Slime': WildMonster("Slime", 1),
+	'Wolf': WildMonster("Wolf", 1),
+	'Husk': WildMonster("Husk", 1),
+	'Orthrus': WildMonster("Orthrus", 1)
 }
 
 modelItemList = {
