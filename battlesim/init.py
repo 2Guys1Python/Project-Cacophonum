@@ -34,7 +34,7 @@ Wild Monster masterlist format:
 	[['suicide', 'enemy', 'selfcurHP<', '30', 100],
 	['attack', 'enemy', 'turn=', 3, 100],
 	['Healing Howl', 'ally', 'lowestHP', None, 60],
-	['offspell', 'enemy', 'enemycurHP>', 500, 60],
+	['offspell', 'enemy', 'curHP>', 500, 60],
 	['attack', 'enemy', None, None, 100]]
 '''
 
