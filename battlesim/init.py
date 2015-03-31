@@ -63,7 +63,7 @@ masterlist_wm = {
 	'Orthrus': [7000, 7000, 3000, 7000, 7000, 7000, 7000,
 					4, 0.85,
 					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
-					['Healing Howl', 'ally','lowestcurHP' ,None, 60],
+					['Healing Howl', 'self','curHP<' ,2500, 60],
 					['suicide', 'enemy', 'selfcurHP<', '20', 100],
 					['attack', 'enemy', None, None, 100]]]
 }
