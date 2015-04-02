@@ -64,7 +64,8 @@ class Battle(tools._State):
         self.transition_rect = setup.SCREEN.get_rect()
         self.transition_alpha = 255
         self.temp_magic = self.game_data['player stats']['magic']['current']
-        self.maxhits = 5
+        self.maxhits = 1
+        self.player.attacked_enemy = None
 
     def make_player_action_dict(self):
         """
@@ -224,9 +225,10 @@ class Battle(tools._State):
 
                 elif self.state == c.SELECT_ENEMY:
                     self.notify(c.CLICK2)
-                    for x in range(5):
-                        self.player_actions.append(c.PLAYER_ATTACK)
-                        self.enemies_to_attack.append(self.get_enemy_to_attack())
+                    for x in range(0,5):
+						self.player_actions.append(c.PLAYER_ATTACK)
+						self.enemies_to_attack.append(self.get_enemy_to_attack())
+                    self.maxhits = 5
                     self.action_selected = True
 
                 elif self.state == c.SELECT_ITEM:
@@ -275,9 +277,10 @@ class Battle(tools._State):
         long_delay = timed_states[1:]
 
         if self.state in long_delay:
-            if (self.current_time - self.timer) > 1000:
+            if (self.current_time - self.timer) > 150:
                 if self.state == c.ENEMY_DAMAGED:
                     if self.player_actions:
+                        print "wat"
                         self.player_action_dict[self.player_actions[0]]()
                         self.player_actions.pop(0)
                     else:
@@ -397,7 +400,7 @@ class Battle(tools._State):
 
         if enemy:
             enemy.enter_knock_back_state()
-            if enemy.health <= 0:
+            if enemy.health <= 0 and len(self.player_actions) == 0:
                 self.enemy_list.pop(enemy.index)
                 enemy.state = c.FADE_DEATH
                 self.arrow.remove_pos(self.player.attacked_enemy)
@@ -750,16 +753,22 @@ class Battle(tools._State):
         """
         Execute the player actions.
         """
-        if len(self.player_actions) >= self.maxhits:
-            enter_state = self.player_action_dict[self.player_actions[0]]
-            enter_state()
-            self.player_actions.pop(0)
-            self.action_selected = False
+        if self.player_level < 3:
+            if self.player_actions:
+                enter_state = self.player_action_dict[self.player_actions[0]]
+                enter_state()
+                self.player_actions.pop(0)
         else:
-            if self.action_selected:
-                self.enter_select_action_state()
+            if len(self.player_actions) >= self.maxhits:
+                enter_state = self.player_action_dict[self.player_actions[0]]
+                enter_state()
+                self.player_actions.pop(0)
                 self.action_selected = False
-
+			
+            else:
+                if self.action_selected:
+                    self.enter_select_action_state()
+                    self.action_selected = False
 
 
 
