@@ -64,6 +64,7 @@ class Battle(tools._State):
         self.transition_rect = setup.SCREEN.get_rect()
         self.transition_alpha = 255
         self.temp_magic = self.game_data['player stats']['magic']['current']
+        self.maxhits = 5
 
     def make_player_action_dict(self):
         """
@@ -223,8 +224,9 @@ class Battle(tools._State):
 
                 elif self.state == c.SELECT_ENEMY:
                     self.notify(c.CLICK2)
-                    self.player_actions.append(c.PLAYER_ATTACK)
-                    self.enemies_to_attack.append(self.get_enemy_to_attack())
+                    for x in range(5):
+                        self.player_actions.append(c.PLAYER_ATTACK)
+                        self.enemies_to_attack.append(self.get_enemy_to_attack())
                     self.action_selected = True
 
                 elif self.state == c.SELECT_ITEM:
@@ -748,21 +750,15 @@ class Battle(tools._State):
         """
         Execute the player actions.
         """
-        if self.player_level < 3:
-            if self.player_actions:
-                enter_state = self.player_action_dict[self.player_actions[0]]
-                enter_state()
-                self.player_actions.pop(0)
+        if len(self.player_actions) >= self.maxhits:
+            enter_state = self.player_action_dict[self.player_actions[0]]
+            enter_state()
+            self.player_actions.pop(0)
+            self.action_selected = False
         else:
-            if len(self.player_actions) == 2:
-                enter_state = self.player_action_dict[self.player_actions[0]]
-                enter_state()
-                self.player_actions.pop(0)
+            if self.action_selected:
+                self.enter_select_action_state()
                 self.action_selected = False
-            else:
-                if self.action_selected:
-                    self.enter_select_action_state()
-                    self.action_selected = False
 
 
 

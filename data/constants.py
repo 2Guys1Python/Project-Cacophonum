@@ -37,7 +37,7 @@ GREEN = 0, 255, 0
 PINK = 208, 32, 144
 TRANSITION_COLOR = BLACK_BLUE
 
-#MAIN_FONT = 'DroidSans'
+MAIN_FONT = 'DroidSans'
 
 #BATTLE STATES
 
@@ -56,8 +56,8 @@ ENEMY_DEAD = 'enemy dead'
 MONSTER_FINISHED_ATTACK = 'tamed monster finished attack'
 MONSTER_DAMAGED = 'enemy attack damage'
 DRINK_POTION = 'drink potion'
-#CURE_SPELL = 'cure spell'
-#FIRE_SPELL = 'fire spell'
+CURE_SPELL = 'cure spell'
+FIRE_SPELL = 'fire spell'
 VICTORY_DANCE = 'victory dance'
 KNOCK_BACK = 'knock back'
 FLEE = 'flee'

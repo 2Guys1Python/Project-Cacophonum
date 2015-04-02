@@ -195,9 +195,10 @@ def create_game_data_dict():
 	carries between states"""
 
 	players = [Conductor(MC1)]
-	players[0].addMonster(copy.deepcopy(modelTamedMonsterList['Kobold']))
-	players[0].monsters[0].setMaster(players[0]) 
-	players[0].monsters[0].addSpell(copy.deepcopy(modelSpellList['Black Aria']))
+	monsters = [copy.deepcopy(modelTamedMonsterList['Kobold'])]
+	players[0].addMonster(monsters[0])
+	monsters[0].setMaster(players[0]) 
+	monsters[0].addSpell(copy.deepcopy(modelSpellList['Black Aria']))
 	players[0].addItem(copy.deepcopy(modelItemList['Potion']))
 	players[0].addItem(copy.deepcopy(modelInstrumentList['Flute']))
 	
@@ -212,10 +213,11 @@ def create_game_data_dict():
 				'last state': None,
 				'last direction': 'down',
 				'master inventory': player_items,
-				'conductors': players
+				'conductors': players,
+				'monsters': monsters,
 				'battle counter': 50,
-                'event flags' = event_flags,
-				'treasure flags' = treasure_flags
+                'event flags': event_flags,
+				'treasure flags': treasure_flags
 	}
 
 	return data_dict
