@@ -532,7 +532,7 @@ class MenuGui(object):
                 self.allow_input = False
 
             elif keys[pg.K_x]:
-                if self.arrow.state == 'conductorsubmenu' or self.arrow.state == 'monsterselect':
+                if self.arrow.state == 'conductorsubmenu' or self.arrow.state == 'monsterselect' or self.arrow.state == 'itemtypeselect':
                     self.left_box.state = 'invisible'
                     self.bottom_box.state = 'invisible'
                     self.arrow.state = 'selectmenu'

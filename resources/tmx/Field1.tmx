@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="51" tilewidth="16" tileheight="16" nextobjectid="301">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="302">
  <tileset firstgid="1" name="tileset1" tilewidth="16" tileheight="16">
   <image source="../graphics/tileset1.png" width="160" height="80"/>
  </tileset>
@@ -18,189 +18,196 @@
  <tileset firstgid="313" name="castledoor" tilewidth="16" tileheight="16">
   <image source="../graphics/castledoor.png" width="32" height="48"/>
  </tileset>
- <layer name="Tile Layer 1" width="25" height="51">
+ <layer name="Tile Layer 1" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJztlT0KgDAMRrs79zJdPEBH8VKim3heFSp0SG0+7R8lwhuK+fKwQaKVUloQOme5WMXBYr84GpgZxQjwJXNjASYHkkERRz+OzYM6xxycfAnH7EGdYw5OvoTDElmq19vMkXxKevw/uP0HRw6P37+UJ/d9tTpzA/A4kIzp6K7EUccR2p9ITQuO0P5DalpwWMb7WE1KR409jnzHX8SR31HiOQF9PDwD
+   eJzt2E0KgzAUBGD3XfcybjyAy9JLlXZXet4qKPiTvDitxIlvBmYh+CAfwQipKjvXDGWInHLKKefRkXPdR9cnOCNn3si57rvrB5wp0VnyOdQAHdeNzDT5KGZaoLehyEybj2JGTjnllPPo9Ot4TRp6TjlT8wzx5LxPGnpOOVPzDPHkHA1LE3IOWfMMWRr2LKPTw39FzrnxMhS1MgQ1/mJliPbT5/dZurMGOjqRmTofxYyX/ZRTTjl9OGP3EAzZsk45543dQzBkyzrlDL9TwjlkOc7m3OteiNn5z38lVobIKaecvM6z5AssrTwD
   </data>
  </layer>
- <layer name="Tile Layer 2" width="25" height="51">
+ <layer name="Tile Layer 2" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJztlUEOgCAMBPsJfoDX+iR9pkefph5MGgRsxCWIPWwUQ2bZ2gZHRM5kMmW1VvJZGsj6d/kKfAZ7sOWwHJajiRwoH8lH1Yupfg6Nz7RrLuDf+Zx8jU+Oz2LP0xwavqOyHmDx9MEa1VcIbq6GSG6vM/imn6aHETm+xM/VCf2/LYee38tcxOZ8eMBO8SmS53gflVx59ru7lemaVSo8b6oWmrtV3o9SLvI93J9iorUBpAl7nw==
+   eJztmEEOwjAMBP2J/CBcy5PgmRx5GnCwZFlRCDROt8muZCFQZXkY6raI1JMGFELISU5ykvPokHNOzqeswfmph6zBuYpPcp6fM0ssYx6HUs0msZzbOJRq6JM+6ZM+jw590id9YvuMYs2C5TPqt6vfIUJW89nCenvXveG45PoiRGf5xqqMLazZ9UWIn0nn/Nen74fo0+6PPbsnCZ7PvVwtzAiJ4POFkNr5uLe0L0J4n9DHJ8oe8tfOnsyIPkvXl1l9RjAi+ozYQYg+I3YQfY4NffZhnNnnWZ7LVvBpvV7kdz7k52x99f8pXKWNzTos3V8hxM5qGXVOW95byZ0/P9M4lGosX3LvN1ep8Lk/3vdA4oyuEXkB0817nw==
   </data>
  </layer>
- <layer name="Tile Layer 3" width="25" height="51">
+ <layer name="Tile Layer 3" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJzt0kEKgDAMBdFcwvtf1W0IaW1+U1GYB93UNiOimdmVrMjvZ8/9mTgn248zRmdW1u79LzQ6voPS6O6OGt3zlff2d2Z3K40ns9ZKo0JpVCn/7k6j0lcaJ52e/1YDAAAAAPAvN9P2Ebk=
+   eJzt0cENhDAQQ9E0kf5b5YqQiCYT4wzwLe0FCPZbemutD35tcP2c6/PRc3fPRc9GE+0YdWbPvcGp+H9w4nQ4M2ciOys61d+yinPV9hXnzNbsht3O2a3ZDTudma3ZDQ5ntPOLzux7VjesRPXuvzvP97MbqjtVG6o61RsqOZ/cgFPX4QhOnOoOR3DiVHc4ghOnusMRnDjVHY7gxKnucAQnTnWHIzhxqjscwYlT3eEITpzqDkdw4lR3OIJTt+UAv9ZfFA==
   </data>
  </layer>
- <layer name="Tile Layer 4" width="25" height="51">
+ <layer name="Tile Layer 4" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJzt0jEOACAIBEE+4f+/amljAPG0IDuJndmz0GwZhXOi0o82VU3Fe151s+3onqd6T/Evdhte+7YftRX97F6HjVd+bgAAAAAA0MUEtc0MTw==
+   eJzt08ENACEIAEGbuP5bvQpUYnwAziR+fLESx4j7Dk41J4277kxvcasv+853s3XsnN2v5s/etxKdNdpcXYedRlT4l7e90vpyZ2evdQIAAAAAAAAAQGY/DAcMTw==
   </data>
  </layer>
- <layer name="Tile Layer 5" width="25" height="51">
+ <layer name="Tile Layer 5" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJzt1TEKACAMBME8xjr/f56VkFo4G2cgrbCN11XV4VsPLt2gQ4eOPzoAuHP+6uT7c3MS5p4lN8HmAABJGzqpNnc=
+   eJzt17ENwDAIRUEPk9r7jxeloHVnQOROYoCvV7HW2U64Dp6E60BPPfXUs5qeeuqpZ7W/9AQAAGbr9Gfd8u2LP2vy1tgXeyfzNwMAAABArRca2TZ3
   </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="2" name="blocker" gid="120" x="112" y="800"/>
-  <object id="3" name="blocker" gid="120" x="112" y="784"/>
-  <object id="4" name="blocker" gid="120" x="96" y="768"/>
-  <object id="5" name="blocker" gid="120" x="80" y="784"/>
-  <object id="6" name="blocker" gid="120" x="64" y="768"/>
-  <object id="7" name="blocker" gid="120" x="64" y="752"/>
-  <object id="8" name="blocker" gid="120" x="48" y="768"/>
-  <object id="9" name="blocker" gid="120" x="32" y="752"/>
-  <object id="10" name="blocker" gid="120" x="32" y="736"/>
-  <object id="11" name="blocker" gid="120" x="32" y="720"/>
-  <object id="12" name="blocker" gid="120" x="32" y="704"/>
-  <object id="13" name="blocker" gid="120" x="48" y="688"/>
-  <object id="15" name="blocker" gid="120" x="48" y="673"/>
-  <object id="16" name="blocker" gid="120" x="48" y="639"/>
-  <object id="18" name="blocker" gid="120" x="47" y="658"/>
-  <object id="19" name="blocker" gid="120" x="48" y="624"/>
-  <object id="20" name="blocker" gid="120" x="64" y="608"/>
-  <object id="21" name="blocker" gid="120" x="64" y="592"/>
-  <object id="22" name="blocker" gid="120" x="48" y="608"/>
-  <object id="23" name="blocker" gid="120" x="32" y="592"/>
-  <object id="24" name="blocker" gid="120" x="16" y="576"/>
-  <object id="25" name="blocker" gid="120" x="16" y="544"/>
-  <object id="26" name="blocker" gid="120" x="16" y="560"/>
-  <object id="27" name="blocker" gid="120" x="16" y="512"/>
-  <object id="37" name="blocker" gid="120" x="32" y="496"/>
-  <object id="38" name="blocker" gid="120" x="48" y="480"/>
-  <object id="39" name="blocker" gid="120" x="80" y="496"/>
-  <object id="40" name="blocker" gid="120" x="80" y="480"/>
-  <object id="41" name="blocker" gid="120" x="48" y="464"/>
-  <object id="42" name="blocker" gid="120" x="32" y="448"/>
-  <object id="43" name="blocker" gid="120" x="16" y="432"/>
-  <object id="44" name="blocker" gid="120" x="16" y="416"/>
-  <object id="45" name="blocker" gid="120" x="16" y="400"/>
-  <object id="46" name="blocker" gid="120" x="0" y="384"/>
-  <object id="47" name="blocker" gid="120" x="16" y="368"/>
-  <object id="51" name="blocker" gid="120" x="18" y="352"/>
-  <object id="52" name="blocker" gid="120" x="15" y="339"/>
-  <object id="53" name="blocker" gid="120" x="16" y="320"/>
-  <object id="78" name="blocker" gid="120" x="368" y="384"/>
-  <object id="79" name="blocker" gid="120" x="368" y="320"/>
-  <object id="80" name="blocker" gid="120" x="368" y="336"/>
-  <object id="81" name="blocker" gid="120" x="368" y="336"/>
-  <object id="82" name="blocker" gid="120" x="368" y="352"/>
-  <object id="83" name="blocker" gid="120" x="368" y="352"/>
-  <object id="84" name="blocker" gid="120" x="368" y="368"/>
-  <object id="85" name="blocker" gid="120" x="400" y="384"/>
-  <object id="86" name="blocker" gid="120" x="400" y="384"/>
-  <object id="87" name="blocker" gid="120" x="400" y="384"/>
-  <object id="88" name="blocker" gid="120" x="384" y="384"/>
-  <object id="89" name="blocker" gid="120" x="368" y="400"/>
-  <object id="90" name="blocker" gid="120" x="368" y="416"/>
-  <object id="91" name="blocker" gid="120" x="368" y="432"/>
-  <object id="92" name="blocker" gid="120" x="368" y="432"/>
-  <object id="93" name="blocker" gid="120" x="352" y="448"/>
-  <object id="94" name="blocker" gid="120" x="336" y="464"/>
-  <object id="95" name="blocker" gid="120" x="320" y="480"/>
-  <object id="96" name="blocker" gid="120" x="320" y="496"/>
-  <object id="97" name="blocker" gid="120" x="336" y="480"/>
-  <object id="98" name="blocker" gid="120" x="352" y="496"/>
-  <object id="99" name="blocker" gid="120" x="368" y="512"/>
-  <object id="111" name="blocker" gid="120" x="368" y="544"/>
-  <object id="112" name="blocker" gid="120" x="368" y="560"/>
-  <object id="113" name="blocker" gid="120" x="368" y="560"/>
-  <object id="114" name="blocker" gid="120" x="368" y="576"/>
-  <object id="115" name="blocker" gid="120" x="368" y="592"/>
-  <object id="116" name="blocker" gid="120" x="368" y="608"/>
-  <object id="117" name="blocker" gid="120" x="368" y="608"/>
-  <object id="118" name="blocker" gid="120" x="352" y="624"/>
-  <object id="124" name="blocker" gid="120" x="354" y="658"/>
-  <object id="128" name="blocker" gid="120" x="352" y="688"/>
-  <object id="129" name="blocker" gid="120" x="336" y="704"/>
-  <object id="130" name="blocker" gid="120" x="336" y="720"/>
-  <object id="131" name="blocker" gid="120" x="336" y="736"/>
-  <object id="132" name="blocker" gid="120" x="320" y="752"/>
-  <object id="133" name="blocker" gid="120" x="304" y="752"/>
-  <object id="134" name="blocker" gid="120" x="288" y="768"/>
-  <object id="135" name="blocker" gid="120" x="272" y="784"/>
-  <object id="136" name="blocker" gid="120" x="256" y="768"/>
-  <object id="137" name="blocker" gid="120" x="256" y="784"/>
-  <object id="138" name="blocker" gid="120" x="272" y="800"/>
-  <object id="139" name="blocker" gid="120" x="0" y="304"/>
-  <object id="140" name="blocker" gid="120" x="0" y="272"/>
-  <object id="141" name="blocker" gid="120" x="0" y="288"/>
-  <object id="142" name="blocker" gid="120" x="0" y="256"/>
-  <object id="143" name="blocker" gid="120" x="0" y="224"/>
-  <object id="144" name="blocker" gid="120" x="0" y="224"/>
-  <object id="145" name="blocker" gid="120" x="0" y="240"/>
-  <object id="146" name="blocker" gid="120" x="16" y="208"/>
-  <object id="147" name="blocker" gid="120" x="32" y="208"/>
-  <object id="148" name="blocker" gid="120" x="48" y="208"/>
-  <object id="149" name="blocker" gid="120" x="64" y="208"/>
-  <object id="150" name="blocker" gid="120" x="80" y="208"/>
-  <object id="151" name="blocker" gid="120" x="96" y="208"/>
-  <object id="152" name="blocker" gid="120" x="112" y="208"/>
-  <object id="153" name="blocker" gid="120" x="128" y="208"/>
-  <object id="154" name="blocker" gid="120" x="144" y="208"/>
-  <object id="155" name="blocker" gid="120" x="160" y="208"/>
-  <object id="156" name="blocker" gid="120" x="224" y="208"/>
-  <object id="157" name="blocker" gid="120" x="208" y="208"/>
-  <object id="158" name="blocker" gid="120" x="240" y="208"/>
-  <object id="159" name="blocker" gid="120" x="256" y="208"/>
-  <object id="160" name="blocker" gid="120" x="272" y="208"/>
-  <object id="161" name="blocker" gid="120" x="288" y="208"/>
-  <object id="162" name="blocker" gid="120" x="304" y="208"/>
-  <object id="163" name="blocker" gid="120" x="320" y="208"/>
-  <object id="164" name="blocker" gid="120" x="336" y="208"/>
-  <object id="165" name="blocker" gid="120" x="368" y="208"/>
-  <object id="166" name="blocker" gid="120" x="352" y="208"/>
-  <object id="167" name="blocker" gid="120" x="400" y="304"/>
-  <object id="168" name="blocker" gid="120" x="384" y="304"/>
-  <object id="169" name="blocker" gid="120" x="384" y="272"/>
-  <object id="170" name="blocker" gid="120" x="384" y="288"/>
-  <object id="171" name="blocker" gid="120" x="384" y="256"/>
-  <object id="172" name="blocker" gid="120" x="384" y="240"/>
-  <object id="173" name="blocker" gid="120" x="384" y="224"/>
-  <object id="174" name="portal" type="SouthField" gid="139" x="192" y="816"/>
-  <object id="175" name="portal" type="SouthField" gid="139" x="176" y="816"/>
-  <object id="179" name="portal" type="East Forest" gid="139" x="0" y="525"/>
-  <object id="182" name="start point" gid="123" x="336" y="528">
+  <object name="Slime"/>
+  <object id="2" name="blocker" gid="120" x="240" y="800"/>
+  <object id="3" name="blocker" gid="120" x="240" y="784"/>
+  <object id="4" name="blocker" gid="120" x="224" y="768"/>
+  <object id="5" name="blocker" gid="120" x="208" y="784"/>
+  <object id="6" name="blocker" gid="120" x="192" y="768"/>
+  <object id="7" name="blocker" gid="120" x="192" y="752"/>
+  <object id="8" name="blocker" gid="120" x="176" y="768"/>
+  <object id="9" name="blocker" gid="120" x="160" y="752"/>
+  <object id="10" name="blocker" gid="120" x="160" y="736"/>
+  <object id="11" name="blocker" gid="120" x="160" y="720"/>
+  <object id="12" name="blocker" gid="120" x="160" y="704"/>
+  <object id="13" name="blocker" gid="120" x="176" y="688"/>
+  <object id="15" name="blocker" gid="120" x="176" y="673"/>
+  <object id="16" name="blocker" gid="120" x="176" y="639"/>
+  <object id="18" name="blocker" gid="120" x="175" y="658"/>
+  <object id="19" name="blocker" gid="120" x="176" y="624"/>
+  <object id="20" name="blocker" gid="120" x="192" y="608"/>
+  <object id="21" name="blocker" gid="120" x="192" y="592"/>
+  <object id="22" name="blocker" gid="120" x="176" y="608"/>
+  <object id="23" name="blocker" gid="120" x="160" y="592"/>
+  <object id="24" name="blocker" gid="120" x="144" y="576"/>
+  <object id="25" name="blocker" gid="120" x="144" y="544"/>
+  <object id="26" name="blocker" gid="120" x="144" y="560"/>
+  <object id="27" name="blocker" gid="120" x="144" y="512"/>
+  <object id="37" name="blocker" gid="120" x="160" y="496"/>
+  <object id="38" name="blocker" gid="120" x="176" y="480"/>
+  <object id="39" name="blocker" gid="120" x="208" y="496"/>
+  <object id="40" name="blocker" gid="120" x="208" y="480"/>
+  <object id="41" name="blocker" gid="120" x="176" y="464"/>
+  <object id="42" name="blocker" gid="120" x="160" y="448"/>
+  <object id="43" name="blocker" gid="120" x="144" y="432"/>
+  <object id="44" name="blocker" gid="120" x="144" y="416"/>
+  <object id="45" name="blocker" gid="120" x="144" y="400"/>
+  <object id="46" name="blocker" gid="120" x="128" y="384"/>
+  <object id="47" name="blocker" gid="120" x="144" y="368"/>
+  <object id="51" name="blocker" gid="120" x="146" y="352"/>
+  <object id="52" name="blocker" gid="120" x="143" y="339"/>
+  <object id="53" name="blocker" gid="120" x="144" y="320"/>
+  <object id="78" name="blocker" gid="120" x="496" y="384"/>
+  <object id="79" name="blocker" gid="120" x="496" y="320"/>
+  <object id="80" name="blocker" gid="120" x="496" y="336"/>
+  <object id="81" name="blocker" gid="120" x="496" y="336"/>
+  <object id="82" name="blocker" gid="120" x="496" y="352"/>
+  <object id="83" name="blocker" gid="120" x="496" y="352"/>
+  <object id="84" name="blocker" gid="120" x="496" y="368"/>
+  <object id="85" name="blocker" gid="120" x="528" y="384"/>
+  <object id="86" name="blocker" gid="120" x="528" y="384"/>
+  <object id="87" name="blocker" gid="120" x="528" y="384"/>
+  <object id="88" name="blocker" gid="120" x="512" y="384"/>
+  <object id="89" name="blocker" gid="120" x="496" y="400"/>
+  <object id="90" name="blocker" gid="120" x="496" y="416"/>
+  <object id="91" name="blocker" gid="120" x="496" y="432"/>
+  <object id="92" name="blocker" gid="120" x="496" y="432"/>
+  <object id="93" name="blocker" gid="120" x="480" y="448"/>
+  <object id="94" name="blocker" gid="120" x="464" y="464"/>
+  <object id="95" name="blocker" gid="120" x="448" y="480"/>
+  <object id="96" name="blocker" gid="120" x="448" y="496"/>
+  <object id="97" name="blocker" gid="120" x="464" y="480"/>
+  <object id="98" name="blocker" gid="120" x="480" y="496"/>
+  <object id="99" name="blocker" gid="120" x="496" y="512"/>
+  <object id="111" name="blocker" gid="120" x="496" y="544"/>
+  <object id="112" name="blocker" gid="120" x="496" y="560"/>
+  <object id="113" name="blocker" gid="120" x="496" y="560"/>
+  <object id="114" name="blocker" gid="120" x="496" y="576"/>
+  <object id="115" name="blocker" gid="120" x="496" y="592"/>
+  <object id="116" name="blocker" gid="120" x="496" y="608"/>
+  <object id="117" name="blocker" gid="120" x="496" y="608"/>
+  <object id="118" name="blocker" gid="120" x="480" y="624"/>
+  <object id="124" name="blocker" gid="120" x="482" y="658"/>
+  <object id="128" name="blocker" gid="120" x="480" y="688"/>
+  <object id="129" name="blocker" gid="120" x="464" y="704"/>
+  <object id="130" name="blocker" gid="120" x="464" y="720"/>
+  <object id="131" name="blocker" gid="120" x="464" y="736"/>
+  <object id="132" name="blocker" gid="120" x="448" y="752"/>
+  <object id="133" name="blocker" gid="120" x="432" y="752"/>
+  <object id="134" name="blocker" gid="120" x="416" y="768"/>
+  <object id="135" name="blocker" gid="120" x="400" y="784"/>
+  <object id="136" name="blocker" gid="120" x="384" y="768"/>
+  <object id="137" name="blocker" gid="120" x="384" y="784"/>
+  <object id="138" name="blocker" gid="120" x="400" y="800"/>
+  <object id="139" name="blocker" gid="120" x="128" y="304"/>
+  <object id="140" name="blocker" gid="120" x="128" y="272"/>
+  <object id="141" name="blocker" gid="120" x="128" y="288"/>
+  <object id="142" name="blocker" gid="120" x="128" y="256"/>
+  <object id="143" name="blocker" gid="120" x="128" y="224"/>
+  <object id="144" name="blocker" gid="120" x="128" y="224"/>
+  <object id="145" name="blocker" gid="120" x="128" y="240"/>
+  <object id="146" name="blocker" gid="120" x="144" y="208"/>
+  <object id="147" name="blocker" gid="120" x="160" y="208"/>
+  <object id="148" name="blocker" gid="120" x="176" y="208"/>
+  <object id="149" name="blocker" gid="120" x="192" y="208"/>
+  <object id="150" name="blocker" gid="120" x="208" y="208"/>
+  <object id="151" name="blocker" gid="120" x="224" y="208"/>
+  <object id="152" name="blocker" gid="120" x="240" y="208"/>
+  <object id="153" name="blocker" gid="120" x="256" y="208"/>
+  <object id="154" name="blocker" gid="120" x="272" y="208"/>
+  <object id="155" name="blocker" gid="120" x="288" y="208"/>
+  <object id="156" name="blocker" gid="120" x="352" y="208"/>
+  <object id="157" name="blocker" gid="120" x="336" y="208"/>
+  <object id="158" name="blocker" gid="120" x="368" y="208"/>
+  <object id="159" name="blocker" gid="120" x="384" y="208"/>
+  <object id="160" name="blocker" gid="120" x="400" y="208"/>
+  <object id="161" name="blocker" gid="120" x="416" y="208"/>
+  <object id="162" name="blocker" gid="120" x="432" y="208"/>
+  <object id="163" name="blocker" gid="120" x="448" y="208"/>
+  <object id="164" name="blocker" gid="120" x="464" y="208"/>
+  <object id="165" name="blocker" gid="120" x="496" y="208"/>
+  <object id="166" name="blocker" gid="120" x="480" y="208"/>
+  <object id="167" name="blocker" gid="120" x="528" y="304"/>
+  <object id="168" name="blocker" gid="120" x="512" y="304"/>
+  <object id="169" name="blocker" gid="120" x="512" y="272"/>
+  <object id="170" name="blocker" gid="120" x="512" y="288"/>
+  <object id="171" name="blocker" gid="120" x="512" y="256"/>
+  <object id="172" name="blocker" gid="120" x="512" y="240"/>
+  <object id="173" name="blocker" gid="120" x="512" y="224"/>
+  <object id="174" name="portal" type="SouthField" gid="139" x="320" y="816"/>
+  <object id="175" name="portal" type="SouthField" gid="139" x="304" y="816"/>
+  <object id="179" name="portal" type="East Forest" gid="139" x="128" y="525"/>
+  <object id="182" name="start point" gid="123" x="464" y="528">
    <properties>
     <property name="direction" value="down"/>
     <property name="state" value="load game"/>
    </properties>
   </object>
-  <object id="301" name="start point" gid="123" x="336" y="528">
+  <object id="301" name="start point" gid="123" x="464" y="528">
    <properties>
     <property name="direction" value="down"/>
     <property name="state" value="instructions"/>
    </properties>
   </object>
-  <object id="203" name="blocker" gid="120" x="320" y="192"/>
-  <object id="264" name="blocker" gid="120" x="48" y="192"/>
-  <object id="273" name="blocker" gid="120" x="240" y="784"/>
-  <object id="274" name="blocker" gid="120" x="224" y="784"/>
-  <object id="275" name="blocker" gid="120" x="208" y="784"/>
-  <object id="276" name="blocker" gid="120" x="208" y="800"/>
-  <object id="277" name="blocker" gid="120" x="160" y="800"/>
-  <object id="278" name="blocker" gid="120" x="160" y="784"/>
-  <object id="279" name="blocker" gid="120" x="144" y="784"/>
-  <object id="280" name="blocker" gid="120" x="128" y="784"/>
-  <object id="281" name="blocker" gid="120" x="112" y="768"/>
-  <object id="282" name="blocker" gid="120" x="112" y="752"/>
-  <object id="285" name="blocker" gid="120" x="352" y="639"/>
-  <object id="286" name="portal" type="fae's landing" gid="139" x="384" y="527"/>
-  <object id="287" name="blocker" gid="120" x="192" y="208"/>
-  <object id="288" name="blocker" gid="120" x="176" y="208"/>
-  <object id="289" name="blocker" gid="120" x="160" y="446"/>
-  <object id="290" name="blocker" gid="120" x="160" y="462"/>
-  <object id="291" name="blocker" gid="120" x="207" y="446"/>
-  <object id="292" name="blocker" gid="120" x="207" y="462"/>
-  <object id="293" name="blocker" gid="120" x="193" y="431"/>
-  <object id="294" name="blocker" gid="120" x="192" y="445"/>
-  <object id="295" name="blocker" gid="120" x="177" y="431"/>
-  <object id="296" name="blocker" gid="120" x="177" y="447"/>
-  <object id="297" name="blocker" gid="120" x="176" y="463"/>
-  <object id="298" name="blocker" gid="120" x="176" y="479"/>
-  <object id="299" name="blocker" gid="120" x="192" y="464"/>
-  <object id="300" name="blocker" gid="120" x="192" y="480"/>
+  <object id="203" name="blocker" gid="120" x="448" y="192"/>
+  <object id="264" name="blocker" gid="120" x="176" y="192"/>
+  <object id="273" name="blocker" gid="120" x="368" y="784"/>
+  <object id="274" name="blocker" gid="120" x="352" y="784"/>
+  <object id="275" name="blocker" gid="120" x="336" y="784"/>
+  <object id="276" name="blocker" gid="120" x="336" y="800"/>
+  <object id="277" name="blocker" gid="120" x="288" y="800"/>
+  <object id="278" name="blocker" gid="120" x="288" y="784"/>
+  <object id="279" name="blocker" gid="120" x="272" y="784"/>
+  <object id="280" name="blocker" gid="120" x="256" y="784"/>
+  <object id="281" name="blocker" gid="120" x="240" y="768"/>
+  <object id="282" name="blocker" gid="120" x="240" y="752"/>
+  <object id="285" name="blocker" gid="120" x="480" y="639"/>
+  <object id="286" name="portal" type="fae's landing" gid="139" x="512" y="527"/>
+  <object id="287" name="blocker" gid="120" x="320" y="208"/>
+  <object id="288" name="blocker" gid="120" x="304" y="208"/>
+  <object id="289" name="blocker" gid="120" x="288" y="446"/>
+  <object id="290" name="blocker" gid="120" x="288" y="462"/>
+  <object id="291" name="blocker" gid="120" x="335" y="446"/>
+  <object id="292" name="blocker" gid="120" x="335" y="462"/>
+  <object id="293" name="blocker" gid="120" x="321" y="431"/>
+  <object id="294" name="blocker" gid="120" x="320" y="445"/>
+  <object id="295" name="blocker" gid="120" x="305" y="431"/>
+  <object id="296" name="blocker" gid="120" x="305" y="447"/>
+  <object id="297" name="blocker" gid="120" x="304" y="463"/>
+  <object id="298" name="blocker" gid="120" x="304" y="479"/>
+  <object id="299" name="blocker" gid="120" x="320" y="464"/>
+  <object id="300" name="blocker" gid="120" x="320" y="480"/>
+  <object id="301" name="start point" gid="123" x="304" y="784">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="state" value="SouthField"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

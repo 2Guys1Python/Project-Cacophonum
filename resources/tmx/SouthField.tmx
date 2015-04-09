@@ -154,12 +154,6 @@
     <property name="state" value="town"/>
    </properties>
   </object>
-  <object id="128" name="start point" gid="123" x="432" y="496">
-   <properties>
-    <property name="direction" value="down"/>
-    <property name="state" value="instructions"/>
-   </properties>
-  </object>
   <object id="129" name="portal" type="brotherhouse" gid="139" x="400" y="144"/>
   <object id="130" name="start point" gid="123" x="400" y="160">
    <properties>
@@ -200,10 +194,10 @@
   <object id="160" name="portal" type="dungeon" gid="139" x="64" y="113"/>
   <object id="161" name="blocker" gid="120" x="48" y="113"/>
   <object id="162" name="portal" type="dungeon" gid="139" x="80" y="113"/>
-  <object id="163" name="start point" gid="123" x="97" y="35">
+  <object id="163" name="start point" gid="123" x="96" y="32">
    <properties>
     <property name="direction" value="down"/>
-    <property name="state" value="load game"/>
+    <property name="state" value="Field1"/>
    </properties>
   </object>
  </objectgroup>
