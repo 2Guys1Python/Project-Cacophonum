@@ -168,6 +168,12 @@
     <property name="state" value="load game"/>
    </properties>
   </object>
+  <object id="301" name="start point" gid="123" x="336" y="528">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="state" value="instructions"/>
+   </properties>
+  </object>
   <object id="203" name="blocker" gid="120" x="320" y="192"/>
   <object id="264" name="blocker" gid="120" x="48" y="192"/>
   <object id="273" name="blocker" gid="120" x="240" y="784"/>

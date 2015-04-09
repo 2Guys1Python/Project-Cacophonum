@@ -129,6 +129,7 @@ class LevelState(tools._State):
             for object in self.renderer.tmx_data.getObjects():
                 properties = object.__dict__
                 if properties['name'] == 'start point':
+                    print "%s %s" %(last_state, properties['state'])
                     if last_state == properties['state']:
                         posx = properties['x'] * 2
                         posy = (properties['y'] * 2) - 32
