@@ -45,7 +45,7 @@ class Menu(tools._State):
         Create the viewport to view the level through.
         """
         map_rect = map_image.get_rect()
-        return setup.SCREEN.get_rect(bottomright=map_rect.bottomright)
+        return setup.SCREEN.get_rect()
 
     def make_state_dict(self):
         """
@@ -163,7 +163,7 @@ class Instructions(tools._State):
         Create the viewport to view the level through.
         """
         map_rect = map_image.get_rect()
-        return setup.SCREEN.get_rect(bottomright=map_rect.bottomright)
+        return setup.SCREEN.get_rect()
 
     def make_state_dict(self):
         """
@@ -226,7 +226,7 @@ class Instructions(tools._State):
 class LoadGame(Instructions):
     def __init__(self):
         super(LoadGame, self).__init__()
-        self.arrow = death.Arrow(200, 260)
+        self.arrow = death.Arrow(234, 294)
         self.arrow.pos_list[1] += 34
         self.allow_input = False
 
