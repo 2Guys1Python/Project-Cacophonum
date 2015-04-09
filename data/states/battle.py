@@ -321,11 +321,11 @@ class Battle(tools._State):
                 self.end_battle()
 
         elif self.state == c.BATTLE_WON:
-            if (self.current_time - self.timer) > 1800:
+            if (self.current_time - self.timer) > 1960:
                 self.enter_show_gold_state()
 
         elif self.state == c.SHOW_GOLD:
-            if (self.current_time - self.timer) > 1800:
+            if (self.current_time - self.timer) > 1960:
                 self.enter_show_experience_state()
 
         elif self.state == c.LEVEL_UP:

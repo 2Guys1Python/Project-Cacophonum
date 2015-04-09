@@ -3,20 +3,23 @@ SCREEN_SIZE = (960, 640)
 
 ##GAME STATES
 
-FAES_LANDING = 'faes landing'
+TOWN = 'town'
 MAIN_MENU = 'main menu'
-FL_FIELD1 = 'faes landing field 1'
-FL_FIELD2 = 'faes landing field 2'
-FL_FIELD3 = 'faes landing field 3'
-FL_ACADEMY = 'faes landing academy'
-FL_HOUSE = 'faes landing house'
-FL_SUNDRIES = 'faes landing sundries' #items
-FL_AULOFICER = 'faes landing auloficer' #wind
-FL_LUTHIER = 'faes landing luthier' #strings
-FL_TAMBOURIER = 'faes landing tambourier' #percussion
-FL_ARTISAN = 'faes landing artisan' #accessories
-FL_SCRIPTORIUM = 'faes landing scriptorium' #songs
+CASTLE = 'castle'
+INN = 'Inn'
+POTION_SHOP = 'potion shop'
+ARMOR_SHOP = 'armor shop'
+WEAPON_SHOP = 'weapon shop'
+MAGIC_SHOP = 'magic shop'
+HOUSE = 'house'
+OVERWORLD = 'overworld'
+BROTHER_HOUSE = 'brotherhouse'
 BATTLE = 'battle'
+DUNGEON = 'dungeon'
+DUNGEON2 = 'dungeon2'
+DUNGEON3 = 'dungeon3'
+DUNGEON4 = 'dungeon4'
+DUNGEON5 = 'dungeon5'
 INSTRUCTIONS = 'instructions'
 DEATH_SCENE = 'death scene'
 LOADGAME = 'load game'
@@ -37,7 +40,7 @@ GREEN = 0, 255, 0
 PINK = 208, 32, 144
 TRANSITION_COLOR = BLACK_BLUE
 
-MAIN_FONT = 'DroidSans'
+MAIN_FONT = 'nrkis'
 
 #BATTLE STATES
 
@@ -53,17 +56,19 @@ ATTACK_ANIMATION = 'attack animation'
 BATTLE_WON = 'battle won'
 ENEMY_DAMAGED = 'enemy damaged'
 ENEMY_DEAD = 'enemy dead'
-MONSTER_FINISHED_ATTACK = 'tamed monster finished attack'
-MONSTER_DAMAGED = 'enemy attack damage'
-DRINK_POTION = 'drink potion'
+PLAYER_FINISHED_ATTACK = 'player finished attack'
+PLAYER_DAMAGED = 'enemy attack damage'
+DRINK_HEALING_POTION = 'drink healing potion'
+DRINK_ETHER_POTION = 'drink ether potion'
 CURE_SPELL = 'cure spell'
 FIRE_SPELL = 'fire spell'
 VICTORY_DANCE = 'victory dance'
 KNOCK_BACK = 'knock back'
 FLEE = 'flee'
 FADE_DEATH = 'fade death'
-SHOW_TP = 'show tp'
-ADD_TP = 'add tp'
+SHOW_EXPERIENCE = 'show experience'
+LEVEL_UP = 'level up'
+TWO_ACTIONS = 'two actions'
 SHOW_GOLD = 'show gold'
 DEATH_FADE = 'death fade'
 

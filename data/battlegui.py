@@ -27,7 +27,7 @@ class InfoBox(object):
         self.gold_earned = gold
         self.state_dict = self.make_state_dict()
         self.image = self.make_image()
-        self.rect = self.image.get_rect(bottom=608)
+        self.rect = self.image.get_rect(bottom=640)
         self.item_text_list = self.make_item_text()[1:]
         self.magic_text_list = self.make_magic_text()[1:]
 
@@ -124,7 +124,7 @@ class InfoBox(object):
         Make image out of box and message.
         """
         image = setup.GFX['shopbox']
-        rect = image.get_rect(bottom=608)
+        rect = image.get_rect(bottom=640)
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
         surface.blit(image, (0, 0))
@@ -197,15 +197,15 @@ class SelectBox(object):
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
         self.slots = self.make_slots()
         self.image = self.make_image()
-        self.rect = self.image.get_rect(bottom=608,
-                                        right=800)
+        self.rect = self.image.get_rect(bottom=640,
+                                        right=960)
 
     def make_image(self):
         """
         Make the box image for
         """
         image = setup.GFX['goldbox']
-        rect = image.get_rect(bottom=608)
+        rect = image.get_rect(bottom=640)
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
         surface.blit(image, (0, 0))

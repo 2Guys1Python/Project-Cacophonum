@@ -11,11 +11,11 @@ from .. import constants as c
 class Player_Menu(object):
     def __init__(self, game_data, level):
         inventory = game_data['player inventory']
-        stats = game_data['player stats']
+        conductors = game_data['conductors']
         self.get_image = tools.get_image
         self.allow_input = False
         self.background = self.make_background()
-        self.gui = menugui.MenuGui(level, inventory, stats)
+        self.gui = menugui.MenuGui(level, inventory, conductors)
 
     def make_background(self):
         """
@@ -27,12 +27,9 @@ class Player_Menu(object):
         background.image = surface
         background.rect = background.image.get_rect()
 
-        player = self.make_sprite('player', 96, 32)
-
-        background.image.blit(player.image, player.rect)
-
         return background
 
+    '''
     def make_sprite(self, key, coordx, coordy, x=40, y=25):
         """
         Get the image for the player.
@@ -51,6 +48,7 @@ class Player_Menu(object):
         sprite.rect = rect
 
         return sprite
+    '''
 
     def update(self, surface, keys):
         self.gui.update(keys)

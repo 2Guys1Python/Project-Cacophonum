@@ -113,10 +113,11 @@ class WildMonster(Monster):
 		'''
 
 class TamedMonster(Monster):
-	def __init__(self, name, index):
+	def __init__(self, name, species, index):
 		super(TamedMonster, self).__init__(name, index)
 		self.master = None
-		self.stats = init.tamedMonster_Init(name)
+		self.species = species
+		self.stats = init.tamedMonster_Init(species)
 		self.equipment = {
 			'instrument': None,
 			'accessory1': None,

@@ -1,9 +1,10 @@
-import os, random, sys, copy
-import pygame
+__author__ = 'justinarmstrong'
+
+import os, random, copy
+import pygame as pg
 from . import constants as c
 from entityclasses import *
 from compositeclasses import *
-from model import *
 
 class Control(object):
     """
@@ -12,14 +13,14 @@ class Control(object):
     states is also found here.
     """
     def __init__(self, caption):
-        self.screen = pygame.display.get_surface()
+        self.screen = pg.display.get_surface()
         self.done = False
-        self.clock = pygame.time.Clock()
+        self.clock = pg.time.Clock()
         self.caption = caption
         self.fps = 60
         self.show_fps = False
         self.current_time = 0.0
-        self.keys = pygame.key.get_pressed()
+        self.keys = pg.key.get_pressed()
         self.state_dict = {}
         self.state_name = None
         self.state = None
@@ -31,7 +32,7 @@ class Control(object):
         self.set_music()
 
     def update(self):
-        self.current_time = pygame.time.get_ticks()
+        self.current_time = pg.time.get_ticks()
         if self.state.quit:
             self.done = True
         elif self.state.done:
@@ -55,41 +56,41 @@ class Control(object):
         if self.state.music_title == self.state.previous_music:
             pass
         elif self.state.music:
-            pygame.mixer.music.load(self.state.music)
-            pygame.mixer.music.set_volume(self.state.volume)
-            pygame.mixer.music.play(-1)
+            pg.mixer.music.load(self.state.music)
+            pg.mixer.music.set_volume(self.state.volume)
+            pg.mixer.music.play(-1)
 
     def event_loop(self):
-        self.events = pygame.event.get()
+        self.events = pg.event.get()
 
         for event in self.events:
-            if event.type == pygame.QUIT:
+            if event.type == pg.QUIT:
                 self.done = True
-            elif event.type == pygame.KEYDOWN:
-                self.keys = pygame.key.get_pressed()
+            elif event.type == pg.KEYDOWN:
+                self.keys = pg.key.get_pressed()
                 self.toggle_show_fps(event.key)
                 self.state.get_event(event)
-            elif event.type == pygame.KEYUP:
-                self.keys = pygame.key.get_pressed()
+            elif event.type == pg.KEYUP:
+                self.keys = pg.key.get_pressed()
                 self.state.get_event(event)
 
     def toggle_show_fps(self, key):
-        if key == pygame.K_F5:
+        if key == pg.K_F5:
             self.show_fps = not self.show_fps
             if not self.show_fps:
-                pygame.display.set_caption(self.caption)
+                pg.display.set_caption(self.caption)
 
     def main(self):
         """Main loop for entire program"""
         while not self.done:
             self.event_loop()
             self.update()
-            pygame.display.update()
+            pg.display.update()
             self.clock.tick(self.fps)
             if self.show_fps:
                 fps = self.clock.get_fps()
                 with_fps = "{} - {:.2f} FPS".format(self.caption, fps)
-                pygame.display.set_caption(with_fps)
+                pg.display.set_caption(with_fps)
 
 
 class _State(object):
@@ -121,12 +122,12 @@ class _State(object):
         pass
 
 
-def load_all_gfx(directory, colorkey=(255,0,255), accept=('.png', 'jpygame', 'bmp')):
+def load_all_gfx(directory, colorkey=(255,0,255), accept=('.png', 'jpg', 'bmp')):
     graphics = {}
     for pic in os.listdir(directory):
         name, ext = os.path.splitext(pic)
         if ext.lower() in accept:
-            img = pygame.image.load(os.path.join(directory, pic))
+            img = pg.image.load(os.path.join(directory, pic))
             if img.get_alpha():
                 img = img.convert_alpha()
             else:
@@ -158,13 +159,13 @@ def load_all_sfx(directory, accept=('.wav','.mp3','.ogg','.mdi')):
     for fx in os.listdir(directory):
         name, ext = os.path.splitext(fx)
         if ext.lower() in accept:
-            effects[name] = pygame.mixer.Sound(os.path.join(directory, fx))
+            effects[name] = pg.mixer.Sound(os.path.join(directory, fx))
     return effects
 
 
 def get_image(x, y, width, height, sprite_sheet):
     """Extracts image from sprite sheet"""
-    image = pygame.Surface([width, height])
+    image = pg.Surface([width, height])
     rect = image.get_rect()
 
     image.blit(sprite_sheet, (0, 0), (x, y, width, height))
@@ -175,7 +176,7 @@ def get_image(x, y, width, height, sprite_sheet):
 def get_tile(x, y, tileset, width=16, height=16, scale=1):
     """Gets the surface and rect for a tile"""
     surface = get_image(x, y, width, height, tileset)
-    surface = pygame.transform.scale(surface, (int(width*scale), int(height*scale)))
+    surface = pg.transform.scale(surface, (int(width*scale), int(height*scale)))
     rect = surface.get_rect()
 
     tile_dict = {'surface': surface,
@@ -191,36 +192,81 @@ def notify_observers(self, event):
         each_observer.on_notify(event)
 
 def create_game_data_dict():
-	"""Create a dictionary of persistant values the player
-	carries between states"""
+    """Create a dictionary of persistant values the player
+    carries between states"""
 
-	players = [Conductor(MC1)]
-	monsters = [copy.deepcopy(modelTamedMonsterList['Kobold'])]
-	players[0].addMonster(monsters[0])
-	monsters[0].setMaster(players[0]) 
-	monsters[0].addSpell(copy.deepcopy(modelSpellList['Black Aria']))
-	players[0].addItem(copy.deepcopy(modelItemList['Potion']))
-	players[0].addItem(copy.deepcopy(modelInstrumentList['Flute']))
-	
-	player_items = []
-	
-	treasure_flags = {'FL1': False}
-	
-	event_flags = {'start of game': True}
+    '''
+    player_items = {'GOLD': dict([('quantity',100),
+                                  ('value',0)]),
+                    'Healing Potion': dict([('quantity',2),
+                                            ('value',15)]),
+                    'Ether Potion': dict([('quantity',1),
+                                          ('value', 15)]),
+                    'Rapier': dict([('quantity', 1),
+                                    ('value', 50),
+                                    ('power', 9)]),
+                    'equipped weapon': 'Rapier',
+                    'equipped armor': []}
+    '''
+    
+    '''
+    player_health = {'current': 70,
+                     'maximum': 70}
+
+    player_magic = {'current': 70,
+                    'maximum': 70}
+
+    player_stats = {'health': player_health,
+                    'Level': 1,
+                    'experience to next level': 30,
+                    'magic': player_magic,
+                    'attack points': 10,
+                    'Defense Points': 10}
+    '''
+    
+    players = [Conductor("Hanami Otozono")]
+    monsters = [copy.deepcopy(TamedMonster("Ichiro", "Kobold", 1))]
+    players[0].addMonster(monsters[0])
+    monsters[0].setMaster(players[0]) 
+    monsters[0].addSpell(copy.deepcopy(Spell("Black Aria", 1)))
+    players[0].addItem(copy.deepcopy(Consumable("Potion", 1)))
+    players[0].addItem(copy.deepcopy(Instrument("Flute", 1)))
+    
+    player_items = []
+    
+    treasure_flags = {'FL1': False}
+    
+    event_flags = {'start of game': True}
 
 
-	data_dict = {'last location': None,
-				'last state': None,
-				'last direction': 'down',
-				'master inventory': player_items,
-				'conductors': players,
-				'monsters': monsters,
-				'battle counter': 50,
-                'event flags': event_flags,
-				'treasure flags': treasure_flags
-	}
+    data_dict = {'last location': None,
+                 'last state': None,
+                 'last direction': 'down',
+                 'king item': 'GOLD',
+                 'old man item': {'ELIXIR': dict([('value',1000),
+                                                  ('quantity',1)])},
+                 'player inventory': player_items,
+                 'conductors': players,
+                 'battle counter': 50,
+                 'treasure1': True,
+                 'treasure2': True,
+                 'treasure3': True,
+                 'treasure4': True,
+                 'treasure5': True,
+                 'start of game': True,
+                 'talked to king': False,
+                 'brother quest complete': False,
+                 'talked to sick brother': False,
+                 'has brother elixir': False,
+                 'elixir received': False,
+                 'old man gift': '',
+                 'battle type': '',
+                 'crown quest': False,
+                 'delivered crown': False,
+                 'brother item': 'ELIXIR'
+    }
 
-	return data_dict
+    return data_dict
 
 
 

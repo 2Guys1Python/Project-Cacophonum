@@ -4,21 +4,24 @@ from . import setup, tools
 from . import constants as c
 
 
-FAES_LANDING = 'faes landing'
+TOWN = 'town'
 MAIN_MENU = 'main menu'
-FL_FIELD1 = 'faes landing field 1'
-FL_FIELD2 = 'faes landing field 2'
-FL_FIELD3 = 'faes landing field 3'
-FL_CASTLE = 'faes landing castle'
-FL_INN = 'faes landing inn'
-FL_SUNDRIES = 'faes landing sundries' #items
-FL_AULOFICER = 'faes landing auloficer' #wind
-FL_LUTHIER = 'faes landing luthier' #strings
-FL_TAMBOURIER = 'faes landing tambourier' #percussion
-FL_ARTISAN = 'faes landing artisan' #accessories
-FL_SCRIPTORIUM = 'faes landing scriptorium' #songs
+CASTLE = 'castle'
 HOUSE = 'house'
+INN = 'Inn'
+ARMOR_SHOP = 'armor shop'
+WEAPON_SHOP = 'weapon shop'
+MAGIC_SHOP = 'magic shop'
+POTION_SHOP = 'potion shop'
+PLAYER_MENU = 'player menu'
+OVERWORLD = 'overworld'
+BROTHER_HOUSE = 'brotherhouse'
 BATTLE = 'battle'
+DUNGEON = 'dungeon'
+DUNGEON2 = 'dungeon2'
+DUNGEON3 = 'dungeon3'
+DUNGEON4 = 'dungeon4'
+DUNGEON5 = 'dungeon5'
 INSTRUCTIONS = 'instructions'
 DEATH_SCENE = 'death scene'
 LOADGAME = 'load game'
@@ -29,20 +32,22 @@ def main():
     """Add states to control here"""
     run_it = tools.Control(setup.ORIGINAL_CAPTION)
     state_dict = {MAIN_MENU: main_menu.Menu(),
-                  FAES_LANDING: levels.LevelState(FAES_LANDING),
-                  FL_FIELD1: levels.LevelState(FL_FIELD1, True),
-				  FL_FIELD2: levels.LevelState(FL_FIELD2, True),
-				  FL_FIELD3: levels.LevelState(FL_FIELD3, True),
-				  FL_ACADEMY: levels.LevelState(FL_ACADEMY),
+                  TOWN: levels.LevelState(TOWN),
+                  CASTLE: levels.LevelState(CASTLE),
                   HOUSE: levels.LevelState(HOUSE),
-                  FL_CASTLE: levels.LevelState(FL_CASTLE),
-                  FL_INN: shop.Inn(),
-                  FL_SUNDRIES: shop.Sundries(),
-                  FL_AULOFICER: shop.Auloficer(),
-                  FL_LUTHIER: shop.Luthier(),
-                  FL_TAMBOURIER: shop.Tambourier(),
-				  FL_SCRIPTORIUM: shop.Scriptorium(),
+                  OVERWORLD: levels.LevelState(OVERWORLD, True),
+                  BROTHER_HOUSE: levels.LevelState(BROTHER_HOUSE),
+                  INN: shop.Inn(),
+                  ARMOR_SHOP: shop.ArmorShop(),
+                  WEAPON_SHOP: shop.WeaponShop(),
+                  MAGIC_SHOP: shop.MagicShop(),
+                  POTION_SHOP: shop.PotionShop(),
                   BATTLE: battle.Battle(),
+                  DUNGEON: levels.LevelState(DUNGEON, True),
+                  DUNGEON2: levels.LevelState(DUNGEON2, True),
+                  DUNGEON3: levels.LevelState(DUNGEON3, True),
+                  DUNGEON4: levels.LevelState(DUNGEON4, True),
+                  DUNGEON5: levels.LevelState(DUNGEON5, True),
                   INSTRUCTIONS: main_menu.Instructions(),
                   LOADGAME: main_menu.LoadGame(),
                   DEATH_SCENE: death.DeathScene(),

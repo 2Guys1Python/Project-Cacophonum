@@ -19,13 +19,13 @@ class SmallArrow(pg.sprite.Sprite):
     """
     Small arrow for menu.
     """
-    def __init__(self, info_box):
+    def __init__(self, left_box):
         super(SmallArrow, self).__init__()
-        self.image = setup.GFX['smallarrow']
+        self.image = setup.GFX['arrowright']
         self.rect = self.image.get_rect()
         self.state = 'selectmenu'
         self.state_dict = self.make_state_dict()
-        self.slots = info_box.slots
+        self.slots = left_box.slots
         self.pos_list = []
 
     def make_state_dict(self):
@@ -33,6 +33,9 @@ class SmallArrow(pg.sprite.Sprite):
         Make state dictionary.
         """
         state_dict = {'selectmenu': self.navigate_select_menu,
+                      'conductorsubmenu': self.navigate_conductor_submenu,
+                      'monsterselect': self.navigate_monster_select,
+                      'itemtypeselect': self.navigate_item_type_select,
                       'itemsubmenu': self.navigate_item_submenu,
                       'magicsubmenu': self.navigate_magic_submenu}
 
@@ -43,7 +46,19 @@ class SmallArrow(pg.sprite.Sprite):
         Nav the select menu.
         """
         self.pos_list = self.make_select_menu_pos_list()
-        self.rect.topleft = self.pos_list[pos_index]
+        self.rect = self.pos_list[pos_index]
+
+    def navigate_conductor_submenu(self, pos_index):
+        self.pos_list = self.make_conductor_menu_pos_list()
+        self.rect = self.pos_list[pos_index]
+
+    def navigate_monster_select(self, pos_index):
+        self.pos_list = self.make_monster_select_pos_list()
+        self.rect = self.pos_list[pos_index]
+
+    def navigate_item_type_select(self, pos_index):
+        self.pos_list = self.make_item_type_select_pos_list()
+        self.rect = self.pos_list[pos_index]
 
     def navigate_item_submenu(self, pos_index):
         """Nav the item submenu"""
@@ -71,9 +86,38 @@ class SmallArrow(pg.sprite.Sprite):
         Make the list of possible arrow positions.
         """
         pos_list = []
+        self.image = setup.GFX['arrowright']
+
+        for i in range(6):
+            pos = (615, 55 + (i * 40))
+            pos_list.append(pos)
+
+        return pos_list
+
+    def make_monster_select_pos_list(self):
+        pos_list = [(5,90), (5,150), (5,210),
+		            (185,90), (185,150), (185,210),
+                    (365,90), (365,150), (365,210)]
+        self.image = setup.GFX['arrowright']
+
+        return pos_list
+
+    def make_conductor_menu_pos_list(self):
+        pos_list = []
+        self.image = setup.GFX['arrowleft']
 
         for i in range(3):
-            pos = (35, 443 + (i * 45))
+            pos = (570, 70 + (i*100))
+            pos_list.append(pos)
+
+        return pos_list
+
+    def make_item_type_select_pos_list(self):
+        pos_list = []
+        self.image = setup.GFX['arrowright']
+        
+        for i in range(4):
+            pos = (5, 75 + (i*60))
             pos_list.append(pos)
 
         return pos_list
@@ -106,57 +150,118 @@ class SmallArrow(pg.sprite.Sprite):
         surface.blit(self.image, self.rect)
 
 
-class QuickStats(pg.sprite.Sprite):
+class BottomBox(pg.sprite.Sprite):
     def __init__(self, game_data):
-        self.inventory = game_data['player inventory']
+        super(BottomBox, self).__init__()
         self.game_data = game_data
-        self.health = game_data['player stats']['health']
-        self.stats = self.game_data['player stats']
-        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
-        self.small_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 18)
-        self.image, self.rect = self.make_image()
+        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 25)
+        self.small_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 20)
+        self.header_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 40)
+        self.big_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 35)
+        self.state = 'invisible'
+        self.state_dict = self.make_state_dict()
+        self.image, self.rect = self.make_blank_bottom_box()
+        self.compstate = None
 
-    def make_image(self):
+    def make_state_dict(self):
+        """Make the dictionary of state methods"""
+        state_dict = {'conductorinfo': self.show_conductor_info,
+                      'monsterinfo': self.show_monster_info,
+                      'description': self.show_description,
+                      'training': self.show_training,
+                      'invisible': self.show_nothing}
+		
+        return state_dict
+
+    def show_conductor_info(self):
+        conductor = self.game_data['conductors'][self.compstate]
+        default_text = ['Current Monsters:', 'Training Aptitudes:', 'HP: ', 'ATK: ', 'DEF: ', 'MUS: ', 'FOC: ', 'CLA: ', 'RHY: ', 'STR: ', 'WND: ', 'PRC: ']
+        
+        surface, rect = self.make_blank_bottom_box()
+        
+        for i in range(len(conductor.monsters)+1):
+            if i == 0:
+                text = default_text[i]
+                text_image = self.header_font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=25, y=25+(45*i))
+                surface.blit(text_image, text_rect)
+            else:
+                text = conductor.monsters[i-1].name
+                text_image = self.big_font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=25, y=25+(45*i))
+                surface.blit(text_image, text_rect)
+                prevsize = self.big_font.size(text)
+                text = conductor.monsters[i-1].species
+                text_image = self.small_font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=prevsize[0]+35, y=35+(45*i))
+                surface.blit(text_image, text_rect)
+        
+        text = default_text[1]
+        
+        text_image = self.header_font.render(text, True, c.WHITE)
+        text_rect = text_image.get_rect(x=395, y=25)
+        surface.blit(text_image, text_rect)
+        
+        for i in range(3):
+            text = default_text[i+2]
+            text += str(conductor.aptitude[text[:len(text)-2].lower()])
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=450+(i*85)+((i-1)*15), y = 75)
+            surface.blit(text_image, text_rect)
+
+        for i in range(4):
+            text = default_text[i+5]
+            text += str(conductor.aptitude[text[:len(text)-2].lower()])
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=400+(i*95), y = 105)
+            surface.blit(text_image, text_rect)
+
+        for i in range(3):
+            text = default_text[i+9]
+            if i == 0:
+                text += str(conductor.aptitude['string'])
+            elif i == 1:
+                text += str(conductor.aptitude['wind'])
+            elif i == 2:
+                text += str(conductor.aptitude['percussion'])
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=450+(i*85)+((i-1)*15), y = 135)
+            surface.blit(text_image, text_rect)
+			
+        self.image = surface
+        self.rect = rect
+
+    def show_monster_info(self):
+        monster = game_data['conductors'][compstate[0]].monsters[compstate[1]]
+    
+    def show_description(self):
+        pass
+
+    def show_training(self):
+        pass
+	
+    def show_nothing(self):
         """
-        Make the surface for the gold box.
+        Show nothing when the menu is opened from a level.
         """
-        stat_list = ['GOLD', 'health', 'magic'] 
-        magic_health_list  = ['health', 'magic']
-        image = setup.GFX['goldbox']
-        rect = image.get_rect(left=10, top=244)
+        self.image, self.rect = self.make_blank_bottom_box()
+
+    def make_blank_bottom_box(self):
+        """Make an info box with title, otherwise blank"""
+        image = setup.GFX['pmenu_box_bottom']
+        rect = image.get_rect(left=25, top=375)
+        centerx = rect.width / 2
 
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
-        surface.blit(image, (0, 0))
+        surface.blit(image, (0,0))
 
-        for i, stat in enumerate(stat_list):
-            first_letter = stat[0].upper()
-            rest_of_letters = stat[1:]
-            if stat in magic_health_list:
-                current = self.stats[stat]['current']
-                max = self.stats[stat]['maximum']
-                text = "{}{}: {}/{}".format(first_letter, rest_of_letters, current, max)
-            elif stat == 'GOLD':
-                text = "Gold: {}".format(self.inventory[stat]['quantity'])
-            render = self.small_font.render(text, True, c.NEAR_BLACK)
-            x = 26
-            y = 45 + (i*30)
-            text_rect = render.get_rect(x=x,
-                                        centery=y)
-            surface.blit(render, text_rect)
-
-        if self.game_data['crown quest']:
-            crown = setup.GFX['crown']
-            crown_rect = crown.get_rect(x=178, y=40)
-            surface.blit(crown, crown_rect)
-        
         return surface, rect
 
+
     def update(self):
-        """
-        Update gold.
-        """
-        self.image, self.rect = self.make_image()
+        state_function = self.state_dict[self.state]
+        state_function()
 
     def draw(self, surface):
         """
@@ -165,214 +270,175 @@ class QuickStats(pg.sprite.Sprite):
         surface.blit(self.image, self.rect)
 
 
-class InfoBox(pg.sprite.Sprite):
-    def __init__(self, inventory, player_stats):
-        super(InfoBox, self).__init__()
-        self.inventory = inventory
-        self.player_stats = player_stats
-        self.attack_power = self.get_attack_power()
-        self.defense_power = self.get_defense_power()
+class LeftBox(pg.sprite.Sprite):
+    def __init__(self, game_data):
+        super(LeftBox, self).__init__()
+        self.game_data = game_data
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
-        self.big_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 24)
+        self.big_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 40)
+        self.big_font.set_bold(True)
         self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 28)
         self.title_font.set_underline(True)
         self.get_tile = tools.get_tile
-        self.sword = self.get_tile(48, 0, setup.GFX['shopsigns'], 16, 16, 2)
-        self.shield = self.get_tile(32, 0, setup.GFX['shopsigns'], 16, 16, 2)
-        self.potion = self.get_tile(16, 0, setup.GFX['shopsigns'], 16, 16, 2)
-        self.possible_potions = ['Healing Potion', 'ELIXIR', 'Ether Potion']
-        self.possible_armor = ['Wooden Shield', 'Chain Mail']
-        self.possible_weapons = ['Long Sword', 'Rapier']
-        self.possible_magic = ['Fire Blast', 'Cure']
-        self.quantity_items = ['Healing Potion', 'ELIXIR', 'Ether Potion']
         self.slots = {}
         self.state = 'invisible'
         self.state_dict = self.make_state_dict()
         self.print_slots = True
-
-    def get_attack_power(self):
-        """
-        Calculate the current attack power based on equipped weapons.
-        """
-        weapon = self.inventory['equipped weapon']
-        return self.inventory[weapon]['power']
-
-    def get_defense_power(self):
-        """
-        Calculate the current defense power based on equipped weapons.
-        """
-        defense_power = 0
-        for armor in self.inventory['equipped armor']:
-            defense_power += self.inventory[armor]['power']
-
-        return defense_power
+        self.itemindex = 0
+        self.selectedmonster = None
 
     def make_state_dict(self):
         """Make the dictionary of state methods"""
-        state_dict = {'stats': self.show_player_stats,
+        state_dict = {'conductors': self.show_conductors,
+                      'monsters': self.show_monsters,
+                      'itemtypes': self.show_itemtypes,
                       'items': self.show_items,
-                      'magic': self.show_magic,
+                      'instruments': self.show_instruments,
+                      'accessories': self.show_accessories,
                       'invisible': self.show_nothing}
-
+		
         return state_dict
 
-
-    def show_player_stats(self):
-        """Show the player's main stats"""
-        title = 'STATS'
-        stat_list = ['Level', 'experience to next level',
-                     'health', 'magic', 'Attack Power', 
-                     'Defense Power', 'gold']
-        attack_power = 5
-        surface, rect = self.make_blank_info_box(title)
-
-        for i, stat in enumerate(stat_list):
-            if stat == 'health' or stat == 'magic':
-                text = "{}{}: {} / {}".format(stat[0].upper(),
-                                              stat[1:],
-                                              str(self.player_stats[stat]['current']),
-                                              str(self.player_stats[stat]['maximum']))
-            elif stat == 'experience to next level':
-                text = "{}{}: {}".format(stat[0].upper(),
-                                         stat[1:],
-                                         self.player_stats[stat])
-            elif stat == 'Attack Power':
-				text = "{}: {}".format(stat, self.get_attack_power()) 
-            elif stat == 'Defense Power':
-                text = "{}: {}".format(stat, self.get_defense_power())
-            elif stat == 'gold':
-                text = "Gold: {}".format(self.inventory['GOLD']['quantity'])
-            else:
-                text = "{}: {}".format(stat, str(self.player_stats[stat]))
-            text_image = self.font.render(text, True, c.NEAR_BLACK)
-            text_rect = text_image.get_rect(x=50, y=80+(i*50))
+    def show_conductors(self):
+        conductor_list = []
+        for conduc in self.game_data['conductors']:
+            conductor_list.append(conduc.name)
+        
+        surface, rect = self.make_blank_left_box()
+        
+        for i in range(len(conductor_list)):
+            text = conductor_list[i]
+            text_image = self.big_font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=160, y=60+(100*i))
             surface.blit(text_image, text_rect)
-
+            
         self.image = surface
         self.rect = rect
 
-
-    def show_items(self):
-        """Show list of items the player has"""
-        title = 'ITEMS'
-        potions = ['POTIONS']
-        weapons = ['WEAPONS']
-        armor = ['ARMOR']
-        for i, item in enumerate(self.inventory):
-            if item in self.possible_weapons:
-                if item == self.inventory['equipped weapon']:
-                    item += " (E)"
-                weapons.append(item)
-            elif item in self.possible_armor:
-                if item in self.inventory['equipped armor']:
-                    item += " (E)"
-                armor.append(item)
-            elif item in self.possible_potions:
-                potions.append(item)
-
+    def show_monsters(self):
+        monster_list = [[]]
+        for i, conduc in enumerate(self.game_data['conductors']):
+            for m in conduc.monsters:
+                monster_list[i].append(m.name)
+                
         self.slots = {}
-        self.assign_slots(weapons, 85)
-        self.assign_slots(armor, 235)
-        self.assign_slots(potions, 390)
-
-        surface, rect = self.make_blank_info_box(title)
-
-        self.blit_item_lists(surface)
-
-        self.sword['rect'].topleft = 40, 80
-        self.shield['rect'].topleft = 40, 230
-        self.potion['rect'].topleft = 40, 385
-        surface.blit(self.sword['surface'], self.sword['rect'])
-        surface.blit(self.shield['surface'], self.shield['rect'])
-        surface.blit(self.potion['surface'], self.potion['rect'])
-
-        self.image = surface
-        self.rect = rect
-
-
-    def assign_slots(self, item_list, starty, weapon_or_armor=False):
-        """Assign each item to a slot in the menu"""
-        if len(item_list) > 3:
-            for i, item in enumerate(item_list[:3]):
-                posx = 80
-                posy = starty + (i * 50)
-                self.slots[(posx, posy)] = item
-            for i, item in enumerate(item_list[3:]):
-                posx = 315
-                posy = (starty + 50) + (i * 5)
-                self.slots[(posx, posy)] = item
-        else:
-            for i, item in enumerate(item_list):
-                posx = 80
-                posy = starty + (i * 50)
-                self.slots[(posx, posy)] = item
-
-    def assign_magic_slots(self, magic_list, starty):
-        """
-        Assign each magic spell to a slot in the menu.
-        """
-        for i, spell in enumerate(magic_list):
-            posx = 120
-            posy = starty + (i * 50)
-            self.slots[(posx, posy)] = spell
-
-    def blit_item_lists(self, surface):
-        """Blit item list to info box surface"""
+        
+        for i, l in enumerate(monster_list):
+            for m in l:
+                posx = 65 + (i*180)
+                posy = 85 + (i*60)
+                self.slots[(posx,posy)] = m
+        
+        surface, rect = self.make_blank_left_box()
+        
         for coord in self.slots:
-            item = self.slots[coord]
-
-            if item in self.possible_potions:
-                text = "{}: {}".format(self.slots[coord],
-                                       self.inventory[item]['quantity'])
-            else:
-                text = "{}".format(self.slots[coord])
-            text_image = self.font.render(text, True, c.NEAR_BLACK)
+            text = self.slots[coord]
+            text_image = self.font.render(text, True, c.WHITE)
             text_rect = text_image.get_rect(topleft=coord)
             surface.blit(text_image, text_rect)
-
-    def show_magic(self):
-        """Show list of magic spells the player knows"""
-        title = 'MAGIC'
-        item_list = []
-        for item in self.inventory:
-            if item in self.possible_magic:
-                item_list.append(item)
-                item_list = sorted(item_list)
-
-        self.slots = {}
-        self.assign_magic_slots(item_list, 80)
-
-        surface, rect = self.make_blank_info_box(title)
-
-        for i, item in enumerate(item_list):
-            text_image = self.font.render(item, True, c.NEAR_BLACK)
-            text_rect = text_image.get_rect(x=100, y=80+(i*50))
-            surface.blit(text_image, text_rect)
-
+            
         self.image = surface
         self.rect = rect
+
+    def show_itemtypes(self):
+        itemtype_list = ['Loot', 'Consumables', 'Equipment', 'Key Items']
+
+        surface, rect = self.make_blank_left_box()
+
+        for i in range(len(itemtype_list)):
+            text = itemtype_list[i]
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=65, y=70+(i*60))
+            surface.blit(text_image, text_rect)
+        
+        self.image = surface
+        self.rect = rect
+        
+    def show_items(self):
+        item_list = []
+        
+        for item in game_data['player inventory']:
+            item_list.append(item.name)
+
+        self.slots = {}
+
+        surface, rect = self.make_blank_left_box()
+        for x in range(5):
+            text = item_list[x+(self.itemindex*5)].name
+            posx = 65
+            posy = 70 + (i*45)
+            self.slots[(posx,posy)] = text
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=posx, y=posy)
+            surface.blit(text_image, text_rect)
+        
+        self.image = surface
+        self.rect = rect
+
+    def show_instruments(self):
+        inst_list = []
+        instruments = []
+		
+        inventory = self.selectedmonster.master.inventory
+        for x in inventory:
+            if x.itemType is "Instrument":
+                inst_list.append(x.name)
+
+        self.slots = {}
+
+        surface, rect = self.make_blank_left_box()
+        for x in range(5):
+            text = inst_list[x+(self.itemindex*5)].name
+            posx = 65
+            posy = 70 + (i*45)
+            self.slots[(posx,posy)] = text
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=posx, y=posy)
+            surface.blit(text_image, text_rect)
+        
+        self.image = surface
+        self.rect = rect
+
+    def show_accessories(self):
+        acc_list = []
+        accessories = []
+		
+        inventory = self.selectedmonster.master.inventory
+        for x in inventory:
+            if x.itemType is "Accessory":
+                acc_list.append(x.name)
+
+        self.slots = {}
+
+        surface, rect = self.make_blank_left_box()
+        for x in range(5):
+            text = acc_list[x+(self.itemindex*5)].name
+            posx = 65
+            posy = 70 + (i*45)
+            self.slots[(posx,posy)] = text
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=posx, y=posy)
+            surface.blit(text_image, text_rect)
+        
+        self.image = surface
+        self.rect = rect
+
 
     def show_nothing(self):
         """
         Show nothing when the menu is opened from a level.
         """
-        self.image = pg.Surface((1, 1))
-        self.rect = self.image.get_rect()
-        self.image.fill(c.BLACK_BLUE)
+        self.image, self.rect = self.make_blank_left_box()
 
-    def make_blank_info_box(self, title):
+    def make_blank_left_box(self):
         """Make an info box with title, otherwise blank"""
-        image = setup.GFX['playerstatsbox']
-        rect = image.get_rect(left=285, top=35)
+        image = setup.GFX['pmenu_box_left']
+        rect = image.get_rect(left=25, top=15)
         centerx = rect.width / 2
 
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
         surface.blit(image, (0,0))
-
-        title_image = self.title_font.render(title, True, c.NEAR_BLACK)
-        title_rect = title_image.get_rect(centerx=centerx, y=30)
-        surface.blit(title_image, title_rect)
 
         return surface, rect
 
@@ -387,23 +453,27 @@ class InfoBox(pg.sprite.Sprite):
         surface.blit(self.image, self.rect)
 
 
-class SelectionBox(pg.sprite.Sprite):
+class RightBox(pg.sprite.Sprite):
     def __init__(self):
-        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
+        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 40)
         self.image, self.rect = self.make_image()
 
     def make_image(self):
-        choices = ['Items', 'Magic', 'Stats']
-        image = setup.GFX['goldbox']
-        rect = image.get_rect(left=10, top=425)
+        choices = ['Conductors', 'Monsters', 'Items', 'Training', 'Quests', 'Save']
+        image = setup.GFX['pmenu_box_right']
+        rect = image.get_rect(left=675, top=15)
+
+        for x in choices:
+            x.center(20)
 
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
         surface.blit(image, (0, 0))
 
         for i, choice in enumerate(choices):
-            choice_image = self.font.render(choice, True, c.NEAR_BLACK)
-            choice_rect = choice_image.get_rect(x=100, y=(15 + (i * 45)))
+            choice_image = self.font.render(choice, True, c.WHITE)
+            choice_rect = choice_image.get_rect(x=15, y=(45 + (i * 40)))
+            choice_rect.centerx = rect.centerx - 675
             surface.blit(choice_image, choice_rect)
 
         return surface, rect
@@ -414,17 +484,17 @@ class SelectionBox(pg.sprite.Sprite):
 
 
 class MenuGui(object):
-    def __init__(self, level, inventory, stats):
+    def __init__(self, level, inventory, conductors):
         self.level = level
         self.game_data = self.level.game_data
         self.sfx_observer = observer.SoundEffects()
         self.observers = [self.sfx_observer]
         self.inventory = inventory
-        self.stats = stats
-        self.info_box = InfoBox(inventory, stats)
-        self.gold_box = QuickStats(self.game_data)
-        self.selection_box = SelectionBox()
-        self.arrow = SmallArrow(self.info_box)
+        self.conductors = conductors
+        self.left_box = LeftBox(self.game_data)
+        self.bottom_box = BottomBox(self.game_data)
+        self.right_box = RightBox()
+        self.arrow = SmallArrow(self.left_box)
         self.arrow_index = 0
         self.allow_input = False
 
@@ -441,46 +511,37 @@ class MenuGui(object):
                     self.notify(c.CLICK)
                     self.arrow_index -= 1
                     self.allow_input = False
-            elif keys[pg.K_RIGHT]:
-                if self.info_box.state == 'items':
-                    if not self.arrow.state == 'itemsubmenu':
-                        self.notify(c.CLICK)
-                        self.arrow_index = 0
-                    self.arrow.state = 'itemsubmenu'
-                elif self.info_box.state == 'magic':
-                    if not self.arrow.state == 'magicsubmenu':
-                        self.notify(c.CLICK)
-                        self.arrow_index = 0
-                    self.arrow.state = 'magicsubmenu'
-                self.allow_input = False
 
-            elif keys[pg.K_LEFT]:
-                self.notify(c.CLICK)
-                self.arrow.state = 'selectmenu'
-                self.arrow_index = 0
-                self.allow_input = False
-            elif keys[pg.K_SPACE]:
+            elif keys[pg.K_z]:
                 self.notify(c.CLICK2)
                 if self.arrow.state == 'selectmenu':
                     if self.arrow_index == 0:
-                        self.info_box.state = 'items'
-                        self.arrow.state = 'itemsubmenu'
+                        self.left_box.state = 'conductors'
+                        self.bottom_box.state = 'conductorinfo'
+                        self.bottom_box.compstate = 0
+                        self.arrow.state = 'conductorsubmenu'
                         self.arrow_index = 0
                     elif self.arrow_index == 1:
-                        self.info_box.state = 'magic'
-                        self.arrow.state = 'magicsubmenu'
                         self.arrow_index = 0
+                        self.left_box.state = 'monsters'
+                        self.arrow.state = 'monsterselect'
                     elif self.arrow_index == 2:
-                        self.info_box.state = 'stats'
-                elif self.arrow.state == 'itemsubmenu':
-                    self.select_item()
-                elif self.arrow.state == 'magicsubmenu':
-                    self.select_magic()
-
+                        self.arrow_index = 0
+                        self.left_box.state = 'itemtypes'
+                        self.arrow.state = 'itemtypeselect'
                 self.allow_input = False
+
+            elif keys[pg.K_x]:
+                if self.arrow.state == 'conductorsubmenu' or self.arrow.state == 'monsterselect':
+                    self.left_box.state = 'invisible'
+                    self.bottom_box.state = 'invisible'
+                    self.arrow.state = 'selectmenu'
+                    self.arrow_index = 0
+                    self.allow_input = True
+
             elif keys[pg.K_RETURN]:
                 self.level.state = 'normal'
-                self.info_box.state = 'invisible'
+                self.left_box.state = 'invisible'
                 self.allow_input = False
                 self.arrow_index = 0
                 self.arrow.state = 'selectmenu'
@@ -508,26 +569,26 @@ class MenuGui(object):
         posx = self.arrow.rect.x - 220
         posy = self.arrow.rect.y - 38
 
-        if (posx, posy) in self.info_box.slots:
-            if self.info_box.slots[(posx, posy)][:7] == 'Healing':
+        if (posx, posy) in self.left_box.slots:
+            if self.left_box.slots[(posx, posy)][:7] == 'Healing':
                 potion = 'Healing Potion'
                 value = 30
                 self.drink_potion(potion, health, value)
-            elif self.info_box.slots[(posx, posy)][:5] == 'Ether':
+            elif self.left_box.slots[(posx, posy)][:5] == 'Ether':
                 potion = 'Ether Potion'
                 stat = self.game_data['player stats']['magic']
                 value = 30
                 self.drink_potion(potion, stat, value)
-            elif self.info_box.slots[(posx, posy)][:10] == 'Long Sword':
+            elif self.left_box.slots[(posx, posy)][:10] == 'Long Sword':
                 self.inventory['equipped weapon'] = 'Long Sword'
-            elif self.info_box.slots[(posx, posy)][:6] == 'Rapier':
+            elif self.left_box.slots[(posx, posy)][:6] == 'Rapier':
                 self.inventory['equipped weapon'] = 'Rapier'
-            elif self.info_box.slots[(posx, posy)][:13] == 'Wooden Shield':
+            elif self.left_box.slots[(posx, posy)][:13] == 'Wooden Shield':
                 if 'Wooden Shield' in self.inventory['equipped armor']:
                     self.inventory['equipped armor'].remove('Wooden Shield')
                 else:
                     self.inventory['equipped armor'].append('Wooden Shield')
-            elif self.info_box.slots[(posx, posy)][:10] == 'Chain Mail':
+            elif self.left_box.slots[(posx, posy)][:10] == 'Chain Mail':
                 if 'Chain Mail' in self.inventory['equipped armor']:
                     self.inventory['equipped armor'].remove('Chain Mail')
                 else:
@@ -542,8 +603,8 @@ class MenuGui(object):
         posx = self.arrow.rect.x - 190
         posy = self.arrow.rect.y - 39
 
-        if (posx, posy) in self.info_box.slots:
-            if self.info_box.slots[(posx, posy)][:4] == 'Cure':
+        if (posx, posy) in self.left_box.slots:
+            if self.left_box.slots[(posx, posy)][:4] == 'Cure':
                self.use_cure_spell()
 
     def use_cure_spell(self):
@@ -576,14 +637,15 @@ class MenuGui(object):
                 del self.inventory[potion]
 
     def update(self, keys):
-        self.info_box.update()
-        self.gold_box.update()
+        self.left_box.update()
+        self.right_box.update()
+        self.bottom_box.update()
         self.arrow.update(self.arrow_index)
         self.check_for_input(keys)
 
 
     def draw(self, surface):
-        self.gold_box.draw(surface)
-        self.info_box.draw(surface)
-        self.selection_box.draw(surface)
+        self.right_box.draw(surface)
+        self.left_box.draw(surface)
+        self.bottom_box.draw(surface)
         self.arrow.draw(surface)

@@ -122,7 +122,7 @@ class DeathScene(tools._State):
         
         box_sprite = pg.sprite.Sprite()
         box_sprite.image = temp_surf
-        box_sprite.rect = temp_surf.get_rect(bottom=608)
+        box_sprite.rect = temp_surf.get_rect(bottom=640)
         
         return box_sprite
 

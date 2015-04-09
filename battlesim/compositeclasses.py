@@ -33,6 +33,12 @@ class Instrument(Item):
 		super(Instrument, self).__init__(name, index)
 		self.itemType = "Instrument"
 		self.stats = init.instrument_Init(name)
+		
+class Accessory(Item):
+	def __init__(self, name, index):
+		super(Accessory, self).__init__(name, index)
+		self.itemType = "Accessory"
+		self.stats = init.accessory_Init(name)
 	
 class Consumable(Item):
 	def __init__(self, name, index):

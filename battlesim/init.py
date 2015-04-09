@@ -103,6 +103,18 @@ masterlist_instrument = {
 }
 
 '''
+Accessory masterlist format:
+	'Name':[effect,
+			bhp, batk, bdef, bmus, bfoc, bcla, brhy, bng,
+			php, patk, pdef, pmus, pfoc, pcla, prhy, png]
+'''
+
+masterlist_accessory = {
+	'Mouthpiece': [None,0,60,0,30,0,0,0,0,
+					0,0,0,0,0,0,0,0]
+}
+
+'''
 Spell masterlist format:
 	'Name': [cost, type, inst, target, [[eff1, [args]], [eff2, [args]], ...]]
 	
@@ -206,6 +218,21 @@ def instrument_Init(indexName):
 			'penaltyHP': masterlist_instrument[indexName][9],'penaltyatk': masterlist_instrument[indexName][10],'penaltydef': masterlist_instrument[indexName][11],
 			'penaltymus': masterlist_instrument[indexName][12],'penaltyfoc': masterlist_instrument[indexName][13],'penaltycla': masterlist_instrument[indexName][14],'penaltyrhy': masterlist_instrument[indexName][15],
 			'penaltynotegain': masterlist_instrument[indexName][16]
+	}
+	return tempdict
+	
+def accessory_Init(indexName):
+	tempdict = {}
+	tempdict['effect'] = masterlist_accessory[indexName][0]
+	tempdict['bonus'] = {
+			'bonusHP': masterlist_accessory[indexName][1], 'bonusatk': masterlist_accessory[indexName][2], 'bonusdef': masterlist_accessory[indexName][3],
+			'bonusmus': masterlist_accessory[indexName][4], 'bonusfoc': masterlist_accessory[indexName][5], 'bonuscla': masterlist_accessory[indexName][6], 'bonusrhy': masterlist_accessory[indexName][7],
+			'bonusnotegain': masterlist_accessory[indexName][8]
+	}
+	tempdict['penalty'] = {
+			'penaltyHP': masterlist_accessory[indexName][9],'penaltyatk': masterlist_accessory[indexName][10],'penaltydef': masterlist_accessory[indexName][11],
+			'penaltymus': masterlist_accessory[indexName][12],'penaltyfoc': masterlist_accessory[indexName][13],'penaltycla': masterlist_accessory[indexName][14],'penaltyrhy': masterlist_accessory[indexName][15],
+			'penaltynotegain': masterlist_accessory[indexName][16]
 	}
 	return tempdict
 	

@@ -99,7 +99,7 @@ class Gui(object):
     def make_gold_box(self):
         """Make the box to display total gold"""
         image = setup.GFX['goldbox']
-        rect = image.get_rect(bottom=608, right=800)
+        rect = image.get_rect(bottom=640, right=960)
 
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
@@ -120,7 +120,7 @@ class Gui(object):
     def make_selection_box(self, choices):
         """Make the box for the player to select options"""
         image = setup.GFX['shopbox']
-        rect = image.get_rect(bottom=608)
+        rect = image.get_rect(bottom=640)
 
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
