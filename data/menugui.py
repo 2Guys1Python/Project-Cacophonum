@@ -36,6 +36,7 @@ class SmallArrow(pg.sprite.Sprite):
                       'conductorsubmenu': self.navigate_conductor_submenu,
                       'monsterselect': self.navigate_monster_select,
                       'itemtypeselect': self.navigate_item_type_select,
+                      'monsterinfo': self.navigate_monster_info,
                       'itemsubmenu': self.navigate_item_submenu,
                       'magicsubmenu': self.navigate_magic_submenu}
 
@@ -58,6 +59,14 @@ class SmallArrow(pg.sprite.Sprite):
 
     def navigate_item_type_select(self, pos_index):
         self.pos_list = self.make_item_type_select_pos_list()
+        self.rect = self.pos_list[pos_index]
+    
+    def navigate_monster_info(self, pos_index):
+        self.pos_list = self.make_monster_info_pos_list()
+        if pos_index == 3:
+            self.image = setup.GFX['doublearrow']
+        else:
+            self.image = setup.GFX['arrowleft']
         self.rect = self.pos_list[pos_index]
 
     def navigate_item_submenu(self, pos_index):
@@ -99,6 +108,18 @@ class SmallArrow(pg.sprite.Sprite):
 		            (185,90), (185,150), (185,210),
                     (365,90), (365,150), (365,210)]
         self.image = setup.GFX['arrowright']
+
+        return pos_list
+
+    def make_monster_info_pos_list(self):
+        pos_list = []
+
+        for i in range(3):
+            pos = (450, 440 + i*45)
+            pos_list.append(pos)
+        pos_list.append((520,440))
+        pos_list.append((755,505))
+        pos_list.append((755,555))
 
         return pos_list
 
@@ -162,6 +183,7 @@ class BottomBox(pg.sprite.Sprite):
         self.state_dict = self.make_state_dict()
         self.image, self.rect = self.make_blank_bottom_box()
         self.compstate = None
+        self.conductorstate = None
 
     def make_state_dict(self):
         """Make the dictionary of state methods"""
@@ -191,7 +213,7 @@ class BottomBox(pg.sprite.Sprite):
                 text_rect = text_image.get_rect(x=25, y=25+(45*i))
                 surface.blit(text_image, text_rect)
                 prevsize = self.big_font.size(text)
-                text = conductor.monsters[i-1].species
+                text = "(" + conductor.monsters[i-1].species + ")"
                 text_image = self.small_font.render(text, True, c.WHITE)
                 text_rect = text_image.get_rect(x=prevsize[0]+35, y=35+(45*i))
                 surface.blit(text_image, text_rect)
@@ -232,7 +254,50 @@ class BottomBox(pg.sprite.Sprite):
         self.rect = rect
 
     def show_monster_info(self):
-        monster = game_data['conductors'][compstate[0]].monsters[compstate[1]]
+        monster = self.game_data['conductors'][self.compstate[0]].monsters[self.compstate[1]]
+        conductors = []
+        for i in range(len(self.game_data['conductors'])):
+            conductors.append(self.game_data['conductors'][i].name)
+
+        default_text = ["Equipment:", "Instrument: ", "Accessory 1:", "Accessory 2:", "Master:", "Release?", "Yes", "No"]
+
+        surface, rect = self.make_blank_bottom_box()
+
+        for i in range(4):
+            text = default_text[i]
+            if i == 1:
+                text += str(monster.equipment['instrument'])
+            elif i == 2:
+                text += str(monster.equipment['accessory1'])
+            elif i == 3:
+                text += str(monster.equipment['accessory2'])
+            text_image = self.big_font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=30, y = 25 + (i*45))
+            surface.blit(text_image, text_rect)
+
+        text = default_text[4] + " " + str(monster.master.name)
+        text_image = self.big_font.render(text, True, c.WHITE)
+        text_rect = text_image.get_rect(x=500, y = 25)
+        surface.blit(text_image, text_rect)
+        
+        text = conductors[self.conductorstate]
+        text_image = self.big_font.render(text, True, c.WHITE)
+        text_rect = text_image.get_rect(x=580, y=70)
+        surface.blit(text_image, text_rect)
+
+        text = default_text[5]
+        text_image = self.big_font.render(text, True, c.WHITE)
+        text_rect = text_image.get_rect(x=500, y=135)
+        surface.blit(text_image, text_rect)
+
+        for i in range(2):
+            text = default_text[i+6]
+            text_image = self.big_font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=650, y=135+(i*50))
+            surface.blit(text_image, text_rect)
+
+        self.image = surface
+        self.rect = rect
     
     def show_description(self):
         pass
@@ -324,9 +389,9 @@ class LeftBox(pg.sprite.Sprite):
         self.slots = {}
         
         for i, l in enumerate(monster_list):
-            for m in l:
+            for j, m in enumerate(l):
                 posx = 65 + (i*180)
-                posy = 85 + (i*60)
+                posy = 85 + (j*60)
                 self.slots[(posx,posy)] = m
         
         surface, rect = self.make_blank_left_box()
@@ -487,6 +552,8 @@ class MenuGui(object):
     def __init__(self, level, inventory, conductors):
         self.level = level
         self.game_data = self.level.game_data
+        self.monsters = self.make_monster_list()
+        self.monposlist = []
         self.sfx_observer = observer.SoundEffects()
         self.observers = [self.sfx_observer]
         self.inventory = inventory
@@ -498,19 +565,67 @@ class MenuGui(object):
         self.arrow_index = 0
         self.allow_input = False
 
+    def make_monster_list(self):
+        monster_list = [[]]
+        self.monposlist = []
+        for i, conduc in enumerate(self.game_data['conductors']):
+            for j, m in enumerate(conduc.monsters):
+                monster_list[i].append(m.name)
+                self.monposlist.append(j + (i*3))
+
+        return monster_list
+        
+
     def check_for_input(self, keys):
         """Check for input"""
         if self.allow_input:
             if keys[pg.K_DOWN]:
                 if self.arrow_index < len(self.arrow.pos_list) - 1:
                     self.notify(c.CLICK)
-                    self.arrow_index += 1
+
+                    if self.arrow.state == 'conductorsubmenu':
+                        if len(self.game_data['conductors']) > self.arrow_index+1:
+                            self.arrow_index += 1
+                            self.bottom_box.compstate += 1
+
+
+                    elif self.arrow.state == 'monsterselect':
+                        if len(self.monsters) > self.arrow_index+1:
+                            self.arrow_index = self.monposlist.index(self.arrow_index) + 1
+
+                    
+                    else:
+                        self.arrow_index += 1
                     self.allow_input = False
+
             elif keys[pg.K_UP]:
                 if self.arrow_index > 0:
-                    self.notify(c.CLICK)
-                    self.arrow_index -= 1
+                    if self.arrow.state == 'conductorsubmenu':
+                        self.arrow_index -= 1
+                        self.bottom_box.compstate -= 1
+
+                    elif self.arrow.state == 'monsterselect':
+                        self.arrow_index = self.monposlist.index(self.arrow_index) - 1
+
+                    else:
+                        self.notify(c.CLICK)
+                        self.arrow_index -= 1
+                    
                     self.allow_input = False
+
+            elif keys[pg.K_LEFT]:
+                if self.arrow.state == 'monsterinfo':
+                    if self.arrow_index == 3:
+                        if self.bottom_box.conductorstate > 0:
+                            self.bottom_box.conductorstate -= 1
+
+                self.allow_input = False
+
+            elif keys[pg.K_RIGHT]:
+                if self.arrow.state == 'monsterinfo':
+                   if self.arrow_index == 3:
+                       if self.bottom_box.conductorstate+1 < len(self.game_data['conductors']):
+                            self.bottom_box.conductorstate += 1
 
             elif keys[pg.K_z]:
                 self.notify(c.CLICK2)
@@ -529,6 +644,12 @@ class MenuGui(object):
                         self.arrow_index = 0
                         self.left_box.state = 'itemtypes'
                         self.arrow.state = 'itemtypeselect'
+                
+                elif self.arrow.state == 'monsterselect':
+                    self.arrow.state = 'monsterinfo'
+                    self.bottom_box.compstate = (self.arrow_index%3, (self.arrow_index/3)-1)
+                    self.bottom_box.conductorstate = 0
+                    self.bottom_box.state = 'monsterinfo'
                 self.allow_input = False
 
             elif keys[pg.K_x]:
@@ -538,6 +659,13 @@ class MenuGui(object):
                     self.arrow.state = 'selectmenu'
                     self.arrow_index = 0
                     self.allow_input = True
+
+                elif self.arrow.state == 'monsterinfo':
+                    self.bottom_box.state = 'invisible'
+                    self.bottom_box.compstate = 0
+                    self.arrow.state = 'monsterselect'
+                    self.arrow_index = 0
+                    self.allow_input = False
 
             elif keys[pg.K_RETURN]:
                 self.level.state = 'normal'
@@ -551,7 +679,9 @@ class MenuGui(object):
                 and not keys[pg.K_RETURN]
                 and not keys[pg.K_SPACE]
                 and not keys[pg.K_RIGHT]
-                and not keys[pg.K_LEFT]):
+                and not keys[pg.K_LEFT]
+                and not keys[pg.K_z]
+                and not keys[pg.K_x]):
             self.allow_input = True
 
     def notify(self, event):
