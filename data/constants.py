@@ -42,6 +42,7 @@ PINK = 208, 32, 144
 TRANSITION_COLOR = BLACK_BLUE
 
 MAIN_FONT = 'nrkis'
+SPEC_FONT1 = 'TCCEB'
 
 #BATTLE STATES
 
@@ -88,6 +89,7 @@ PUNCH = 'punch'
 POWERUP = 'powerup'
 TALK = 'talk'
 MISS = 'whoosh'
+CLOSE = 'close'
 
 TRANSITION_SPEED = 35 
 DEATH_TRANSITION_SPEED = 5

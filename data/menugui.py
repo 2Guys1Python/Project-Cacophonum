@@ -342,6 +342,8 @@ class LeftBox(pg.sprite.Sprite):
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
         self.big_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 40)
         self.big_font.set_bold(True)
+        self.cond_font = pg.font.Font(setup.FONTS[c.SPEC_FONT1], 40)
+        self.cond_font.set_italic(True)
         self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 28)
         self.title_font.set_underline(True)
         self.get_tile = tools.get_tile
@@ -373,15 +375,15 @@ class LeftBox(pg.sprite.Sprite):
         
         for i in range(len(conductor_list)):
             text = conductor_list[i]
-            text_image = self.big_font.render(text, True, c.WHITE)
-            text_rect = text_image.get_rect(x=160, y=60+(100*i))
+            text_image = self.cond_font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=250, y=55+(100*i))
             surface.blit(text_image, text_rect)
             
         self.image = surface
         self.rect = rect
 
     def show_monsters(self):
-        monster_list = [[]]
+        monster_list = [[],[],[]]
         for i, conduc in enumerate(self.game_data['conductors']):
             for m in conduc.monsters:
                 monster_list[i].append(m.name)
@@ -553,7 +555,6 @@ class MenuGui(object):
         self.level = level
         self.game_data = self.level.game_data
         self.monsters = self.make_monster_list()
-        self.monposlist = []
         self.sfx_observer = observer.SoundEffects()
         self.observers = [self.sfx_observer]
         self.inventory = inventory
@@ -566,7 +567,7 @@ class MenuGui(object):
         self.allow_input = False
 
     def make_monster_list(self):
-        monster_list = [[]]
+        monster_list = [[],[],[]]
         self.monposlist = []
         for i, conduc in enumerate(self.game_data['conductors']):
             for j, m in enumerate(conduc.monsters):
@@ -581,42 +582,46 @@ class MenuGui(object):
         if self.allow_input:
             if keys[pg.K_DOWN]:
                 if self.arrow_index < len(self.arrow.pos_list) - 1:
-                    self.notify(c.CLICK)
 
                     if self.arrow.state == 'conductorsubmenu':
                         if len(self.game_data['conductors']) > self.arrow_index+1:
                             self.arrow_index += 1
                             self.bottom_box.compstate += 1
+                            self.notify(c.CLICK)
 
 
                     elif self.arrow.state == 'monsterselect':
                         if len(self.monsters) > self.arrow_index+1:
-                            self.arrow_index = self.monposlist.index(self.arrow_index) + 1
+                            self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) + 1]
+                            self.notify(c.CLICK)
 
-                    
                     else:
                         self.arrow_index += 1
-                    self.allow_input = False
+                        self.notify(c.CLICK)
+                self.allow_input = False
 
             elif keys[pg.K_UP]:
                 if self.arrow_index > 0:
                     if self.arrow.state == 'conductorsubmenu':
+                        self.notify(c.CLICK)
                         self.arrow_index -= 1
                         self.bottom_box.compstate -= 1
 
                     elif self.arrow.state == 'monsterselect':
-                        self.arrow_index = self.monposlist.index(self.arrow_index) - 1
+                        self.notify(c.CLICK)
+                        self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) - 1]
 
                     else:
                         self.notify(c.CLICK)
                         self.arrow_index -= 1
                     
-                    self.allow_input = False
+                self.allow_input = False
 
             elif keys[pg.K_LEFT]:
                 if self.arrow.state == 'monsterinfo':
                     if self.arrow_index == 3:
                         if self.bottom_box.conductorstate > 0:
+                            self.notify(c.CLICK)
                             self.bottom_box.conductorstate -= 1
 
                 self.allow_input = False
@@ -626,26 +631,31 @@ class MenuGui(object):
                    if self.arrow_index == 3:
                        if self.bottom_box.conductorstate+1 < len(self.game_data['conductors']):
                             self.bottom_box.conductorstate += 1
+                            self.notify(c.CLICK)
+                self.allow_input = False
 
             elif keys[pg.K_z]:
-                self.notify(c.CLICK2)
                 if self.arrow.state == 'selectmenu':
                     if self.arrow_index == 0:
+                        self.notify(c.CLICK2)
                         self.left_box.state = 'conductors'
                         self.bottom_box.state = 'conductorinfo'
                         self.bottom_box.compstate = 0
                         self.arrow.state = 'conductorsubmenu'
                         self.arrow_index = 0
                     elif self.arrow_index == 1:
+                        self.notify(c.CLICK2)
                         self.arrow_index = 0
                         self.left_box.state = 'monsters'
                         self.arrow.state = 'monsterselect'
                     elif self.arrow_index == 2:
+                        self.notify(c.CLICK2)
                         self.arrow_index = 0
                         self.left_box.state = 'itemtypes'
                         self.arrow.state = 'itemtypeselect'
                 
                 elif self.arrow.state == 'monsterselect':
+                    self.notify(c.CLICK2)
                     self.arrow.state = 'monsterinfo'
                     self.bottom_box.compstate = (self.arrow_index%3, (self.arrow_index/3)-1)
                     self.bottom_box.conductorstate = 0
@@ -654,25 +664,27 @@ class MenuGui(object):
 
             elif keys[pg.K_x]:
                 if self.arrow.state == 'conductorsubmenu' or self.arrow.state == 'monsterselect' or self.arrow.state == 'itemtypeselect':
+                    self.notify(c.CLOSE)
                     self.left_box.state = 'invisible'
                     self.bottom_box.state = 'invisible'
                     self.arrow.state = 'selectmenu'
                     self.arrow_index = 0
-                    self.allow_input = True
 
                 elif self.arrow.state == 'monsterinfo':
+                    self.notify(c.CLOSE)
                     self.bottom_box.state = 'invisible'
                     self.bottom_box.compstate = 0
                     self.arrow.state = 'monsterselect'
                     self.arrow_index = 0
-                    self.allow_input = False
+
+                self.allow_input = False
 
             elif keys[pg.K_RETURN]:
                 self.level.state = 'normal'
                 self.left_box.state = 'invisible'
-                self.allow_input = False
                 self.arrow_index = 0
                 self.arrow.state = 'selectmenu'
+                self.allow_input = False
 
         if (not keys[pg.K_DOWN]
                 and not keys[pg.K_UP]

@@ -139,6 +139,19 @@ masterlist_status = {
 	'Paralysis': ['off', [['set_Paralysis', [True]]]]
 }
 
+masterlist_conductor = {
+	'Hanami Otozono': {
+			'hp': 5, 'atk': 5, 'def': 5,
+			'mus': 5,'foc': 5,'cla': 5,'rhy': 5,
+			'string': 8,'wind': 5,'percussion': 2
+		},
+	'Gir-Nas': {
+			'hp': 6, 'atk': 7, 'def': 7,
+			'mus': 5,'foc': 3,'cla': 3,'rhy': 6,
+			'string': 5,'wind': 3,'percussion': 8
+		}
+}
+
 def tamedMonster_Init(indexName):
 	
 	tempdict = {}
@@ -241,3 +254,6 @@ def spell_Init(indexName):
 	
 def status_Init(indexName):
 	return masterlist_status[indexName][0], masterlist_status[indexName][1]
+
+def conductor_Init(indexName):
+	return masterlist_conductor[indexName]

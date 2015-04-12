@@ -275,11 +275,7 @@ class Conductor:
 		self.monsters = []
 		self.inventory = compositeclasses.Inventory()
 		self.conductorskill = None
-		self.aptitude = {
-			'hp': 5, 'atk': 5, 'def': 5,
-			'mus': 5,'foc': 5,'cla': 5,'rhy': 5,
-			'string': 8,'wind': 5,'percussion': 2
-		}
+		self.aptitude = init.conductor_Init(name)
 		
 	def addMonster(self, monster):
 		if self.monsterLimit > len(self.monsters):
