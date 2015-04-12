@@ -240,6 +240,8 @@ def create_game_data_dict():
     players[1].addItem(copy.deepcopy(Instrument("Flute", 1)))
 
     player_items = []
+    for x in range(7):
+        player_items.append(copy.deepcopy(Consumable("Potion", 1)))
     
     treasure_flags = {'FL1': False}
     

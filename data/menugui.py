@@ -72,14 +72,14 @@ class SmallArrow(pg.sprite.Sprite):
     def navigate_item_submenu(self, pos_index):
         """Nav the item submenu"""
         self.pos_list = self.make_item_menu_pos_list()
-        self.rect.topleft = self.pos_list[pos_index]
+        self.rect = self.pos_list[pos_index]
 
     def navigate_magic_submenu(self, pos_index):
         """
         Nav the magic submenu.
         """
         self.pos_list = self.make_magic_menu_pos_list()
-        self.rect.topleft = self.pos_list[pos_index]
+        self.rect = self.pos_list[pos_index]
 
     def make_magic_menu_pos_list(self):
         """
@@ -147,14 +147,12 @@ class SmallArrow(pg.sprite.Sprite):
         """
         Make the list of arrow positions in the item submenu.
         """
-        pos_list = [(300, 173),
-                    (300, 223),
-                    (300, 323),
-                    (300, 373),
-                    (300, 478),
-                    (300, 528),
-                    (535, 478),
-                    (535, 528)]
+        pos_list = []
+        self.image = setup.GFX['arrowright']
+
+        for i in range(5):
+            pos = (5, 75 + (i*45))
+            pos_list.append(pos)
 
         return pos_list
 
@@ -358,7 +356,10 @@ class LeftBox(pg.sprite.Sprite):
         state_dict = {'conductors': self.show_conductors,
                       'monsters': self.show_monsters,
                       'itemtypes': self.show_itemtypes,
-                      'items': self.show_items,
+                      'consumables': self.show_consumables,
+                      'equipment': self.show_equipment,
+                      'keyitems': self.show_keyitems,
+                      'loot': self.show_loot,
                       'instruments': self.show_instruments,
                       'accessories': self.show_accessories,
                       'invisible': self.show_nothing}
@@ -413,50 +414,156 @@ class LeftBox(pg.sprite.Sprite):
 
         for i in range(len(itemtype_list)):
             text = itemtype_list[i]
-            text_image = self.font.render(text, True, c.WHITE)
-            text_rect = text_image.get_rect(x=65, y=70+(i*60))
+            text_image = self.big_font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=65, y=65+(i*60))
             surface.blit(text_image, text_rect)
         
         self.image = surface
         self.rect = rect
         
-    def show_items(self):
-        item_list = []
+    def show_consumables(self):
+        self.consum_list = []
         
-        for item in game_data['player inventory']:
-            item_list.append(item.name)
+        for item in self.game_data['player inventory']:
+            if item.itemType is "Consumable":
+                self.consum_list.append(item.name)
 
         self.slots = {}
 
         surface, rect = self.make_blank_left_box()
-        for x in range(5):
-            text = item_list[x+(self.itemindex*5)].name
-            posx = 65
-            posy = 70 + (i*45)
-            self.slots[(posx,posy)] = text
-            text_image = self.font.render(text, True, c.WHITE)
-            text_rect = text_image.get_rect(x=posx, y=posy)
-            surface.blit(text_image, text_rect)
+        if len(self.consum_list)-(self.itemindex*5)>5:
+            for x in range(5):
+                text = self.consum_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
+        else:
+            for x in range(len(self.consum_list) - self.itemindex*5):
+                text = self.consum_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
+        
+        self.image = surface
+        self.rect = rect
+
+    def show_loot(self):
+        self.loot_list = []
+        
+        for item in self.game_data['player inventory']:
+            if item.itemType is "Loot":
+                self.loot_list.append(item.name)
+
+        self.slots = {}
+
+        surface, rect = self.make_blank_left_box()
+        if len(self.loot_list)-(self.itemindex*5)>5:
+            for x in range(5):
+                text = self.loot_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
+        else:
+            for x in range(len(self.loot_list) - self.itemindex*5):
+                text = self.loot_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
+        
+        self.image = surface
+        self.rect = rect
+
+    def show_equipment(self):
+        self.eq_list = []
+		
+        for item in self.game_data['player inventory']:
+            if item.itemType is "Instrument" or item.itemType is "Accessory":
+                self.eq_list.append(item.name)
+
+        self.slots = {}
+
+        surface, rect = self.make_blank_left_box()
+        if len(self.eq_list)-(self.itemindex*5)>5:
+            for x in range(5):
+                text = self.eq_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
+        else:
+            for x in range(len(self.eq_list) - self.itemindex*5):
+                text = self.eq_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
+        
+        self.image = surface
+        self.rect = rect
+
+    def show_keyitems(self):
+        self.ki_list = []
+		
+        for item in self.game_data['player inventory']:
+            if item.itemType is "Key Item":
+                self.ki_list.append(item.name)
+
+        self.slots = {}
+
+        surface, rect = self.make_blank_left_box()
+        if len(self.ki_list)-(self.itemindex*5)>5:
+            for x in range(5):
+                text = self.ki_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
+        else:
+            for x in range(len(self.ki_list) - self.itemindex*5):
+                text = self.ki_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
         
         self.image = surface
         self.rect = rect
 
     def show_instruments(self):
-        inst_list = []
-        instruments = []
+        self.inst_list = []
 		
         inventory = self.selectedmonster.master.inventory
         for x in inventory:
             if x.itemType is "Instrument":
-                inst_list.append(x.name)
+                self.inst_list.append(x.name)
 
         self.slots = {}
 
         surface, rect = self.make_blank_left_box()
         for x in range(5):
-            text = inst_list[x+(self.itemindex*5)].name
+            text = self.inst_list[x+(self.itemindex*5)]
             posx = 65
-            posy = 70 + (i*45)
+            posy = 70 + (x*45)
             self.slots[(posx,posy)] = text
             text_image = self.font.render(text, True, c.WHITE)
             text_rect = text_image.get_rect(x=posx, y=posy)
@@ -466,8 +573,7 @@ class LeftBox(pg.sprite.Sprite):
         self.rect = rect
 
     def show_accessories(self):
-        acc_list = []
-        accessories = []
+        self.acc_list = []
 		
         inventory = self.selectedmonster.master.inventory
         for x in inventory:
@@ -478,9 +584,9 @@ class LeftBox(pg.sprite.Sprite):
 
         surface, rect = self.make_blank_left_box()
         for x in range(5):
-            text = acc_list[x+(self.itemindex*5)].name
+            text = self.acc_list[x+(self.itemindex*5)]
             posx = 65
-            posy = 70 + (i*45)
+            posy = 70 + (x*45)
             self.slots[(posx,posy)] = text
             text_image = self.font.render(text, True, c.WHITE)
             text_rect = text_image.get_rect(x=posx, y=posy)
@@ -594,9 +700,33 @@ class MenuGui(object):
                             self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) + 1]
                             self.notify(c.CLICK)
 
+                    elif self.arrow.state == 'itemsubmenu':
+                        if self.left_box.state == 'loot':
+                            if len(self.left_box.loot_list) > (self.arrow_index + self.left_box.itemindex*5) + 1:
+                                self.arrow_index += 1
+                                self.notify(c.CLICK)
+                        elif self.left_box.state == 'consumables':
+                            if len(self.left_box.consum_list) > (self.arrow_index + self.left_box.itemindex*5) + 1:
+                                self.arrow_index += 1
+                                self.notify(c.CLICK)
+                        elif self.left_box.state == 'equipment':
+                            if len(self.left_box.eq_list) > (self.arrow_index + self.left_box.itemindex*5) + 1:
+                                self.arrow_index += 1
+                                self.notify(c.CLICK)
+                        elif self.left_box.state == 'keyitems':
+                            if len(self.left_box.ki_list) > (self.arrow_index + self.left_box.itemindex*5) + 1:
+                                self.arrow_index += 1
+                                self.notify(c.CLICK)
+
                     else:
                         self.arrow_index += 1
                         self.notify(c.CLICK)
+
+                else:
+                    if self.arrow.state == 'itemsubmenu':
+                        if self.arrow_index > 3:
+                            self.arrow_index = 0
+                            self.left_box.itemindex += 1
                 self.allow_input = False
 
             elif keys[pg.K_UP]:
@@ -610,9 +740,22 @@ class MenuGui(object):
                         self.notify(c.CLICK)
                         self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) - 1]
 
+                    elif self.arrow.state == 'itemsubmenu':
+                        if self.left_box.itemindex >= 0:
+                            self.notify(c.CLICK)
+                            self.arrow_index -= 1
+
                     else:
                         self.notify(c.CLICK)
                         self.arrow_index -= 1
+
+                else:
+                    if self.arrow.state == 'itemsubmenu':
+                        if self.left_box.itemindex > 0:
+                                self.left_box.itemindex -= 1
+                                self.arrow_index = 4
+                        else:
+                                self.arrow_index = 0
                     
                 self.allow_input = False
 
@@ -660,10 +803,23 @@ class MenuGui(object):
                     self.bottom_box.conductorstate = 0
                     self.arrow_index = 0
                     self.bottom_box.state = 'monsterinfo'
+
+                elif self.arrow.state == 'itemtypeselect':
+                    self.notify(c.CLICK2)
+                    if self.arrow_index == 0:
+                        self.left_box.state = 'loot'
+                    elif self.arrow_index == 1:
+                        self.left_box.state = 'consumables'
+                    elif self.arrow_index == 2:
+                        self.left_box.state = 'equipment'
+                    elif self.arrow_index == 3:
+                        self.left_box.state = 'keyitems'
+                    self.arrow_index = 0
+                    self.arrow.state = 'itemsubmenu'
                 self.allow_input = False
 
             elif keys[pg.K_x]:
-                if self.arrow.state == 'conductorsubmenu' or self.arrow.state == 'monsterselect' or self.arrow.state == 'itemtypeselect':
+                if self.arrow.state in ('conductorsubmenu', 'monsterselect','itemtypeselect'):
                     self.notify(c.CLOSE)
                     self.left_box.state = 'invisible'
                     self.bottom_box.state = 'invisible'
@@ -675,6 +831,12 @@ class MenuGui(object):
                     self.bottom_box.state = 'invisible'
                     self.bottom_box.compstate = 0
                     self.arrow.state = 'monsterselect'
+                    self.arrow_index = 0
+
+                elif self.arrow.state == 'itemsubmenu':
+                    self.notify(c.CLOSE)
+                    self.left_box.state = 'itemtypes'
+                    self.arrow.state = 'itemtypeselect'
                     self.arrow_index = 0
 
                 self.allow_input = False
