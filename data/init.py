@@ -4,8 +4,8 @@ from compositeclasses import *
 
 '''
 Tamed Monster masterlist format:
-	'Name': [maxHP, atk, def, mus, foc, cla, rhy, <- base (1-9999, combined max 50000?)
-			maxHP, atk, def, mus, foc, cla, rhy] <- gain modifiers (1-10) 
+	'Name': [HP, atk, def, mus, foc, cla, rhy, <- base (1-9999, combined max 50000?)
+			HP, atk, def, mus, foc, cla, rhy] <- gain modifiers (1-10) 
 '''
 
 masterlist_tm = {
@@ -15,7 +15,7 @@ masterlist_tm = {
 
 '''
 Wild Monster masterlist format:
-	'Name': [maxHP, atk, def, mus, foc, cla, rhy,				<- base, no max
+	'Name': [HP, atk, def, mus, foc, cla, rhy,				<- base, no max
 			hits, proration,									<- attack stats
 			[[command1, target1, condition1, conditionNum1, probability1] , [command2, target2, condition2, conditionNum2, probability2], ...]]
 																^ possible AI actions, list by priority
@@ -31,10 +31,10 @@ Wild Monster masterlist format:
 	Use spell on random enemy, no condition (prob 60)
 	Attack someone from enemy party, no condition (prob 100)
 	
-	[['suicide', 'enemy', 'selfcurHP<', '30', 100],
+	[['suicide', 'enemy', 'selfHP<', '30', 100],
 	['attack', 'enemy', 'turn=', 3, 100],
-	['Healing Howl', 'ally', 'lowestcurHP', None, 60],
-	['offspell', 'enemy', 'curHP>', 500, 60],
+	['Healing Howl', 'ally', 'lowestHP', None, 60],
+	['offspell', 'enemy', 'HP>', 500, 60],
 	['attack', 'enemy', None, None, 100]]
 	
 	again, an AI entry consists of this 5 tuple:
@@ -44,27 +44,27 @@ Wild Monster masterlist format:
 masterlist_wm = {
 	'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000,
 					4, 0.85,
-					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
+					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],
 	'Slime': [2500, 1500, 1500, 1500, 1500, 3000, 3000,
 					4, 0.85,
-					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
+					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],
 	'Wolf': [5500, 3500, 4500, 3500, 3500, 3500, 3500,
 					4, 0.85,
-					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
-					['Healing Howl', 'ally','lowestcurHP' ,None, 95],
+					[['offspell', 'enemy', 'enemyHP>', 500, 60],
+					['Healing Howl', 'ally','lowestHP' ,None, 95],
 					['attack', 'enemy', None, None, 100]]],
 	'Husk': [6500, 6000, 4000, 2500, 2500, 2500, 3000,
 					4, 0.85,
-					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
-					['Healing Howl', 'ally','lowestcurHP' ,None, 60],
+					[['offspell', 'enemy', 'enemyHP>', 500, 60],
+					['Healing Howl', 'ally','lowestHP' ,None, 60],
 					['attack', 'enemy', None, None, 100]]],
 	'Orthrus': [7000, 7000, 3000, 7000, 7000, 7000, 7000,
 					4, 0.85,
-					[['offspell', 'enemy', 'enemycurHP>', 500, 60],
-					['Healing Howl', 'self','curHP<' ,2500, 60],
-					['suicide', 'enemy', 'selfcurHP<', '20', 100],
+					[['offspell', 'enemy', 'enemyHP>', 500, 60],
+					['Healing Howl', 'self','HP<' ,2500, 60],
+					['suicide', 'enemy', 'selfHP<', '20', 100],
 					['attack', 'enemy', None, None, 100]]]
 }
 
@@ -135,7 +135,7 @@ Status masterlist format:
 '''
 
 masterlist_status = {
-	'Poison': ['off', [['dmg_HP', [1, 'ecurHP', 0.05]]]],
+	'Poison': ['off', [['dmg_HP', [1, 'eHP', 0.05]]]],
 	'Paralysis': ['off', [['set_Paralysis', [True]]]]
 }
 
@@ -156,12 +156,12 @@ def tamedMonster_Init(indexName):
 	
 	tempdict = {}
 	tempdict['base'] = {
-			'maxHP': masterlist_tm[indexName][0], 'atk': masterlist_tm[indexName][1], 'def': masterlist_tm[indexName][2],
+			'HP': masterlist_tm[indexName][0], 'atk': masterlist_tm[indexName][1], 'def': masterlist_tm[indexName][2],
 			'mus': masterlist_tm[indexName][3], 'foc': masterlist_tm[indexName][4], 'cla': masterlist_tm[indexName][5], 'rhy': masterlist_tm[indexName][6],
 			'string': 1, 'wind': 1, 'percussion': 1
 	}
 	tempdict['curr'] = {
-			'curHP': masterlist_tm[indexName][0], 'bond': 0,
+			'HP': masterlist_tm[indexName][0], 'bond': 0,
 			'notegain': 2, 'notes': 4
 	}
 	tempdict['bonus'] = {
@@ -175,7 +175,7 @@ def tamedMonster_Init(indexName):
 			'penaltynotegain': 0
 	}
 	tempdict['gains'] = {
-			'maxHP': masterlist_tm[indexName][7],'atk': masterlist_tm[indexName][8],'def': masterlist_tm[indexName][9],
+			'HP': masterlist_tm[indexName][7],'atk': masterlist_tm[indexName][8],'def': masterlist_tm[indexName][9],
 			'mus': masterlist_tm[indexName][10],'foc': masterlist_tm[indexName][11],'cla': masterlist_tm[indexName][12],'rhy': masterlist_tm[indexName][13]
 	}
 	tempdict['tp'] = {
@@ -188,11 +188,11 @@ def wildMonster_Init(indexName):
 	tempdict = {}
 	
 	tempdict['base'] = {
-			'maxHP': masterlist_wm[indexName][0], 'atk': masterlist_wm[indexName][1], 'def': masterlist_wm[indexName][2],
+			'HP': masterlist_wm[indexName][0], 'atk': masterlist_wm[indexName][1], 'def': masterlist_wm[indexName][2],
 			'mus': masterlist_wm[indexName][3], 'foc': masterlist_wm[indexName][4], 'cla': masterlist_wm[indexName][5], 'rhy': masterlist_wm[indexName][6],
 	}
 	tempdict['curr'] = {
-			'curHP': masterlist_wm[indexName][0], 'hits': masterlist_wm[indexName][7], 'proration': masterlist_wm[indexName][8]
+			'HP': masterlist_wm[indexName][0], 'hits': masterlist_wm[indexName][7], 'proration': masterlist_wm[indexName][8]
 	}
 	tempdict['bonus'] = {
 			'bonusHP': 0, 'bonusatk': 0, 'bonusdef': 0,

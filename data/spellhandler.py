@@ -18,9 +18,9 @@ def statusTick(status):
 			
 def getStat(str, s, t):
 	if str == 'maxHP':
-		return s['base']['maxHP'] + s['bonus']['bonusHP'] - s['penalty']['penaltyHP']
+		return s['base']['HP'] + s['bonus']['bonusHP'] - s['penalty']['penaltyHP']
 	elif str == 'curHP':
-		return s['curr']['curHP']
+		return s['curr']['HP']
 	elif str == 'atk':
 		return s['base']['atk'] + s['bonus']['bonusatk'] - s['penalty']['penaltyatk']
 	elif str == 'def':
@@ -34,9 +34,9 @@ def getStat(str, s, t):
 	elif str == 'rhy':
 		return s['base']['rhy'] + s['bonus']['bonusrhy'] - s['penalty']['penaltyrhy']
 	elif str == 'emaxHP':
-		return t['base']['maxHP'] + t['bonus']['bonusHP'] - t['penalty']['penaltyHP']
+		return t['base']['HP'] + t['bonus']['bonusHP'] - t['penalty']['penaltyHP']
 	elif str == 'ecurHP':
-		return t['curr']['curHP']
+		return t['curr']['HP']
 	elif str == 'eatk':
 		return t['base']['atk'] + t['bonus']['bonusatk'] - t['penalty']['penaltyatk']
 	elif str == 'edef':

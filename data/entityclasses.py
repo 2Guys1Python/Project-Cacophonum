@@ -28,20 +28,20 @@ class WildMonster(Monster):
 			currentdamage *= self.proration
 	
 	def damage(self, num):
-		if num <= self.stats['curr']['curHP']:
-			self.stats['curr']['curHP'] -= int(num)
+		if num <= self.stats['curr']['HP']:
+			self.stats['curr']['HP'] -= int(num)
 		else:
-			self.stats['curr']['curHP'] = 0
-		print "%d dealt! %d HP left." %(num, self.stats['curr']['curHP'])
-		if self.stats['curr']['curHP'] == 0:
+			self.stats['curr']['HP'] = 0
+		print "%d dealt! %d HP left." %(num, self.stats['curr']['HP'])
+		if self.stats['curr']['HP'] == 0:
 			self.isDead = True
 			self.canMove = False
 			print "%s died" %self.name
 	
 	def heal(self, num):
-		self.stats['curr']['curHP'] += int(num)
-		if self.stats['curr']['curHP'] > (self.stats['base']['maxHP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP']):
-			self.stats['curr']['curHP'] = (self.stats['base']['maxHP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP'])
+		self.stats['curr']['HP'] += int(num)
+		if self.stats['curr']['HP'] > (self.stats['base']['HP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP']):
+			self.stats['curr']['HP'] = (self.stats['base']['HP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP'])
 			
 	def addStatus(self, status):
 		self.status.append(status)
@@ -184,19 +184,19 @@ class TamedMonster(Monster):
 		self.spells.append(spell)
 	
 	def damage(self, num):
-		if num <= self.stats['curr']['curHP']:
-			self.stats['curr']['curHP'] -= int(num)
+		if num <= self.stats['curr']['HP']:
+			self.stats['curr']['HP'] -= int(num)
 		else:
-			self.stats['curr']['curHP'] = 0
-		print "%d dealt! %d HP left." %(num, self.stats['curr']['curHP'])
-		if self.stats['curr']['curHP'] == 0:
+			self.stats['curr']['HP'] = 0
+		print "%d dealt! %d HP left." %(num, self.stats['curr']['HP'])
+		if self.stats['curr']['HP'] == 0:
 			self.isDead = True
 			print "%s died" %self.name
 			
 	def heal(self, num):
-		self.stats['curr']['curHP'] += int(num)
-		if self.stats['curr']['curHP'] > (self.stats['base']['maxHP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP']):
-			self.stats['curr']['curHP'] = (self.stats['base']['maxHP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP'])
+		self.stats['curr']['HP'] += int(num)
+		if self.stats['curr']['HP'] > (self.stats['base']['HP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP']):
+			self.stats['curr']['HP'] = (self.stats['base']['HP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP'])
 	
 	def attack(self, target):
 		print "%s attacked %s!" %(self.name, target.name)

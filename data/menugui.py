@@ -35,6 +35,8 @@ class SmallArrow(pg.sprite.Sprite):
         state_dict = {'selectmenu': self.navigate_select_menu,
                       'conductorsubmenu': self.navigate_conductor_submenu,
                       'monsterselect': self.navigate_monster_select,
+                      'trainselect': self.navigate_monster_select,
+                      'training': self.navigate_monster_training,
                       'itemtypeselect': self.navigate_item_type_select,
                       'monsterinfo': self.navigate_monster_info,
                       'itemsubmenu': self.navigate_item_submenu,
@@ -55,6 +57,10 @@ class SmallArrow(pg.sprite.Sprite):
 
     def navigate_monster_select(self, pos_index):
         self.pos_list = self.make_monster_select_pos_list()
+        self.rect = self.pos_list[pos_index]
+
+    def navigate_monster_training(self, pos_index):
+        self.pos_list = self.make_monster_training_pos_list()
         self.rect = self.pos_list[pos_index]
 
     def navigate_item_type_select(self, pos_index):
@@ -107,6 +113,14 @@ class SmallArrow(pg.sprite.Sprite):
         pos_list = [(5,90), (5,150), (5,210),
 		            (185,90), (185,150), (185,210),
                     (365,90), (365,150), (365,210)]
+        self.image = setup.GFX['arrowright']
+
+        return pos_list
+
+    def make_monster_training_pos_list(self):
+        pos_list = [(5,460), (5,500), (5,540),
+                    (285,435), (285, 475), (285, 515), (285, 555),
+                    (560,460), (560, 500), (560, 540)]
         self.image = setup.GFX['arrowright']
 
         return pos_list
@@ -296,11 +310,86 @@ class BottomBox(pg.sprite.Sprite):
 
         self.image = surface
         self.rect = rect
-    
-    def show_description(self):
-        pass
 
     def show_training(self):
+        conductor = self.game_data['conductors'][self.compstate[0]]
+        monster = conductor.monsters[self.compstate[1]]
+        default_text = ['TP remaining: ', 'To next TP: ', 'HP: ', 'ATK: ', 'DEF: ', 'MUS: ', 'FOC: ', 'CLA: ', 'RHY: ', 'STR: ', 'WND: ', 'PRC: ']
+
+        surface, rect = self.make_blank_bottom_box()
+
+        for i in range(2):
+            text = default_text[i]
+            if i == 0:
+                text += str(monster.stats['tp']['tp'])
+            else:
+                text += str(monster.stats['tp']['tpprog']) + "/" + str(monster.stats['tp']['nexttp'])
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=25+(i*195), y=25)
+            surface.blit(text_image, text_rect)
+
+        for i in range(7):
+            text = default_text[i+2]
+            text_image = self.font.render(text, True, c.WHITE)
+            if i < 3:
+                text_rect = text_image.get_rect(x=50, y=95+(40*i))
+            else:
+                text_rect = text_image.get_rect(x=330, y=70+(40*(i-3)))
+            surface.blit(text_image, text_rect)
+            if i == 0:
+                text = str(monster.stats['base'][text[:len(text)-2]])
+            else:
+                text = str(monster.stats['base'][text[:len(text)-2].lower()])
+            text_image = self.font.render(text, True, c.WHITE)
+            if i < 3:
+                text_rect = text_image.get_rect(x=115, y=95+(40*i))
+            else:
+                text_rect = text_image.get_rect(x=395, y=70+(40*(i-3)))
+            surface.blit(text_image, text_rect)
+
+            text = default_text[i+2]
+            if i == 0:
+                text = "(" + str(conductor.aptitude[text[:len(text)-2].lower()] * monster.stats['gains'][text[:len(text)-2]]) + ")"
+            else:
+                text = "(" + str(conductor.aptitude[text[:len(text)-2].lower()] * monster.stats['gains'][text[:len(text)-2].lower()]) + ")"
+            text_image = self.font.render(text, True, c.WHITE)
+            if i < 3:
+                text_rect = text_image.get_rect(x=175, y=95+(40*i))
+            else:
+                text_rect = text_image.get_rect(x=455, y=70+(40*(i-3)))
+            surface.blit(text_image, text_rect)
+			
+        for i in range(3):
+            text = default_text[i+9]
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=605, y=95+(40*i))
+            surface.blit(text_image, text_rect)
+            
+            if i == 0:
+                text = str(monster.stats['base']['string'])
+            elif i == 1:
+                text = str(monster.stats['base']['wind'])
+            else:
+                text = str(monster.stats['base']['percussion'])
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=670, y=95+(40*i))
+            surface.blit(text_image, text_rect)
+
+            text = default_text[i+9]
+            if i == 0:
+                text = "(" + str(conductor.aptitude['string']) + ")"
+            elif i == 1:
+                text = "(" + str(conductor.aptitude['wind']) + ")"
+            elif i == 2:
+                text = "(" + str(conductor.aptitude['percussion']) + ")"
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=740, y=95+(40*i))
+            surface.blit(text_image, text_rect)
+
+        self.image = surface
+        self.rect = rect
+            
+    def show_description(self):
         pass
 	
     def show_nothing(self):
@@ -355,6 +444,7 @@ class LeftBox(pg.sprite.Sprite):
         """Make the dictionary of state methods"""
         state_dict = {'conductors': self.show_conductors,
                       'monsters': self.show_monsters,
+                      'trainselect': self.show_monsters,
                       'itemtypes': self.show_itemtypes,
                       'consumables': self.show_consumables,
                       'equipment': self.show_equipment,
@@ -695,7 +785,7 @@ class MenuGui(object):
                             self.notify(c.CLICK)
 
 
-                    elif self.arrow.state == 'monsterselect':
+                    elif self.arrow.state in ('monsterselect', 'trainselect'):
                         if len(self.monsters) > self.arrow_index+1:
                             self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) + 1]
                             self.notify(c.CLICK)
@@ -736,7 +826,7 @@ class MenuGui(object):
                         self.arrow_index -= 1
                         self.bottom_box.compstate -= 1
 
-                    elif self.arrow.state == 'monsterselect':
+                    elif self.arrow.state in ('monsterselect', 'trainselect'):
                         self.notify(c.CLICK)
                         self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) - 1]
 
@@ -795,6 +885,11 @@ class MenuGui(object):
                         self.arrow_index = 0
                         self.left_box.state = 'itemtypes'
                         self.arrow.state = 'itemtypeselect'
+                    elif self.arrow_index == 3:
+                        self.notify(c.CLICK2)
+                        self.arrow_index = 0
+                        self.left_box.state = 'trainselect'
+                        self.arrow.state = 'trainselect'
                 
                 elif self.arrow.state == 'monsterselect':
                     self.notify(c.CLICK2)
@@ -803,6 +898,13 @@ class MenuGui(object):
                     self.bottom_box.conductorstate = 0
                     self.arrow_index = 0
                     self.bottom_box.state = 'monsterinfo'
+
+                elif self.arrow.state == 'trainselect':
+                    self.notify(c.CLICK2)
+                    self.arrow.state = 'training'
+                    self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
+                    self.arrow_index = 0
+                    self.bottom_box.state = 'training'
 
                 elif self.arrow.state == 'itemtypeselect':
                     self.notify(c.CLICK2)
@@ -819,7 +921,7 @@ class MenuGui(object):
                 self.allow_input = False
 
             elif keys[pg.K_x]:
-                if self.arrow.state in ('conductorsubmenu', 'monsterselect','itemtypeselect'):
+                if self.arrow.state in ('conductorsubmenu', 'monsterselect','itemtypeselect', 'trainselect'):
                     self.notify(c.CLOSE)
                     self.left_box.state = 'invisible'
                     self.bottom_box.state = 'invisible'
@@ -831,6 +933,13 @@ class MenuGui(object):
                     self.bottom_box.state = 'invisible'
                     self.bottom_box.compstate = 0
                     self.arrow.state = 'monsterselect'
+                    self.arrow_index = 0
+
+                elif self.arrow.state == 'training':
+                    self.notify(c.CLOSE)
+                    self.bottom_box.state = 'invisible'
+                    self.bottom_box.compstate = 0
+                    self.arrow.state = 'trainselect'
                     self.arrow_index = 0
 
                 elif self.arrow.state == 'itemsubmenu':
