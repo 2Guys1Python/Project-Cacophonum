@@ -340,8 +340,7 @@ class LeftBox(pg.sprite.Sprite):
         super(LeftBox, self).__init__()
         self.game_data = game_data
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
-        self.big_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 40)
-        self.big_font.set_bold(True)
+        self.big_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 35)
         self.cond_font = pg.font.Font(setup.FONTS[c.SPEC_FONT1], 40)
         self.cond_font.set_italic(True)
         self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 28)
@@ -400,7 +399,7 @@ class LeftBox(pg.sprite.Sprite):
         
         for coord in self.slots:
             text = self.slots[coord]
-            text_image = self.font.render(text, True, c.WHITE)
+            text_image = self.big_font.render(text, True, c.WHITE)
             text_rect = text_image.get_rect(topleft=coord)
             surface.blit(text_image, text_rect)
             
@@ -657,8 +656,9 @@ class MenuGui(object):
                 elif self.arrow.state == 'monsterselect':
                     self.notify(c.CLICK2)
                     self.arrow.state = 'monsterinfo'
-                    self.bottom_box.compstate = (self.arrow_index%3, (self.arrow_index/3)-1)
+                    self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
                     self.bottom_box.conductorstate = 0
+                    self.arrow_index = 0
                     self.bottom_box.state = 'monsterinfo'
                 self.allow_input = False
 

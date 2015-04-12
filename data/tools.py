@@ -232,7 +232,7 @@ def create_game_data_dict():
     players[0].addItem(copy.deepcopy(Consumable("Potion", 1)))
     players[0].addItem(copy.deepcopy(Instrument("Flute", 1)))
     players.append(Conductor("Gir-Nas"))
-    monsters.append(copy.deepcopy(TamedMonster("Ichiro", "Kobold", 1)))
+    monsters.append(copy.deepcopy(TamedMonster("Naraka", "Kobold", 1)))
     players[1].addMonster(monsters[1])
     monsters[1].setMaster(players[1]) 
     monsters[1].addSpell(copy.deepcopy(Spell("Black Aria", 1)))
