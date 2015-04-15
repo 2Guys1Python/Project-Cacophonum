@@ -179,6 +179,26 @@ class TamedMonster(Monster):
 		self.stats['penalty']['penaltycla'] += equipment.stats['penalty']['penaltycla']
 		self.stats['penalty']['penaltyrhy'] += equipment.stats['penalty']['penaltyrhy']
 		self.stats['penalty']['penaltynotegain'] += equipment.stats['penalty']['penaltynotegain']
+    
+    def unequip(self, slot):
+        equipment = self.equipment[slot]
+		self.stats['bonus']['bonusHP'] -= equipment.stats['bonus']['bonusHP']
+		self.stats['bonus']['bonusatk'] -= equipment.stats['bonus']['bonusatk']
+		self.stats['bonus']['bonusdef'] -= equipment.stats['bonus']['bonusdef']
+		self.stats['bonus']['bonusmus'] -= equipment.stats['bonus']['bonusmus']
+		self.stats['bonus']['bonusfoc'] -= equipment.stats['bonus']['bonusfoc']
+		self.stats['bonus']['bonuscla'] -= equipment.stats['bonus']['bonuscla']
+		self.stats['bonus']['bonusrhy'] -= equipment.stats['bonus']['bonusrhy']
+		self.stats['bonus']['bonusnotegain'] -= equipment.stats['bonus']['bonusnotegain']
+		self.stats['penalty']['penaltyHP'] -= equipment.stats['penalty']['penaltyHP']
+		self.stats['penalty']['penaltyatk'] -= equipment.stats['penalty']['penaltyatk']
+		self.stats['penalty']['penaltydef'] -= equipment.stats['penalty']['penaltydef']
+		self.stats['penalty']['penaltymus'] -= equipment.stats['penalty']['penaltymus']
+		self.stats['penalty']['penaltyfoc'] -= equipment.stats['penalty']['penaltyfoc']
+		self.stats['penalty']['penaltycla'] -= equipment.stats['penalty']['penaltycla']
+		self.stats['penalty']['penaltyrhy'] -= equipment.stats['penalty']['penaltyrhy']
+		self.stats['penalty']['penaltynotegain'] -= equipment.stats['penalty']['penaltynotegain']
+		self.equipment[slot] = None
 		
 	def addSpell(self, spell):
 		self.spells.append(spell)
