@@ -278,11 +278,20 @@ class BottomBox(pg.sprite.Sprite):
         for i in range(4):
             text = default_text[i]
             if i == 1:
-                text += str(monster.equipment['instrument'])
+                if monster.equipment['instrument']:
+                    text += str(monster.equipment['instrument'].name)
+                else:
+                    text += "None"
             elif i == 2:
-                text += str(monster.equipment['accessory1'])
+                if monster.equipment['accessory1']:
+                    text += str(monster.equipment['accessory1'].name)
+                else:
+                    text += "None"
             elif i == 3:
-                text += str(monster.equipment['accessory2'])
+                if monster.equipment['accessory2']:
+                    text += str(monster.equipment['accessory2'].name)
+                else:
+                    text += "None"
             text_image = self.big_font.render(text, True, c.WHITE)
             text_rect = text_image.get_rect(x=30, y = 25 + (i*45))
             surface.blit(text_image, text_rect)
@@ -786,7 +795,7 @@ class MenuGui(object):
 
 
                     elif self.arrow.state in ('monsterselect', 'trainselect'):
-                        if len(self.monsters) > self.arrow_index+1:
+                        if len(self.monposlist) > self.arrow_index+1:
                             self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) + 1]
                             self.notify(c.CLICK)
 

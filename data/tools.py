@@ -231,6 +231,9 @@ def create_game_data_dict():
     monsters[0].addSpell(copy.deepcopy(Spell("Black Aria", 1)))
     players[0].addItem(copy.deepcopy(Consumable("Potion", 1)))
     players[0].addItem(copy.deepcopy(Instrument("Flute", 1)))
+    monsters[0].equip(copy.deepcopy(Instrument("Flute", 1)),"instrument")
+    
+    """
     players.append(Conductor("Gir-Nas"))
     monsters.append(copy.deepcopy(TamedMonster("Naraka", "Kobold", 1)))
     players[1].addMonster(monsters[1])
@@ -238,6 +241,10 @@ def create_game_data_dict():
     monsters[1].addSpell(copy.deepcopy(Spell("Black Aria", 1)))
     players[1].addItem(copy.deepcopy(Consumable("Potion", 1)))
     players[1].addItem(copy.deepcopy(Instrument("Flute", 1)))
+    monsters.append(copy.deepcopy(TamedMonster("Kyouki", "Kobold", 1)))
+    players[0].addMonster(monsters[2])
+    monsters[2].setMaster(players[0])
+    """
 
     player_items = []
     for x in range(7):

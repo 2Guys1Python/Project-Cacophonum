@@ -161,24 +161,24 @@ class TamedMonster(Monster):
 	def setMaster(self, newmaster):
 		self.master = newmaster
 		
-	def setInstrument(self, instrument):
-		self.equipment['instrument'] = instrument
-		self.stats['bonus']['bonusHP'] += instrument.stats['bonus']['bonusHP']
-		self.stats['bonus']['bonusatk'] += instrument.stats['bonus']['bonusatk']
-		self.stats['bonus']['bonusdef'] += instrument.stats['bonus']['bonusdef']
-		self.stats['bonus']['bonusmus'] += instrument.stats['bonus']['bonusmus']
-		self.stats['bonus']['bonusfoc'] += instrument.stats['bonus']['bonusfoc']
-		self.stats['bonus']['bonuscla'] += instrument.stats['bonus']['bonuscla']
-		self.stats['bonus']['bonusrhy'] += instrument.stats['bonus']['bonusrhy']
-		self.stats['bonus']['bonusnotegain'] += instrument.stats['bonus']['bonusnotegain']
-		self.stats['penalty']['penaltyHP'] += instrument.stats['penalty']['penaltyHP']
-		self.stats['penalty']['penaltyatk'] += instrument.stats['penalty']['penaltyatk']
-		self.stats['penalty']['penaltydef'] += instrument.stats['penalty']['penaltydef']
-		self.stats['penalty']['penaltymus'] += instrument.stats['penalty']['penaltymus']
-		self.stats['penalty']['penaltyfoc'] += instrument.stats['penalty']['penaltyfoc']
-		self.stats['penalty']['penaltycla'] += instrument.stats['penalty']['penaltycla']
-		self.stats['penalty']['penaltyrhy'] += instrument.stats['penalty']['penaltyrhy']
-		self.stats['penalty']['penaltynotegain'] += instrument.stats['penalty']['penaltynotegain']
+	def equip(self, equipment, slot):
+		self.equipment[slot] = equipment
+		self.stats['bonus']['bonusHP'] += equipment.stats['bonus']['bonusHP']
+		self.stats['bonus']['bonusatk'] += equipment.stats['bonus']['bonusatk']
+		self.stats['bonus']['bonusdef'] += equipment.stats['bonus']['bonusdef']
+		self.stats['bonus']['bonusmus'] += equipment.stats['bonus']['bonusmus']
+		self.stats['bonus']['bonusfoc'] += equipment.stats['bonus']['bonusfoc']
+		self.stats['bonus']['bonuscla'] += equipment.stats['bonus']['bonuscla']
+		self.stats['bonus']['bonusrhy'] += equipment.stats['bonus']['bonusrhy']
+		self.stats['bonus']['bonusnotegain'] += equipment.stats['bonus']['bonusnotegain']
+		self.stats['penalty']['penaltyHP'] += equipment.stats['penalty']['penaltyHP']
+		self.stats['penalty']['penaltyatk'] += equipment.stats['penalty']['penaltyatk']
+		self.stats['penalty']['penaltydef'] += equipment.stats['penalty']['penaltydef']
+		self.stats['penalty']['penaltymus'] += equipment.stats['penalty']['penaltymus']
+		self.stats['penalty']['penaltyfoc'] += equipment.stats['penalty']['penaltyfoc']
+		self.stats['penalty']['penaltycla'] += equipment.stats['penalty']['penaltycla']
+		self.stats['penalty']['penaltyrhy'] += equipment.stats['penalty']['penaltyrhy']
+		self.stats['penalty']['penaltynotegain'] += equipment.stats['penalty']['penaltynotegain']
 		
 	def addSpell(self, spell):
 		self.spells.append(spell)
