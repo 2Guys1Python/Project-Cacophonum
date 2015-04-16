@@ -180,8 +180,8 @@ class TamedMonster(Monster):
 		self.stats['penalty']['penaltyrhy'] += equipment.stats['penalty']['penaltyrhy']
 		self.stats['penalty']['penaltynotegain'] += equipment.stats['penalty']['penaltynotegain']
     
-    def unequip(self, slot):
-        equipment = self.equipment[slot]
+	def unequip(self, slot):
+		equipment = self.equipment[slot]
 		self.stats['bonus']['bonusHP'] -= equipment.stats['bonus']['bonusHP']
 		self.stats['bonus']['bonusatk'] -= equipment.stats['bonus']['bonusatk']
 		self.stats['bonus']['bonusdef'] -= equipment.stats['bonus']['bonusdef']
@@ -199,6 +199,8 @@ class TamedMonster(Monster):
 		self.stats['penalty']['penaltyrhy'] -= equipment.stats['penalty']['penaltyrhy']
 		self.stats['penalty']['penaltynotegain'] -= equipment.stats['penalty']['penaltynotegain']
 		self.equipment[slot] = None
+		self.master.addItem(equipment)
+        
 		
 	def addSpell(self, spell):
 		self.spells.append(spell)
@@ -330,6 +332,9 @@ class Conductor:
 	def removeItem(self, index):
 		if self.inventory.getSize() > 0:
 			return self.inventory.removeItem(index)
+
+	def inventorySize(self):
+		return self.inventory.getSize()
 	'''	
 	def useItem(self, itemIndex, target):
 		self.items[itemIndex].use(target)

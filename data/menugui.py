@@ -649,51 +649,66 @@ class LeftBox(pg.sprite.Sprite):
         self.rect = rect
 
     def show_instruments(self):
-        self.inst_list = []
+        self.inst_list = ['unequip']
 		
         inventory = self.selectedmonster.master.inventory
-        for x in inventory:
-            if x.itemType is "Instrument":
-                self.inst_list.append(x.name)
-
-        self.slots = {}
+        for x in range(inventory.getSize()):
+            if inventory.getItem(x).itemType is "Instrument":
+                self.inst_list.append(inventory.getItem(x).name)
 
         surface, rect = self.make_blank_left_box()
-        for x in range(5):
-            text = self.inst_list[x+(self.itemindex*5)]
-            posx = 65
-            posy = 70 + (x*45)
-            self.slots[(posx,posy)] = text
-            text_image = self.font.render(text, True, c.WHITE)
-            text_rect = text_image.get_rect(x=posx, y=posy)
-            surface.blit(text_image, text_rect)
+        if len(self.inst_list)-(self.itemindex*5)>5:
+            for x in range(5):
+                text = self.inst_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
+        else:
+            for x in range(len(self.inst_list) - self.itemindex*5):
+                text = self.inst_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
         
         self.image = surface
         self.rect = rect
 
     def show_accessories(self):
-        self.acc_list = []
+        self.acc_list = ['unequip']
 		
         inventory = self.selectedmonster.master.inventory
-        for x in inventory:
-            if x.itemType is "Accessory":
-                acc_list.append(x.name)
-
-        self.slots = {}
+        for x in range(inventory.getSize()):
+            if inventory.getItem(x).itemType is "Accessory":
+                self.acc_list.append(inventory.getItem(x).name)
 
         surface, rect = self.make_blank_left_box()
-        for x in range(5):
-            text = self.acc_list[x+(self.itemindex*5)]
-            posx = 65
-            posy = 70 + (x*45)
-            self.slots[(posx,posy)] = text
-            text_image = self.font.render(text, True, c.WHITE)
-            text_rect = text_image.get_rect(x=posx, y=posy)
-            surface.blit(text_image, text_rect)
+        if len(self.acc_list)-(self.itemindex*5)>5:
+            for x in range(5):
+                text = self.acc_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
+        else:
+            for x in range(len(self.acc_list) - self.itemindex*5):
+                text = self.acc_list[x+(self.itemindex*5)]
+                posx = 65
+                posy = 70 + (x*45)
+                self.slots[(posx,posy)] = text
+                text_image = self.font.render(text, True, c.WHITE)
+                text_rect = text_image.get_rect(x=posx, y=posy)
+                surface.blit(text_image, text_rect)
         
         self.image = surface
         self.rect = rect
-
 
     def show_nothing(self):
         """
@@ -816,6 +831,14 @@ class MenuGui(object):
                             if len(self.left_box.ki_list) > (self.arrow_index + self.left_box.itemindex*5) + 1:
                                 self.arrow_index += 1
                                 self.notify(c.CLICK)
+                        elif self.left_box.state == 'instruments':
+                            if len(self.left_box.inst_list) > (self.arrow_index + self.left_box.itemindex*5) + 1:
+                                self.arrow_index += 1
+                                self.notify(c.CLICK)
+                        elif self.left_box.state == 'accessory':
+                            if len(self.left_box.acc_list) > (self.arrow_index + self.left_box.itemindex*5) + 1:
+                                self.arrow_index += 1
+                                self.notify(c.CLICK)
 
                     else:
                         self.arrow_index += 1
@@ -927,6 +950,42 @@ class MenuGui(object):
                         self.left_box.state = 'keyitems'
                     self.arrow_index = 0
                     self.arrow.state = 'itemsubmenu'
+                
+                elif self.arrow.state == 'monsterinfo':
+                    self.notify(c.CLICK2)
+                    self.left_box.selectedmonster = self.game_data['conductors'][self.bottom_box.compstate[0]].monsters[self.bottom_box.compstate[1]]
+                    if self.arrow_index == 0:
+                        self.left_box.state = 'instruments'
+                        self.arrow_index = 0
+                        self.arrow.state = 'itemsubmenu'
+                    elif self.arrow_index in (1,2):
+                        self.left_box.state = 'accessories'
+                        self.acctoggle = self.arrow_index
+                        self.arrow_index = 0
+                        self.arrow.state = 'itemsubmenu'
+                
+                elif self.left_box.state == 'instruments':
+                    self.notify(c.CLICK2)
+                    tempmon = self.game_data['conductors'][self.bottom_box.compstate[0]].monsters[self.bottom_box.compstate[1]]
+                    if(tempmon.equipment['instrument'] != None):
+                        self.unequip(tempmon, 'instrument')
+                    if(self.left_box.itemindex != 0 or self.arrow_index != 0):
+                        eqname = self.left_box.inst_list[self.left_box.itemindex*5 + self.arrow_index]
+                        self.equip(tempmon, eqname,'instrument')
+                
+                elif self.left_box.state == 'accessories':
+                    self.notify(c.CLICK2)
+                    tempmon = self.game_data['conductors'][self.bottom_box.compstate[0]].monsters[self.bottom_box.compstate[1]]
+                    if self.acctoggle == 1:
+                        tempslot = 'accessory1'
+                    else:
+                        tempslot = 'accessory2'
+                    if(tempmon.equipment[tempslot] != None):
+                        self.unequip(tempmon, tempslot)
+                    if(self.left_box.itemindex != 0 or self.arrow_index != 0):
+                        eqname = self.left_box.acc_list[self.left_box.itemindex*5 + self.arrow_index]
+                        self.equip(tempmon, eqname, tempslot)
+                    
                 self.allow_input = False
 
             elif keys[pg.K_x]:
@@ -951,17 +1010,26 @@ class MenuGui(object):
                     self.arrow.state = 'trainselect'
                     self.arrow_index = 0
 
-                elif self.arrow.state == 'itemsubmenu':
+                elif self.left_box.state in ('loot', 'consumables', 'equipment', 'keyitems'):
                     self.notify(c.CLOSE)
                     self.left_box.state = 'itemtypes'
                     self.arrow.state = 'itemtypeselect'
                     self.arrow_index = 0
+                
+                elif self.left_box.state in ('instruments', 'accessories'):
+                    self.notify(c.CLOSE)
+                    self.left_box.state = 'monsters'
+                    self.bottom_box.state = 'monsterinfo'
+                    self.arrow_index = 0
+                    self.arrow.state = 'monsterinfo'
+                    
 
                 self.allow_input = False
 
             elif keys[pg.K_RETURN]:
                 self.level.state = 'normal'
                 self.left_box.state = 'invisible'
+                self.bottom_box.state = 'invisible'
                 self.arrow_index = 0
                 self.arrow.state = 'selectmenu'
                 self.allow_input = False
@@ -982,6 +1050,19 @@ class MenuGui(object):
         """
         for observer in self.observers:
             observer.on_notify(event)
+
+    def unequip(self, monster, slot):
+        monster.unequip(slot)
+
+    def equip(self, monster, itemname, slot):
+        conductor = self.game_data['conductors'][self.bottom_box.compstate[0]]
+        
+        for x in range(conductor.inventorySize()):
+            if conductor.getItem(x).name == itemname:
+                tempitem = conductor.removeItem(x)
+                break
+        
+        monster.equip(tempitem, slot)
 
     def select_item(self):
         """
