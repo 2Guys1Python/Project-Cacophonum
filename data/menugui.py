@@ -118,9 +118,9 @@ class SmallArrow(pg.sprite.Sprite):
         return pos_list
 
     def make_monster_training_pos_list(self):
-        pos_list = [(5,460), (5,500), (5,540),
-                    (285,435), (285, 475), (285, 515), (285, 555),
-                    (560,460), (560, 500), (560, 540)]
+        pos_list = [(0,450), (0,490), (0,530),
+                    (280,425), (280, 465), (280, 505), (280, 545),
+                    (555,450), (555, 490), (555, 530)]
         self.image = setup.GFX['arrowright']
 
         return pos_list
@@ -129,11 +129,11 @@ class SmallArrow(pg.sprite.Sprite):
         pos_list = []
 
         for i in range(3):
-            pos = (450, 440 + i*45)
+            pos = (450, 430 + i*45)
             pos_list.append(pos)
-        pos_list.append((520,440))
-        pos_list.append((755,505))
-        pos_list.append((755,555))
+        pos_list.append((520,430))
+        pos_list.append((755,495))
+        pos_list.append((755,545))
 
         return pos_list
 
@@ -410,7 +410,7 @@ class BottomBox(pg.sprite.Sprite):
     def make_blank_bottom_box(self):
         """Make an info box with title, otherwise blank"""
         image = setup.GFX['pmenu_box_bottom']
-        rect = image.get_rect(left=25, top=375)
+        rect = image.get_rect(left=15, top=365)
         centerx = rect.width / 2
 
         surface = pg.Surface(rect.size)
@@ -719,7 +719,7 @@ class LeftBox(pg.sprite.Sprite):
     def make_blank_left_box(self):
         """Make an info box with title, otherwise blank"""
         image = setup.GFX['pmenu_box_left']
-        rect = image.get_rect(left=25, top=15)
+        rect = image.get_rect(left=15, top=15)
         centerx = rect.width / 2
 
         surface = pg.Surface(rect.size)
@@ -747,7 +747,7 @@ class RightBox(pg.sprite.Sprite):
     def make_image(self):
         choices = ['Conductors', 'Monsters', 'Items', 'Training', 'Quests', 'Save']
         image = setup.GFX['pmenu_box_right']
-        rect = image.get_rect(left=675, top=15)
+        rect = image.get_rect(left=665, top=15)
 
         for x in choices:
             x.center(20)
@@ -759,7 +759,7 @@ class RightBox(pg.sprite.Sprite):
         for i, choice in enumerate(choices):
             choice_image = self.font.render(choice, True, c.WHITE)
             choice_rect = choice_image.get_rect(x=15, y=(45 + (i * 40)))
-            choice_rect.centerx = rect.centerx - 675
+            choice_rect.centerx = rect.centerx - 665
             surface.blit(choice_image, choice_rect)
 
         return surface, rect
@@ -883,19 +883,43 @@ class MenuGui(object):
 
             elif keys[pg.K_LEFT]:
                 if self.arrow.state == 'monsterinfo':
-                    if self.arrow_index == 3:
+                    if self.arrow_index in (4,5):
+                        self.arrow_index = 0
+                    elif self.arrow_index == 3:
                         if self.bottom_box.conductorstate > 0:
                             self.notify(c.CLICK)
                             self.bottom_box.conductorstate -= 1
-
+                elif self.arrow.state == 'training':
+                    if self.arrow_index in (6,7,8,9):
+                        self.arrow_index -= 4
+                    elif self.arrow_index in (3,4,5):
+                        self.arrow_index -= 3
+                
+                elif self.arrow.state in ('monsterselect', 'trainselect'):
+                        if (self.arrow_index-3) in self.monposlist:
+                            self.arrow_index -= 3
+                            self.notify(c.CLICK)
                 self.allow_input = False
 
             elif keys[pg.K_RIGHT]:
                 if self.arrow.state == 'monsterinfo':
-                   if self.arrow_index == 3:
+                    if self.arrow_index in (0,1,2):
+                        self.arrow_index = 3
+                    elif self.arrow_index == 3:
                        if self.bottom_box.conductorstate+1 < len(self.game_data['conductors']):
                             self.bottom_box.conductorstate += 1
                             self.notify(c.CLICK)
+                
+                elif self.arrow.state in ('monsterselect', 'trainselect'):
+                        if (self.arrow_index+3) in self.monposlist:
+                            self.arrow_index += 3
+                            self.notify(c.CLICK)
+                
+                elif self.arrow.state == 'training':
+                    if self.arrow_index in (0,1,2,6):
+                        self.arrow_index += 3
+                    elif self.arrow_index in (3,4,5):
+                        self.arrow_index += 4
                 self.allow_input = False
 
             elif keys[pg.K_z]:
@@ -971,7 +995,11 @@ class MenuGui(object):
                         self.unequip(tempmon, 'instrument')
                     if(self.left_box.itemindex != 0 or self.arrow_index != 0):
                         eqname = self.left_box.inst_list[self.left_box.itemindex*5 + self.arrow_index]
-                        self.equip(tempmon, eqname,'instrument')
+                        self.equip(tempmon, eqname,'instrument', self.left_box.inst_list)
+                    self.left_box.state = 'monsters'
+                    self.bottom_box.state = 'monsterinfo'
+                    self.arrow.state = 'monsterinfo'
+                    self.arrow_index = 0
                 
                 elif self.left_box.state == 'accessories':
                     self.notify(c.CLICK2)
@@ -984,7 +1012,11 @@ class MenuGui(object):
                         self.unequip(tempmon, tempslot)
                     if(self.left_box.itemindex != 0 or self.arrow_index != 0):
                         eqname = self.left_box.acc_list[self.left_box.itemindex*5 + self.arrow_index]
-                        self.equip(tempmon, eqname, tempslot)
+                        self.equip(tempmon, eqname, tempslot, self.left_box.acc_list)
+                    self.left_box.state = 'monsters'
+                    self.bottom_box.state = 'monsterinfo'
+                    self.arrow.state = 'monsterinfo'
+                    self.arrow_index = 0
                     
                 self.allow_input = False
 
@@ -1054,13 +1086,17 @@ class MenuGui(object):
     def unequip(self, monster, slot):
         monster.unequip(slot)
 
-    def equip(self, monster, itemname, slot):
+    def equip(self, monster, itemname, slot, templist):
         conductor = self.game_data['conductors'][self.bottom_box.compstate[0]]
+        tempindex = 0
+        max = templist[:self.left_box.itemindex*5 + self.arrow_index+1].count(itemname)
         
         for x in range(conductor.inventorySize()):
             if conductor.getItem(x).name == itemname:
-                tempitem = conductor.removeItem(x)
-                break
+                tempindex += 1
+                if tempindex == max:
+                    tempitem = conductor.removeItem(x)
+                    break
         
         monster.equip(tempitem, slot)
 

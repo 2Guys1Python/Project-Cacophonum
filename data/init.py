@@ -75,7 +75,9 @@ Item price masterlist format:
 
 masterlist_price = {
 	'Potion': [50, 25],
-	'Flute': [600, 300]
+	'Flute': [600, 300],
+	'Mouthpiece': [200, 100],
+	'Gria Auliet': [0, 50000]
 }
 
 '''
@@ -99,7 +101,11 @@ masterlist_instrument = {
 	'Flute': [8,0,60,0,30,0,0,0,0,
 				0,0,0,0,0,0,0,0,
 				'wind', 0.2, 15, 2.5, 0.9,
-				None]
+				None],
+	'Gria Auliet': [9,15,150,0,0,0,0,0,0,
+					0,0,0,0,0,0,0,0,
+					'wind', 0.3, 20, 2.5, 0.95,
+					None]
 }
 
 '''

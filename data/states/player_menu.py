@@ -14,6 +14,7 @@ class Player_Menu(object):
         conductors = game_data['conductors']
         self.get_image = tools.get_image
         self.allow_input = False
+        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 18)
         self.background = self.make_background()
         self.gui = menugui.MenuGui(level, inventory, conductors)
 
@@ -24,6 +25,11 @@ class Player_Menu(object):
         background = pg.sprite.Sprite()
         surface = pg.Surface(c.SCREEN_SIZE).convert()
         surface.fill(c.BLACK_BLUE)
+        text = "Z = confirm, X = cancel, <v^> = navigation"
+        text_image = self.font.render(text, True, c.WHITE)
+        text_rect = text_image.get_rect(x=15, y=620)
+        text_rect.centerx = surface.get_rect().centerx
+        surface.blit(text_image, text_rect)
         background.image = surface
         background.rect = background.image.get_rect()
 

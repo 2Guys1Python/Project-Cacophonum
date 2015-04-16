@@ -244,6 +244,14 @@ def create_game_data_dict():
     monsters.append(copy.deepcopy(TamedMonster("Kyouki", "Kobold", 1)))
     players[0].addMonster(monsters[2])
     monsters[2].setMaster(players[0])
+    '''
+    players[0].addItem(copy.deepcopy(Instrument("Gria Auliet", 1)))
+    players[0].addItem(copy.deepcopy(Instrument("Gria Auliet", 1)))
+    players[0].addItem(copy.deepcopy(Instrument("Gria Auliet", 1)))
+    players[0].addItem(copy.deepcopy(Instrument("Flute", 1)))
+    players[0].addItem(copy.deepcopy(Instrument("Gria Auliet", 1)))
+    players[0].addItem(copy.deepcopy(Instrument("Flute", 1)))
+    '''
     
 
     player_items = []
