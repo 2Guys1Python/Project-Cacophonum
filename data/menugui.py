@@ -203,6 +203,7 @@ class BottomBox(pg.sprite.Sprite):
                       'monsterinfo': self.show_monster_info,
                       'description': self.show_description,
                       'training': self.show_training,
+                      'monstats': self.show_monstats,
                       'invisible': self.show_nothing}
 		
         return state_dict
@@ -397,7 +398,52 @@ class BottomBox(pg.sprite.Sprite):
 
         self.image = surface
         self.rect = rect
+
+    def show_monstats(self):
+        conductor = self.game_data['conductors'][self.compstate[0]]
+        monster = conductor.monsters[self.compstate[1]]
+        default_text = ['HP: ', 'ATK: ', 'DEF: ', 'MUS: ', 'FOC: ', 'CLA: ', 'RHY: ', 'STR: ', 'WND: ', 'PRC: ']
+
+        surface, rect = self.make_blank_bottom_box()
+
+        for i in range(7):
+            text = default_text[i]
+            text_image = self.font.render(text, True, c.WHITE)
+            if i < 3:
+                text_rect = text_image.get_rect(x=50, y=95+(40*i))
+            else:
+                text_rect = text_image.get_rect(x=330, y=70+(40*(i-3)))
+            surface.blit(text_image, text_rect)
+            if i == 0:
+                text = str(monster.stats['base'][text[:len(text)-2]] + monster.stats['bonus']['bonus' + text[:len(text)-2]] - monster.stats['penalty']['penalty' + text[:len(text)-2]])
+            else:
+                text = str(monster.stats['base'][text[:len(text)-2].lower()] + monster.stats['bonus']['bonus' + text[:len(text)-2].lower()] - monster.stats['penalty']['penalty'+text[:len(text)-2].lower()])
+            text_image = self.font.render(text, True, c.WHITE)
+            if i < 3:
+                text_rect = text_image.get_rect(x=115, y=95+(40*i))
+            else:
+                text_rect = text_image.get_rect(x=395, y=70+(40*(i-3)))
+            surface.blit(text_image, text_rect)
+			
+        for i in range(3):
+            text = default_text[i+7]
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=605, y=95+(40*i))
+            surface.blit(text_image, text_rect)
             
+            if i == 0:
+                text = str(monster.stats['base']['string'])
+            elif i == 1:
+                text = str(monster.stats['base']['wind'])
+            else:
+                text = str(monster.stats['base']['percussion'])
+            text_image = self.font.render(text, True, c.WHITE)
+            text_rect = text_image.get_rect(x=670, y=95+(40*i))
+            surface.blit(text_image, text_rect)
+
+        self.image = surface
+        self.rect = rect
+        
     def show_description(self):
         pass
 	
@@ -812,6 +858,7 @@ class MenuGui(object):
                     elif self.arrow.state in ('monsterselect', 'trainselect'):
                         if len(self.monposlist) > self.arrow_index+1:
                             self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) + 1]
+                            self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
                             self.notify(c.CLICK)
 
                     elif self.arrow.state == 'itemsubmenu':
@@ -861,6 +908,7 @@ class MenuGui(object):
                     elif self.arrow.state in ('monsterselect', 'trainselect'):
                         self.notify(c.CLICK)
                         self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) - 1]
+                        self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
 
                     elif self.arrow.state == 'itemsubmenu':
                         if self.left_box.itemindex >= 0:
@@ -899,6 +947,7 @@ class MenuGui(object):
                         if (self.arrow_index-3) in self.monposlist:
                             self.arrow_index -= 3
                             self.notify(c.CLICK)
+                        self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
                 self.allow_input = False
 
             elif keys[pg.K_RIGHT]:
@@ -913,6 +962,7 @@ class MenuGui(object):
                 elif self.arrow.state in ('monsterselect', 'trainselect'):
                         if (self.arrow_index+3) in self.monposlist:
                             self.arrow_index += 3
+                            self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
                             self.notify(c.CLICK)
                 
                 elif self.arrow.state == 'training':
@@ -935,6 +985,8 @@ class MenuGui(object):
                         self.notify(c.CLICK2)
                         self.arrow_index = 0
                         self.left_box.state = 'monsters'
+                        self.bottom_box.state = 'monstats'
+                        self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
                         self.arrow.state = 'monsterselect'
                     elif self.arrow_index == 2:
                         self.notify(c.CLICK2)
@@ -1030,8 +1082,8 @@ class MenuGui(object):
 
                 elif self.arrow.state == 'monsterinfo':
                     self.notify(c.CLOSE)
-                    self.bottom_box.state = 'invisible'
-                    self.bottom_box.compstate = 0
+                    self.bottom_box.state = 'monstats'
+                    self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
                     self.arrow.state = 'monsterselect'
                     self.arrow_index = 0
 

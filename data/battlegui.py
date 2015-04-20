@@ -50,7 +50,6 @@ class InfoBox(object):
                         c.FIRE_SPELL: 'FIRE BLAST!',
                         c.BATTLE_WON: 'Battle won!',
                         c.SHOW_EXPERIENCE: self.show_experience(),
-                        c.LEVEL_UP: self.level_up(),
                         c.TWO_ACTIONS: 'Two actions per turn mode is now available.',
                         c.SHOW_GOLD: self.show_gold()}
 
@@ -177,12 +176,6 @@ class InfoBox(object):
         Show how much gold the player earned.
         """
         return "You found {} gold.".format(self.gold_earned)
-
-    def level_up(self):
-        """
-        Return message indicating a level up for player.
-        """
-        return "You leveled up to Level {}!".format(self.game_data['player stats']['Level'])
 
     def reset_level_up_message(self):
         self.state_dict[c.LEVEL_UP] = self.level_up()

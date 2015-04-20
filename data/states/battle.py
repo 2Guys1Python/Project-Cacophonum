@@ -179,6 +179,7 @@ class Battle(tools._State):
         """
         Make the sprite for the player's character.
         """
+        player = []
         player = person.Player('left', self.game_data, 630, 220, 'battle resting', 1)
         player.image = pg.transform.scale2x(player.image)
         return player
