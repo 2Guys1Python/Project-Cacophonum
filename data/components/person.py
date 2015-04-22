@@ -493,8 +493,8 @@ class Player(Person):
     User controlled character.
     """
 
-    def __init__(self, direction, game_data, x=0, y=0, state='resting', index=0):
-        super(Player, self).__init__('player', x, y, direction, state, index)
+    def __init__(self, direction, game_data, x=0, y=0, state='resting', index=0, name='Hanami Otozono'):
+        super(Player, self).__init__(name, x, y, direction, state, index)
         self.damaged = False
         self.healing = False
         self.damage_alpha = 0

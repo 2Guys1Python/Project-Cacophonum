@@ -28,14 +28,13 @@ class Battle(tools._State):
         self.timer = current_time
         self.allow_input = False
         self.game_data = game_data
-        self.inventory = game_data['player inventory']
+        self.inventory = game_data['conductors'][0].inventory
         self.state = 'transition in'
         self.next = game_data['last state']
         self.run_away = False
 
-        self.player = self.make_player()
+        self.players = self.make_player()
         self.attack_animations = pg.sprite.Group()
-        self.sword = attackitems.Sword(self.player)
         self.enemy_group, self.enemy_pos_list, self.enemy_list = self.make_enemies()
         self.experience_points = self.get_experience_points()
         self.new_gold = self.get_new_gold()
@@ -52,20 +51,21 @@ class Battle(tools._State):
         self.select_action_state_dict = self.make_selection_state_dict()
         self.observers = [observer.Battle(self),
                           observer.MusicChange()]
-        self.player.observers.extend(self.observers)
+        for p in self.players:
+            p.observers.extend(self.observers)
         self.observers.append(observer.SoundEffects())
         self.damage_points = pg.sprite.Group()
         self.player_actions = []
         self.player_action_dict = self.make_player_action_dict()
-        self.player_level = self.game_data['player stats']['Level']
         self.enemies_to_attack = []
         self.action_selected = False
         self.just_leveled_up = False
         self.transition_rect = setup.SCREEN.get_rect()
         self.transition_alpha = 255
-        self.temp_magic = self.game_data['player stats']['magic']['current']
+        self.temp_notes = self.game_data['conductors'][0].monsters[0].stats['curr']['notes']
         self.maxhits = 1
-        self.player.attacked_enemy = None
+        for p in self.players:
+            p.attacked_enemy = None
 
     def make_player_action_dict(self):
         """
@@ -165,11 +165,6 @@ class Battle(tools._State):
             enemy.rect.topleft = pos_list[i]
             enemy.image = pg.transform.scale2x(enemy.image)
             enemy.index = i
-            enemy.level = self.make_enemy_level_dict()[self.previous]
-            if enemy.name == 'evilwizard':
-                enemy.health = 100
-            else:
-                enemy.health = enemy.level * 4
 
         enemy_list = [enemy for enemy in enemy_group]
 
@@ -179,10 +174,11 @@ class Battle(tools._State):
         """
         Make the sprite for the player's character.
         """
-        player = []
-        player = person.Player('left', self.game_data, 630, 220, 'battle resting', 1)
-        player.image = pg.transform.scale2x(player.image)
-        return player
+        players = []
+        for i, p in enumerate(self.game_data['conductors']):
+            players.append(person.Player('left', self.game_data, 630, 220, 'battle resting', 1, p.name))
+            players[i].image = pg.transform.scale2x(players[i].image)
+        return players
 
     def make_selection_state_dict(self):
         """
@@ -202,11 +198,11 @@ class Battle(tools._State):
         self.check_timed_events()
         self.check_if_battle_won()
         self.enemy_group.update(current_time)
-        self.player.update(keys, current_time)
+        for p in self.players:
+            p.update(keys, current_time)
         self.attack_animations.update()
         self.info_box.update()
         self.arrow.update(keys)
-        self.sword.update(current_time)
         self.damage_points.update()
         self.execute_player_actions()
 
@@ -281,7 +277,6 @@ class Battle(tools._State):
             if (self.current_time - self.timer) > 150:
                 if self.state == c.ENEMY_DAMAGED:
                     if self.player_actions:
-                        print "wat"
                         self.player_action_dict[self.player_actions[0]]()
                         self.player_actions.pop(0)
                     else:
@@ -329,12 +324,13 @@ class Battle(tools._State):
             if (self.current_time - self.timer) > 1960:
                 self.enter_show_experience_state()
 
-        elif self.state == c.LEVEL_UP:
-            if (self.current_time - self.timer) > 2200:
-                if self.game_data['player stats']['Level'] == 3:
-                    self.enter_two_actions_per_turn_state()
-                else:
-                    self.end_battle()
+        
+        #elif self.state == c.LEVEL_UP:
+        #    if (self.current_time - self.timer) > 2200:
+        #        if self.game_data['player stats']['Level'] == 3:
+        #            self.enter_two_actions_per_turn_state()
+        #        else:
+        #            self.end_battle()
 
         elif self.state == c.TWO_ACTIONS:
             if (self.current_time - self.timer) > 3000:
@@ -416,8 +412,8 @@ class Battle(tools._State):
         self.background.draw(surface)
         self.enemy_group.draw(surface)
         self.attack_animations.draw(surface)
-        self.sword.draw(surface)
-        surface.blit(self.player.image, self.player.rect)
+        for p in self.players:
+            surface.blit(p.image, p.rect)
         surface.blit(self.info_box.image, self.info_box.rect)
         surface.blit(self.select_box.image, self.select_box.rect)
         surface.blit(self.arrow.image, self.arrow.rect)
@@ -754,22 +750,16 @@ class Battle(tools._State):
         """
         Execute the player actions.
         """
-        if self.player_level < 3:
-            if self.player_actions:
-                enter_state = self.player_action_dict[self.player_actions[0]]
-                enter_state()
-                self.player_actions.pop(0)
-        else:
-            if len(self.player_actions) >= self.maxhits:
-                enter_state = self.player_action_dict[self.player_actions[0]]
-                enter_state()
-                self.player_actions.pop(0)
-                self.action_selected = False
+        if len(self.player_actions) >= self.maxhits:
+            enter_state = self.player_action_dict[self.player_actions[0]]
+            enter_state()
+            self.player_actions.pop(0)
+            self.action_selected = False
 			
-            else:
-                if self.action_selected:
-                    self.enter_select_action_state()
-                    self.action_selected = False
+        else:
+            if self.action_selected:
+                self.enter_select_action_state()
+                self.action_selected = False
 
 
 

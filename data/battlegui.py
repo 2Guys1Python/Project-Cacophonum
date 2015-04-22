@@ -122,7 +122,7 @@ class InfoBox(object):
         """
         Make image out of box and message.
         """
-        image = setup.GFX['shopbox']
+        image = setup.GFX['battlebox']
         rect = image.get_rect(bottom=640)
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
@@ -418,8 +418,7 @@ class PlayerHealth(object):
     Basic health meter for player.
     """
     def __init__(self, select_box_rect, game_data):
-        self.health_stats = game_data['player stats']['health']
-        self.magic_stats = game_data['player stats']['magic']
+        self.stats = game_data['conductors'][0].monsters[0].stats
         self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
         self.posx = select_box_rect.centerx
         self.posy = select_box_rect.y - 5
@@ -429,8 +428,8 @@ class PlayerHealth(object):
         """
         Make the image surface for the player
         """
-        current_health = str(self.health_stats['current'])
-        max_health = str(self.health_stats['maximum'])
+        current_health = str(self.stats['curr']['HP'])
+        max_health = str(self.stats['base']['HP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP'])
         if len(current_health) == 2:
             buffer = '  '
         elif len(current_health) == 1:
@@ -441,6 +440,7 @@ class PlayerHealth(object):
         health_surface =  self.title_font.render(health_string, True, c.NEAR_BLACK)
         health_rect = health_surface.get_rect(x=20, y=9)
 
+        """
         current_magic = str(self.magic_stats['current'])
         if len(current_magic) == 2:
             buffer = '  '
@@ -452,14 +452,15 @@ class PlayerHealth(object):
         magic_string = "Magic:  {}{}/{}".format(buffer, current_magic, max_magic)
         magic_surface = self.title_font.render(magic_string, True, c.NEAR_BLACK)
         magic_rect = magic_surface.get_rect(x=20, top=health_rect.bottom)
-
+        """
+        
         box_surface = setup.GFX['battlestatbox']
         box_rect = box_surface.get_rect()
 
         parent_surface = pg.Surface(box_rect.size)
         parent_surface.blit(box_surface, box_rect)
         parent_surface.blit(health_surface, health_rect)
-        parent_surface.blit(magic_surface, magic_rect)
+        #parent_surface.blit(magic_surface, magic_rect)
 
         return parent_surface
 

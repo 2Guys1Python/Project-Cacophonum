@@ -12,7 +12,7 @@ class Battle(object):
     """
     def __init__(self, level):
         self.level = level
-        self.player = level.player
+        self.players = level.players
         self.set_observer_for_enemies()
         self.event_dict = self.make_event_dict()
 
@@ -51,7 +51,8 @@ class Battle(object):
         """
         Eliminate all traces of enemy.
         """
-        self.level.player.attacked_enemy = None
+        for p in self.level.players:
+            p.attacked_enemy = None
 
 
 class SoundEffects(object):
