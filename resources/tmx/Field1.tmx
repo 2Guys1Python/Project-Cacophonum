@@ -20,7 +20,7 @@
  </tileset>
  <layer name="Tile Layer 1" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJzt2E0KgzAUBGD3XfcybjyAy9JLlXZXet4qKPiTvDitxIlvBmYh+CAfwQipKjvXDGWInHLKKefRkXPdR9cnOCNn3si57rvrB5wp0VnyOdQAHdeNzDT5KGZaoLehyEybj2JGTjnllPPo9Ot4TRp6TjlT8wzx5LxPGnpOOVPzDPHkHA1LE3IOWfMMWRr2LKPTw39FzrnxMhS1MgQ1/mJliPbT5/dZurMGOjqRmTofxYyX/ZRTTjl9OGP3EAzZsk45543dQzBkyzrlDL9TwjlkOc7m3OteiNn5z38lVobIKaecvM6z5AssrTwD
+   eJztmEEOwiAQRdm79jJuPECXxksZvbMSJUH8Q2daZT6Wn/xYgdZ5DExtQ6hr38AMGpyDc3AOTm8Nzk9fHr4azxmcbTU4370T3AunNlYLezkPDIqxHDPvKm2lpTGozVNS/BMw6tfk05uzxij1nV5G8yDNCStnLadaTiZWDdc/cIbwO05p/XupJaen8jhuL0/Zcfo+x1mOZ1qzAcSyFc5zeMZ5zqzhLMdvhTMds3KWTJY6VLYz5/P0RbMwRtXyuea+wnRPiUL1Ygoy89L/twzScuZrcY61B06pJqG9rGHsiVOTT+k6vXHO7c+tcPa2bg/ZZ+nEifoO2bmMrKjWrskna04RpxR/r8+fUdq9uWZ/enNaatDg1N9fvHgtjBrOGptnTlFM6H2JlfMmXNtLv+JkYgwglmj0vkTDmZ/Pxhn1bU7G/Zl+H9UiVJskzhojS14tMSaj51FmzqWM1hz+Qy61zJ5qtV69tXSPWTw1o5G1Fc4k6xq09LXSHVBfy0E=
   </data>
  </layer>
  <layer name="Tile Layer 2" width="58" height="51">
@@ -169,7 +169,7 @@
   <object id="301" name="start point" gid="123" x="464" y="528">
    <properties>
     <property name="direction" value="down"/>
-    <property name="state" value="instructions"/>
+    <property name="state" value="FaesLanding"/>
    </properties>
   </object>
   <object id="203" name="blocker" gid="120" x="448" y="192"/>
@@ -216,7 +216,7 @@
   <object id="305" name="start point" gid="123" x="464" y="528">
    <properties>
     <property name="direction" value="down"/>
-    <property name="state" value="FaesLanding"/>
+    <property name="state" value="instructions"/>
    </properties>
   </object>
  </objectgroup>
