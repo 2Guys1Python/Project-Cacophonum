@@ -194,35 +194,6 @@ def notify_observers(self, event):
 def create_game_data_dict():
     """Create a dictionary of persistant values the player
     carries between states"""
-
-    '''
-    player_items = {'GOLD': dict([('quantity',100),
-                                  ('value',0)]),
-                    'Healing Potion': dict([('quantity',2),
-                                            ('value',15)]),
-                    'Ether Potion': dict([('quantity',1),
-                                          ('value', 15)]),
-                    'Rapier': dict([('quantity', 1),
-                                    ('value', 50),
-                                    ('power', 9)]),
-                    'equipped weapon': 'Rapier',
-                    'equipped armor': []}
-    '''
-    
-    '''
-    player_health = {'current': 70,
-                     'maximum': 70}
-
-    player_magic = {'current': 70,
-                    'maximum': 70}
-
-    player_stats = {'health': player_health,
-                    'Level': 1,
-                    'experience to next level': 30,
-                    'magic': player_magic,
-                    'attack points': 10,
-                    'Defense Points': 10}
-    '''
     
     players = [Conductor("Hanami Otozono")]
     monsters = [copy.deepcopy(TamedMonster("Ichiro", "Kobold", 1))]

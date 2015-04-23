@@ -26,7 +26,6 @@ class InfoBox(object):
         self.experience_points = experience
         self.gold_earned = gold
         self.state_dict = self.make_state_dict()
-        self.basestrings = ['wholenote', '8thnote', 'gclef']
         self.noteoff = [setup.GFX['8thnoteempty'], setup.GFX['wholenoteempty'], setup.GFX['gclefempty']]
         self.noteon = [setup.GFX['8thnotefilled'], setup.GFX['wholenotefilled'], setup.GFX['gcleffilled']]
         self.notecount = 4

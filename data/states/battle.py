@@ -33,7 +33,8 @@ class Battle(tools._State):
         self.next = game_data['last state']
         self.run_away = False
 
-        self.players = self.make_player()
+        self.players, self.playerentities = self.make_player()
+        self.monsters, self.monsterentities = self.make_monster()
         self.attack_animations = pg.sprite.Group()
         self.enemy_group, self.enemy_pos_list, self.enemy_list = self.make_enemies()
         self.experience_points = self.get_experience_points()
@@ -68,8 +69,7 @@ class Battle(tools._State):
         self.maxhits = 1
         for p in self.players:
             p.attacked_enemy = None
-        self.currentmonster = (0,0)
-        self.currentconductor = 0
+        self.currentmonster = 0
         
 
     def make_player_action_dict(self):
@@ -177,9 +177,10 @@ class Battle(tools._State):
 
     def make_player(self):
         """
-        Make the sprite for the player's character.
+        Make the lists of sprites and data for the conductors
         """
         players = []
+        playerentities = []
         for i, p in enumerate(self.game_data['conductors']):
             if i == 0:
                 players.append(person.Player('left', self.game_data, 758, 69, 'battle resting', 1, p.name))
@@ -187,8 +188,25 @@ class Battle(tools._State):
                 players.append(person.Player('left', self.game_data, 575, 220, 'battle resting', 1, p.name))
             elif i == 2:
                 players.append(person.Player('left', self.game_data, 777, 317, 'battle resting', 1, p.name))
+            playerentities.append(p)
             players[i].image = pg.transform.scale2x(players[i].image)
-        return players
+        return players, playerentities
+        
+    def make_monster(self):
+        """
+        Make the lists of sprites and data for the monsters
+        """
+        monsters = []
+        monsterentities = []
+        k = 0
+        temppos = [(840,30), (660, 30), (810, 135), (655,160), (500, 195), (640, 270), (700,370), (850, 380), (815,245)]
+        for i, c in enumerate(self.game_data['conductors']):
+            for j, m in enumerate(c.monsters):
+                monsters.append(person.Player('left', self.game_data, temppos[i*3+j][0], temppos[i*3+j][1], 'battle resting', 1, m.species))
+                monsterentities.append(m)
+                monsters[k].image = pg.transform.scale2x(monsters[k].image)
+                k+=1
+        return monsters, monsterentities
 
     def make_selection_state_dict(self):
         """
@@ -210,6 +228,8 @@ class Battle(tools._State):
         self.enemy_group.update(current_time)
         for p in self.players:
             p.update(keys, current_time)
+        for m in self.monsters:
+            m.update(keys, current_time)
         self.attack_animations.update()
         self.info_box.update()
         self.arrow.update(keys)
@@ -424,6 +444,8 @@ class Battle(tools._State):
         self.attack_animations.draw(surface)
         for p in self.players:
             surface.blit(p.image, p.rect)
+        for m in self.monsters:
+            surface.blit(m.image, m.rect)
         surface.blit(self.info_box.image, self.info_box.rect)
         #surface.blit(self.select_box.image, self.select_box.rect)
         #surface.blit(self.arrow.image, self.arrow.rect)
