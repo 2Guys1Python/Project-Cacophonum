@@ -104,7 +104,7 @@ class Gui(object):
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
         surface.blit(image, (0, 0))
-        gold = self.player_inventory['GOLD']['quantity']
+        gold = self.game_data['gold']
         text = 'Gold: ' + str(gold)
         text_render = self.font.render(text, True, c.NEAR_BLACK)
         text_rect = text_render.get_rect(x=80, y=60)

@@ -46,6 +46,12 @@ class Consumable(Item):
 		self.target, self.effectsList = init.consumableEffect_Init(name)
 		self.itemType = "Consumable"
 
+		
+class Room(Item):
+	def __init__(self, name, index):
+		super(Room, self).__init__(name, index)
+		self.itemType= "Room"
+		self.prices = init.itemPrice_Init(name)
 	
 class Inventory(object):
 	def __init__(self):

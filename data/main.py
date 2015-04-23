@@ -8,10 +8,13 @@ MAIN_MENU = 'main menu'
 CASTLE = 'castle'
 HOUSE = 'house'
 INN = 'Inn'
-ARMOR_SHOP = 'armor shop'
-WEAPON_SHOP = 'weapon shop'
+AULOFICER = 'Auloficer'
+LUTHIER = 'Luthier'
+TAMBOURIER = 'Tambourier'
+ARTISAN = 'Artisan'
+SCRIPTORIUM = 'Scriptorium'
+SUNDRIES = 'Sundries'
 MAGIC_SHOP = 'magic shop'
-POTION_SHOP = 'potion shop'
 PLAYER_MENU = 'player menu'
 FAESLANDING = 'FaesLanding'
 OVERWORLD = 'Field1'
@@ -42,10 +45,13 @@ def main():
 				  WESTFIELD: levels.LevelState(WESTFIELD, True),
                   BROTHER_HOUSE: levels.LevelState(BROTHER_HOUSE),
                   INN: shop.Inn(),
-                  ARMOR_SHOP: shop.ArmorShop(),
-                  WEAPON_SHOP: shop.WeaponShop(),
+                  AULOFICER: shop.Auloficer(),
+                  LUTHIER: shop.Luthier(),
+                  TAMBOURIER: shop.Tambourier(),
+                  ARTISAN: shop.Artisan(),
+                  SCRIPTORIUM: shop.Scriptorium(),
+                  SUNDRIES: shop.Sundries(),
                   MAGIC_SHOP: shop.MagicShop(),
-                  POTION_SHOP: shop.PotionShop(),
                   BATTLE: battle.Battle(),
                   DUNGEON: levels.LevelState(DUNGEON, True),
                   DUNGEON2: levels.LevelState(DUNGEON2, True),

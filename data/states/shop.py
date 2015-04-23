@@ -10,6 +10,8 @@ import copy
 import pygame as pg
 from .. import tools, setup, shopgui
 from .. import constants as c
+from ..compositeclasses import *
+from ..entityclasses import *
 
 
 class Shop(tools._State):
@@ -27,7 +29,7 @@ class Shop(tools._State):
         self.current_time = current_time
         self.state_dict = self.make_state_dict()
         self.state = 'transition in'
-        self.next = c.TOWN
+        self.next = c.FAESLANDING
         self.get_image = tools.get_image
         self.dialogue = self.make_dialogue()
         self.accept_dialogue = self.make_accept_dialogue()
@@ -82,7 +84,7 @@ class Shop(tools._State):
         background.image = surface
         background.rect = background.image.get_rect()
 
-        player = self.make_sprite('player', 96, 32, 150)
+        player = self.make_sprite('Hanami Otozono', 96, 32, 150)
         shop_owner = self.make_sprite(self.key, 32, 32, 600)
         counter = self.make_counter()
 
@@ -196,24 +198,19 @@ class Inn(Shop):
 
     def make_purchasable_items(self):
         """Make list of items to be chosen"""
-        dialogue = 'Rent a room (30 gold)'
 
-        item = {'type': 'room',
-                'price': 30,
-                'quantity': 0,
-                'power': None,
-                'dialogue': dialogue}
-
+        item = Room('Room', 1)
+		
         return [item]
 
 
-class WeaponShop(Shop):
-    """A place to buy weapons"""
+class Auloficer(Shop):
+    """A place to buy wind instruments"""
     def __init__(self):
-        super(WeaponShop, self).__init__()
-        self.name = c.WEAPON_SHOP
-        self.key = 'weaponman'
-        self.sell_items = ['Long Sword', 'Rapier']
+        super(Auloficer, self).__init__()
+        self.name = c.AULOFICER
+        self.key = 'Auloficer'
+        self.sell_items = ['Flute']
 
 
     def make_dialogue(self):
@@ -225,58 +222,77 @@ class WeaponShop(Shop):
 
     def make_purchasable_items(self):
         """Make list of items to be chosen"""
-        longsword_dialogue = 'Long Sword (150 gold)'
-        rapier_dialogue = 'Rapier (50 gold)'
 
-        item2 = {'type': 'Long Sword',
-                'price': 150,
-                'quantity': 1,
-                'power': 11,
-                'dialogue': longsword_dialogue}
-
-        item1 = {'type': 'Rapier',
-                 'price': 50,
-                 'quantity': 1,
-                 'power': 9,
-                 'dialogue': rapier_dialogue}
-
-        return [item1, item2]
+        item1 = Instrument('Flute', 1)
 
 
-class ArmorShop(Shop):
-    """A place to buy armor"""
+        return [item1]
+
+class Luthier(Shop):
+    """A place to buy string instruments"""
     def __init__(self):
-        super(ArmorShop, self).__init__()
-        self.name = c.ARMOR_SHOP
-        self.key = 'armorman'
-        self.sell_items = ['Chain Mail', 'Wooden Shield']
+        super(Luthier, self).__init__()
+        self.name = c.LUTHIER
+        self.key = 'Luthier'
 
 
     def make_dialogue(self):
         """Make the list of dialogue phrases"""
         shop_name = "{}{}".format(self.name[0].upper(), self.name[1:])
         return ["Welcome to the " + shop_name + "!",
-                "Would piece of armor would you like to buy?"]
+                "Sadly there's nothing for you here yet!"]
+
+class Tambourier(Shop):
+    """A place to buy percussion instruments"""
+    def __init__(self):
+        super(Tambourier, self).__init__()
+        self.name = c.TAMBOURIER
+        self.key = 'Tambourier'
+
+    def make_dialogue(self):
+        """Make the list of dialogue phrases"""
+        shop_name = "{}{}".format(self.name[0].upper(), self.name[1:])
+        return ["Welcome to the " + shop_name + "!",
+                "Sadly there's nothing for you here yet!"]
+
+				
+class Scriptorium(Shop):
+    """A place to buy Spells"""
+    def __init__(self):
+        super(Scriptorium, self).__init__()
+        self.name = c.SCRIPTORIUM
+        self.key = 'Scriptorium'
+
+    def make_dialogue(self):
+        """Make the list of dialogue phrases"""
+        shop_name = "{}{}".format(self.name[0].upper(), self.name[1:])
+        return ["Welcome to the " + shop_name + "!",
+                "Sadly there's nothing for you here yet!"]
+				
+
+class Artisan(Shop):
+    """A place to buy armor"""
+    def __init__(self):
+        super(Artisan, self).__init__()
+        self.name = c.ARTISAN
+        self.key = 'Artisan'
+        self.sell_items = ['Mouthpiece']
+
+
+    def make_dialogue(self):
+        """Make the list of dialogue phrases"""
+        shop_name = "{}{}".format(self.name[0].upper(), self.name[1:])
+        return ["Welcome to the " + shop_name + "!",
+                "What accesories would you like to buy?"]
 
 
     def make_purchasable_items(self):
         """Make list of items to be chosen"""
-        chainmail_dialogue = 'Chain Mail (50 gold)'
-        shield_dialogue = 'Wooden Shield (75 gold)'
 
-        item = {'type': 'Chain Mail',
-                'price': 50,
-                'quantity': 1,
-                'power': 2,
-                'dialogue': chainmail_dialogue}
 
-        item2 = {'type': 'Wooden Shield',
-                 'price': 75,
-                 'quantity': 1,
-                 'power': 3,
-                 'dialogue': shield_dialogue}
+        item = Accessory('Mouthpiece', 1)
 
-        return [item, item2]
+        return [item]
 
 
 class MagicShop(Shop):
@@ -316,13 +332,13 @@ class MagicShop(Shop):
         return [item1, item2]
 
 
-class PotionShop(Shop):
+class Sundries(Shop):
     """A place to buy potions"""
     def __init__(self):
-        super(PotionShop, self).__init__()
-        self.name = c.POTION_SHOP
+        super(Sundries, self).__init__()
+        self.name = c.SUNDRIES
         self.key = 'potionlady'
-        self.sell_items = 'Healing Potion'
+        self.sell_items = 'Potion'
 
 
     def make_dialogue(self):
@@ -334,21 +350,10 @@ class PotionShop(Shop):
 
     def make_purchasable_items(self):
         """Make list of items to be chosen"""
-        healing_dialogue = 'Healing Potion (15 gold)'
-        ether_dialogue = 'Ether Potion (15 gold)'
 
 
-        item = {'type': 'Healing Potion',
-                'price': 15,
-                'quantity': 1,
-                'power': None,
-                'dialogue': healing_dialogue}
+        item = Consumable('Potion', 1)
 
-        item2 = {'type': 'Ether Potion',
-                 'price': 15,
-                 'quantity': 1,
-                 'power': None,
-                 'dialogue': ether_dialogue}
 
-        return [item, item2]
+        return [item]
 

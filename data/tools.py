@@ -271,6 +271,7 @@ def create_game_data_dict():
                                                   ('quantity',1)])},
                  'player inventory': player_items,
                  'conductors': players,
+                 'gold': 400,
                  'battle counter': 50,
                  'treasure1': True,
                  'treasure2': True,
