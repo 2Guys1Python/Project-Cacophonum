@@ -3,7 +3,7 @@ SCREEN_SIZE = (960, 640)
 
 ##GAME STATES
 
-TOWN = 'town'
+FAESLANDING = 'FaesLanding'
 MAIN_MENU = 'main menu'
 CASTLE = 'castle'
 INN = 'Inn'

@@ -58,7 +58,7 @@ class DeathScene(tools._State):
     """
     def __init__(self):
         super(DeathScene, self).__init__()
-        self.next = c.TOWN
+        self.next = c.FAESLANDING
         self.music = setup.MUSIC['shop_theme']
         self.volume = 0.5
         self.music_title = 'shop_theme'
@@ -174,7 +174,7 @@ class DeathScene(tools._State):
         """
         if keys[pg.K_SPACE]:
             if self.arrow.index == 0:
-                self.next = c.TOWN
+                self.next = c.FAESLANDING
                 self.game_data = pickle.load(open("save.p", "rb"))
             elif self.arrow.index == 1:
                 self.next = c.MAIN_MENU

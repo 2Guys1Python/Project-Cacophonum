@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="305">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="306">
  <tileset firstgid="1" name="tileset1" tilewidth="16" tileheight="16">
   <image source="../graphics/tileset1.png" width="160" height="80"/>
  </tileset>
@@ -185,7 +185,7 @@
   <object id="281" name="blocker" gid="120" x="240" y="768"/>
   <object id="282" name="blocker" gid="120" x="240" y="752"/>
   <object id="285" name="blocker" gid="120" x="480" y="639"/>
-  <object id="286" name="portal" type="fae's landing" gid="139" x="512" y="527"/>
+  <object id="286" name="portal" type="FaesLanding" gid="139" x="512" y="527"/>
   <object id="287" name="blocker" gid="120" x="320" y="208"/>
   <object id="288" name="blocker" gid="120" x="304" y="208"/>
   <object id="289" name="blocker" gid="120" x="288" y="448"/>
@@ -211,6 +211,12 @@
    <properties>
     <property name="direction" value="down"/>
     <property name="state" value="WestField"/>
+   </properties>
+  </object>
+  <object id="305" name="start point" gid="123" x="464" y="528">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="state" value="FaesLanding"/>
    </properties>
   </object>
  </objectgroup>

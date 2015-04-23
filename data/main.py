@@ -4,7 +4,6 @@ from . import setup, tools
 from . import constants as c
 
 
-TOWN = 'town'
 MAIN_MENU = 'main menu'
 CASTLE = 'castle'
 HOUSE = 'house'
@@ -14,6 +13,7 @@ WEAPON_SHOP = 'weapon shop'
 MAGIC_SHOP = 'magic shop'
 POTION_SHOP = 'potion shop'
 PLAYER_MENU = 'player menu'
+FAESLANDING = 'FaesLanding'
 OVERWORLD = 'Field1'
 SOUTHFIELD = 'SouthField'
 WESTFIELD = 'WestField'
@@ -34,7 +34,7 @@ def main():
     """Add states to control here"""
     run_it = tools.Control(setup.ORIGINAL_CAPTION)
     state_dict = {MAIN_MENU: main_menu.Menu(),
-                  TOWN: levels.LevelState(TOWN),
+                  FAESLANDING: levels.LevelState(FAESLANDING),
                   CASTLE: levels.LevelState(CASTLE),
                   HOUSE: levels.LevelState(HOUSE),
                   OVERWORLD: levels.LevelState(OVERWORLD, True),
