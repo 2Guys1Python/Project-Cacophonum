@@ -30,6 +30,10 @@ class InfoBox(object):
         self.rect = self.image.get_rect(bottom=640)
         self.item_text_list = self.make_item_text()[1:]
         self.magic_text_list = self.make_magic_text()[1:]
+        self.basestrings = ['wholenote', '8thnote', 'gclef']
+        self.noteoff = [setup.GFX['wholenoteempty'], setup.GFX['8thnoteempty'], setup.GFX['gclefempty']]
+        self.noteon = [setup.GFX['wholenotefilled'], setup.GFX['8thnotefilled'], setup.GFX['gcleffilled']]
+        self.notecount = 4
 
     def make_state_dict(self):
         """
@@ -127,7 +131,9 @@ class InfoBox(object):
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
         surface.blit(image, (0, 0))
-
+        note_surface = pg.Surface((315,480))
+        note_rect = note_surface.get_rect(x=180, y=135)
+        
         if self.state == c.SELECT_ITEM:
             text_sprites = self.make_text_sprites(self.make_item_text())
             text_sprites.draw(surface)
@@ -181,7 +187,7 @@ class InfoBox(object):
         self.state_dict[c.LEVEL_UP] = self.level_up()
 
 
-
+'''
 class SelectBox(object):
     """
     Box to select whether to attack, use item, use magic or run away.
@@ -223,13 +229,14 @@ class SelectBox(object):
                                'y': (i*34)+10}
 
         return slot_dict
+'''
 
 
 class SelectArrow(object):
     """Small arrow for menu"""
     def __init__(self, enemy_pos_list, info_box):
         self.info_box = info_box
-        self.image = setup.GFX['smallarrow']
+        self.image = setup.GFX['doublearrow']
         self.rect = self.image.get_rect()
         self.state = 'select action'
         self.state_dict = self.make_state_dict()
@@ -272,12 +279,8 @@ class SelectArrow(object):
         """
         Make the list of positions the arrow can be in.
         """
-        pos_list = []
-
-        for i in range(4):
-            x = 590
-            y = (i * 34) + 472
-            pos_list.append((x, y))
+        self.image = setup.GFX['doublearrow']
+        pos_list = [(510,525)]
 
         return pos_list
 
@@ -412,7 +415,7 @@ class SelectArrow(object):
 
         self.enemy_pos_list = [pos for pos in enemy_list if pos != enemy_pos]
 
-
+'''
 class PlayerHealth(object):
     """
     Basic health meter for player.
@@ -476,3 +479,4 @@ class PlayerHealth(object):
         Draw health to surface.
         """
         surface.blit(self.image, self.rect)
+'''

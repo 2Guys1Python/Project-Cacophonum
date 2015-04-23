@@ -44,9 +44,11 @@ class Battle(tools._State):
                                           self.new_gold)
         self.arrow = battlegui.SelectArrow(self.enemy_pos_list,
                                            self.info_box)
+        '''
         self.select_box = battlegui.SelectBox()
         self.player_health_box = battlegui.PlayerHealth(self.select_box.rect,
                                                         self.game_data)
+        '''
 
         self.select_action_state_dict = self.make_selection_state_dict()
         self.observers = [observer.Battle(self),
@@ -66,6 +68,8 @@ class Battle(tools._State):
         self.maxhits = 1
         for p in self.players:
             p.attacked_enemy = None
+        self.currentmonster = (0,0)
+        
 
     def make_player_action_dict(self):
         """
@@ -140,8 +144,8 @@ class Battle(tools._State):
 
         for column in range(3):
             for row in range(3):
-                x = (column * 100) + 100
-                y = (row * 100) + 100
+                x = (column * 110) + 40
+                y = (row * 130) + 70
                 pos_list.append([x, y])
 
         enemy_group = pg.sprite.Group()
@@ -176,7 +180,12 @@ class Battle(tools._State):
         """
         players = []
         for i, p in enumerate(self.game_data['conductors']):
-            players.append(person.Player('left', self.game_data, 630, 220, 'battle resting', 1, p.name))
+            if i == 0:
+                players.append(person.Player('left', self.game_data, 758, 69, 'battle resting', 1, p.name))
+            elif i == 1:
+                players.append(person.Player('left', self.game_data, 575, 220, 'battle resting', 1, p.name))
+            elif i == 2:
+                players.append(person.Player('left', self.game_data, 777, 317, 'battle resting', 1, p.name))
             players[i].image = pg.transform.scale2x(players[i].image)
         return players
 
@@ -415,9 +424,10 @@ class Battle(tools._State):
         for p in self.players:
             surface.blit(p.image, p.rect)
         surface.blit(self.info_box.image, self.info_box.rect)
-        surface.blit(self.select_box.image, self.select_box.rect)
-        surface.blit(self.arrow.image, self.arrow.rect)
-        self.player_health_box.draw(surface)
+        #surface.blit(self.select_box.image, self.select_box.rect)
+        #surface.blit(self.arrow.image, self.arrow.rect)
+        self.arrow.draw(surface)
+        #self.player_health_box.draw(surface)
         self.damage_points.draw(surface)
         self.draw_transition(surface)
 
