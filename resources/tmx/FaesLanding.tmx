@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="807">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="819">
  <tileset firstgid="1" name="tileset1" tilewidth="16" tileheight="16">
   <image source="../graphics/tileset1.png" width="160" height="80"/>
  </tileset>
@@ -35,12 +35,17 @@
  </layer>
  <layer name="Tile Layer 4" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJztmDsOgzAQBd1Tp+Fe6bh/i+QT0AQpsfzdGO/aGqSpwOaNHxiJzTm3VfISUDu3FSSOJW9La9HLz3rnqWz3saJna8+lddB2k7rnrss5a/v0WA/rnb47jJW8l5L7/pP1iW4t9olnP0/tTKN8tbOM8NTOAQDrcnzQzjHScUXfw/16pnoNz8/Wf5g75ZE7NwOx/L7BfwZS+b2L+8zoWerIB3yP084u8TwF2U83T693xl0wdg/msEzpO1LzLMzi2bqP9th3Lf0TyrnFngkAAAAAAAAAAJBj9b8QwBNckWGpAg==
+   eJztmDsOgzAQRLenTsOxiNJxplwVySdIg6XE8nfZeNdmkF4DGOZ5+AgWIloqeTCoPbYVOI4lb0tzIeVnvfNUNr/M6Nnac2ketN247rn9cs7aPhLzYb3Tl8BYzn3JOe+VrP/o1mKf8JTz1M7Uy1c7Sw9P7RwAgHnZT7Rz9HSc0XenX89Ur+H2kfrfIrlTHuH6t4H83D49rsF/BFL5HcV9RvQsdeQCvsdpZ+d4HozsB43Tq8+4MsauwTEsU3qP1FwLo3i2PkclnruW/gnl3GLXBLDP80Q7Ry9X7QwAAAAAALVY/Q4AAADQF7wPwJ34AMLuqp0=
   </data>
  </layer>
  <layer name="Tile Layer 5" width="58" height="51" opacity="0.9">
   <data encoding="base64" compression="zlib">
-   eJztmjtOAzEQhr28wqNIeEkIASWhJHS8UnGFdIg6F0nJKaBDwEGoQ50z5ATMKrY0MqOsnc06HnuKT7Ls/WN/8mo38k5bKdVGdIB9q487pdMPsJc444w9Xwlcfy901jWTs+dA84barms117/XyH54ZM113xWZeZ4Dj/lWlXXNzPMcovax51pHNTyHHlnX+XJ53k4y8cxlP8UzLUrP3wjWIfspnqE8nxpCPFfr+bwkxDNOzwJYA9aBDWAT2AJawDawA+wy9sR+hinQ1Uy1p8H25eJpXGx6Gmqsy9ATu2DnW9jou4Ie6zHyPAAOgSNr/aZ9D44PBT2Gs1We1FmQ63nSMjzPgHPgAjgleATHfkGP4Wzsnpdqdi9eKfp9caKhxnC2ytM+B/ok+pr0vFaze/FmAU+c9fUcEX1NelZhPLn/70vdkxPimRbimRbimRbimRbimRbimRacPOvU7IhnfJgzgy/lX8vC0XOR2iRO37ON2wtqu9Y1jSNYfwhy8Zyo/zXUHRWmvjlkzXY53x8q/12w
+   eJztmjlOAzEUhj3sS5GwSQgBJaEkdKwVN0DpEHUuElHBJaBDwEGoQ50z5AS8aGzpybzM2OPZHn7FJ1nj+cf+5JFnsTtKqQ6iC2xZx7gzc/oGNv8544g9nwlcr1d31jUTs+dA84rKrn01578FZN89sua8r5xMlufAo72msq6ZLM8hKu959nUU4Dn0yLq2lzXfPnn0selsXmYSiWcs4ymeaZYrlOdPJJ7zxpMj4lnc864ixLNZz4eSEM/2eL6g/ibAArAILAHLwAqwCqwB68AGOt9kOXjafoYp0NNMtafB9uXiaVxs+hqqrsfQE7tg5wsY6MuErusz8twGdoBdq/+mfAWO1wldh7N5ntS/IJsqPQ+BI+AYOCC4AcfbhK7D2bZ7nqj0XjxV9PNiX0PV4Wyep/0f6IM4VqXnmUrvxfMCnjjr6zkijjX53mc8y37vq+u7LBZPV+41ZV+X8pmHeDbnGfJ/RDzb61lmH8RTPMWTh2fImjsnz5C1aI6eRdaiOXnidspsQzz9PEPmD/Fsn6eZMz6V//zB0bPI84Baz2675yMqu+5rGlvX5obPeMbgOVF/91B3VT37m+vcsz1r7xcN5wAp
+  </data>
+ </layer>
+ <layer name="Tile Layer 6" width="58" height="51">
+  <data encoding="base64" compression="zlib">
+   eJzt2TEOgCAMBVAO6OBN1MXEwQM4e2FXwggNkPjeAoT8tjOkBABEWIp15mxLPwCAaHdF5g2foq+tOB/Z/uo5CM32yjvGOwNqrAE1engGZYH5eAsCAID/8TcMAOQ+/4QIZg==
   </data>
  </layer>
  <objectgroup name="Object Layer 1">
@@ -524,5 +529,16 @@
   <object id="804" name="blocker" gid="120" x="496" y="432"/>
   <object id="805" name="blocker" gid="120" x="288" y="432"/>
   <object id="806" name="blocker" gid="120" x="288" y="448"/>
+  <object id="807" name="blocker" gid="120" x="32" y="672"/>
+  <object id="808" name="blocker" gid="120" x="32" y="640"/>
+  <object id="809" name="blocker" gid="120" x="32" y="656"/>
+  <object id="810" name="blocker" gid="120" x="96" y="672"/>
+  <object id="811" name="blocker" gid="120" x="96" y="640"/>
+  <object id="812" name="blocker" gid="120" x="96" y="656"/>
+  <object id="813" name="blocker" gid="120" x="48" y="640"/>
+  <object id="814" name="blocker" gid="120" x="64" y="640"/>
+  <object id="815" name="blocker" gid="120" x="80" y="640"/>
+  <object id="816" name="blocker" gid="120" x="48" y="672"/>
+  <object id="818" name="blocker" gid="120" x="80" y="672"/>
  </objectgroup>
 </map>
