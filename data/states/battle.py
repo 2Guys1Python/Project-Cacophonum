@@ -77,8 +77,8 @@ class Battle(tools._State):
         Make the dict to execute player actions.
         """
         action_dict = {c.PLAYER_ATTACK: self.enter_player_attack_state,
-                       c.CURE_SPELL: self.cast_cure,
-                       c.FIRE_SPELL: self.cast_fire_blast,
+                       c.OFF_SPELL: self.cast_cure,
+                       c.DEF_SPELL: self.cast_fire_blast,
                        c.DRINK_HEALING_POTION: self.enter_drink_healing_potion_state,
                        c.DRINK_ETHER_POTION: self.enter_drink_ether_potion_state}
 
@@ -231,7 +231,7 @@ class Battle(tools._State):
         for m in self.monsters:
             m.update(keys, current_time)
         self.attack_animations.update()
-        self.info_box.update()
+        self.info_box.update(keys)
         self.arrow.update(keys)
         self.damage_points.update()
         self.execute_player_actions()
@@ -246,8 +246,7 @@ class Battle(tools._State):
             if keys[pg.K_SPACE]:
                 if self.state == c.SELECT_ACTION:
                     self.notify(c.CLICK2)
-                    enter_state_function = self.select_action_state_dict[
-                        self.arrow.rect.topleft]
+                    enter_state_function = self.select_action_state_dict[self.arrow.rect.topleft]
                     enter_state_function()
 
                 elif self.state == c.SELECT_ENEMY:
@@ -278,13 +277,13 @@ class Battle(tools._State):
                         magic_points = self.game_data['player inventory']['Cure']['magic points']
                         if self.temp_magic >= magic_points:
                             self.temp_magic -= magic_points
-                            self.player_actions.append(c.CURE_SPELL)
+                            self.player_actions.append(c.DEF_SPELL)
                             self.action_selected = True
                     elif self.info_box.magic_text_list[self.arrow.index] == 'Fire Blast':
                         magic_points = self.game_data['player inventory']['Fire Blast']['magic points']
                         if self.temp_magic >= magic_points:
                             self.temp_magic -= magic_points
-                            self.player_actions.append(c.FIRE_SPELL)
+                            self.player_actions.append(c.OFF_SPELL)
                             self.action_selected = True
 
             self.allow_input = False
@@ -310,12 +309,15 @@ class Battle(tools._State):
                         self.player_action_dict[self.player_actions[0]]()
                         self.player_actions.pop(0)
                     else:
-                        if len(self.enemy_list):
-                            self.enter_enemy_attack_state()
-                        else:
+                        if not len(self.enemy_list):
                             self.enter_battle_won_state()
+                        elif self.currentmonster < len(self.monsters):
+                            self.currentmonster+=1
+                        elif len(self.enemy_list):
+                            self.enter_enemy_attack_state()
+                        
                 elif (self.state == c.DRINK_HEALING_POTION or
-                      self.state == c.CURE_SPELL or
+                      self.state == c.DEF_SPELL or
                       self.state == c.DRINK_ETHER_POTION):
                     if self.player_actions:
                         self.player_action_dict[self.player_actions[0]]()
@@ -327,7 +329,7 @@ class Battle(tools._State):
                             self.enter_battle_won_state()
                 self.timer = self.current_time
 
-        elif self.state == c.FIRE_SPELL or self.state == c.CURE_SPELL:
+        elif self.state == c.OFF_SPELL or self.state == c.DEF_SPELL:
             if (self.current_time - self.timer) > 1500:
                 if self.player_actions:
                     if not len(self.enemy_list):
@@ -397,7 +399,7 @@ class Battle(tools._State):
         """
         Check if state is SELECT_ACTION and there are no enemies left.
         """
-        if self.state == c.SELECT_ACTION:
+        if self.state in self.info_box.command_list:
             if len(self.enemy_group) == 0:
                 self.enter_battle_won_state()
 
@@ -466,7 +468,7 @@ class Battle(tools._State):
             surface.blit(transition_image, self.transition_rect)
             self.transition_alpha -= c.TRANSITION_SPEED 
             if self.transition_alpha <= 0:
-                self.state = c.SELECT_ACTION
+                self.state = c.ATTACK
                 self.transition_alpha = 0
 
         elif self.state == 'transition out':
@@ -508,7 +510,7 @@ class Battle(tools._State):
             self.game_data['player inventory']['Healing Potion']['quantity'] -= 1
             if self.game_data['player inventory']['Healing Potion']['quantity'] == 0:
                 del self.game_data['player inventory']['Healing Potion']
-        elif self.state == c.CURE_SPELL:
+        elif self.state == c.DEF_SPELL:
             self.game_data['player stats']['magic']['current'] -= magic_points
 
     def magic_boost(self, magic_points):
@@ -534,7 +536,7 @@ class Battle(tools._State):
         Cast fire blast on all enemies.
         """
         self.notify(c.FIRE)
-        self.state = self.info_box.state = c.FIRE_SPELL
+        self.state = self.info_box.state = c.OFF_SPELL
         POWER = self.inventory['Fire Blast']['power']
         MAGIC_POINTS = self.inventory['Fire Blast']['magic points']
         self.game_data['player stats']['magic']['current'] -= MAGIC_POINTS
@@ -562,7 +564,7 @@ class Battle(tools._State):
         """
         Cast cure spell on player.
         """
-        self.state = c.CURE_SPELL
+        self.state = c.DEF_SPELL
         HEAL_AMOUNT = self.inventory['Cure']['power']
         MAGIC_POINTS = self.inventory['Cure']['magic points']
         self.player.healing = True
@@ -681,9 +683,9 @@ class Battle(tools._State):
         """
         Transition battle into the select action state
         """
-        self.state = self.info_box.state = c.SELECT_ACTION
+        self.state = self.info_box.state = c.ATTACK
         self.arrow.index = 0
-        self.arrow.state = self.state
+        self.arrow.state = c.SELECT_ACTION
 
     def enter_player_damaged_state(self):
         """

@@ -19,7 +19,9 @@ class InfoBox(object):
         self.game_data = game_data
         self.enemy_damage = 0
         self.player_damage = 0
-        self.state = c.SELECT_ACTION
+        self.index = 0
+        self.state = c.ATTACK
+        self.big_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 38)
         self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
         self.title_font.set_underline(True)
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 18)
@@ -33,30 +35,55 @@ class InfoBox(object):
         self.rect = self.image.get_rect(bottom=640)
         self.item_text_list = self.make_item_text()[1:]
         self.magic_text_list = self.make_magic_text()[1:]
+        self.command_list = [c.ATTACK, c.SPELL, c.ITEM, c.SYMPHONY, c.WAIT, c.RUN_AWAY]
+        self.allow_input = True
 
     def make_state_dict(self):
         """
         Make dictionary of states Battle info can be in.
         """
-        state_dict   = {c.SELECT_ACTION: 'Select an action.',
-                        c.SELECT_MAGIC: 'Select a magic spell.',
-                        c.SELECT_ITEM: 'Select an item.',
-                        c.SELECT_ENEMY: 'Select an enemy.',
+        state_dict   = {c.ATTACK: 'ATTACK',
+                        c.SPELL: 'SPELL',
+                        c.ITEM: 'ITEM',
+                        c.SYMPHONY: 'SYMPHONY',
+                        c.WAIT: 'WAIT',
                         c.ENEMY_ATTACK: 'Enemy attacks player!',
                         c.PLAYER_ATTACK: 'Player attacks enemy! ',
-                        c.RUN_AWAY: 'RUN AWAY!!!',
+                        c.RUN_AWAY: 'RUN',
                         c.ENEMY_DAMAGED: self.enemy_damaged(),
                         c.ENEMY_DEAD: 'Enemy killed.',
                         c.PLAYER_DAMAGED: self.player_hit(),
                         c.DRINK_HEALING_POTION: 'Player healed.',
                         c.DRINK_ETHER_POTION: 'Magic Points Increased.',
-                        c.FIRE_SPELL: 'FIRE BLAST!',
+                        c.OFF_SPELL: 'FIRE BLAST!',
                         c.BATTLE_WON: 'Battle won!',
                         c.SHOW_EXPERIENCE: self.show_experience(),
                         c.TWO_ACTIONS: 'Two actions per turn mode is now available.',
                         c.SHOW_GOLD: self.show_gold()}
 
         return state_dict
+
+    def check_input(self, keys):
+        if self.allow_input:
+            if keys[pg.K_RIGHT]:
+                #self.notify(c.CLICK)
+                self.index += 1
+                if self.index > len(self.command_list)-1:
+                    self.index = 0
+                self.state = self.command_list[self.index]
+                self.allow_input = False
+            elif keys[pg.K_LEFT]:
+                #self.notify(c.CLICK)
+                self.index -= 1
+                if self.index < 0:
+                    self.index = len(self.command_list)-1
+                self.state = self.command_list[self.index]
+                self.allow_input = False
+
+
+        if keys[pg.K_DOWN] == False and keys[pg.K_UP] == False \
+                and keys[pg.K_RIGHT] == False and keys[pg.K_LEFT] == False:
+            self.allow_input = True
 
     def enemy_damaged(self):
         """
@@ -138,8 +165,9 @@ class InfoBox(object):
             text_sprites = self.make_text_sprites(self.make_magic_text())
             text_sprites.draw(surface)
         else:
-            text_surface = self.font.render(self.state_dict[self.state], True, c.WHITE)
-            text_rect = text_surface.get_rect(x=50, y=50)
+            text_surface = self.big_font.render(self.state_dict[self.state], True, c.WHITE)
+            text_rect = text_surface.get_rect(x=640, y=75)
+            text_rect.centerx = rect.centerx+230
             surface.blit(text_surface, text_rect)
 
         for i in range(10):
@@ -187,8 +215,9 @@ class InfoBox(object):
         else:
             return "Enemy missed!"
 
-    def update(self):
+    def update(self, keys):
         """Updates info box"""
+        self.check_input(keys)
         self.image = self.make_image()
 
     def show_experience(self):
@@ -319,11 +348,11 @@ class SelectArrow(object):
 
     def check_input(self, keys):
         if self.allow_input:
-            if keys[pg.K_DOWN] and self.index < (len(self.pos_list) - 1):
+            if keys[pg.K_RIGHT] and self.index < (len(self.pos_list) - 1):
                 self.notify(c.CLICK)
                 self.index += 1
                 self.allow_input = False
-            elif keys[pg.K_UP] and self.index > 0:
+            elif keys[pg.K_LEFT] and self.index > 0:
                 self.notify(c.CLICK)
                 self.index -= 1
                 self.allow_input = False

@@ -120,8 +120,8 @@ class Instructions(tools._State):
         self.level_surface = pg.Surface(self.map_rect.size)
         self.title_box = self.set_image()
         self.title_rect = self.title_box.get_rect()
-        self.title_rect.midbottom = self.viewport.midbottom
-        self.title_rect.y -= 30
+        #self.title_rect.midbottom = self.viewport.midbottom
+        #self.title_rect.y -= 30
         self.game_data = tools.create_game_data_dict()
         self.next = self.set_next_scene()
         self.state_dict = self.make_state_dict()
