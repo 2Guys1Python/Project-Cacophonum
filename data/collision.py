@@ -103,8 +103,6 @@ class CollisionHandler(object):
             sprite.rect.y -= sprite.y_vel
 
     def check_for_battle(self):
-        pass
-        '''
         """
         Switch scene to battle 1/5 times if battles are allowed.
         """
@@ -113,5 +111,5 @@ class CollisionHandler(object):
             self.level.game_data['battle counter'] -= 5
             if self.level.game_data['battle counter'] <= 0:
                 self.level.switch_to_battle = True
-        '''
+
 

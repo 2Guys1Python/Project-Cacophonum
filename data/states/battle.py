@@ -69,6 +69,7 @@ class Battle(tools._State):
         for p in self.players:
             p.attacked_enemy = None
         self.currentmonster = (0,0)
+        self.currentconductor = 0
         
 
     def make_player_action_dict(self):

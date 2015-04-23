@@ -26,14 +26,14 @@ class InfoBox(object):
         self.experience_points = experience
         self.gold_earned = gold
         self.state_dict = self.make_state_dict()
+        self.basestrings = ['wholenote', '8thnote', 'gclef']
+        self.noteoff = [setup.GFX['8thnoteempty'], setup.GFX['wholenoteempty'], setup.GFX['gclefempty']]
+        self.noteon = [setup.GFX['8thnotefilled'], setup.GFX['wholenotefilled'], setup.GFX['gcleffilled']]
+        self.notecount = 4
         self.image = self.make_image()
         self.rect = self.image.get_rect(bottom=640)
         self.item_text_list = self.make_item_text()[1:]
         self.magic_text_list = self.make_magic_text()[1:]
-        self.basestrings = ['wholenote', '8thnote', 'gclef']
-        self.noteoff = [setup.GFX['wholenoteempty'], setup.GFX['8thnoteempty'], setup.GFX['gclefempty']]
-        self.noteon = [setup.GFX['wholenotefilled'], setup.GFX['8thnotefilled'], setup.GFX['gcleffilled']]
-        self.notecount = 4
 
     def make_state_dict(self):
         """
@@ -131,8 +131,6 @@ class InfoBox(object):
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
         surface.blit(image, (0, 0))
-        note_surface = pg.Surface((315,480))
-        note_rect = note_surface.get_rect(x=180, y=135)
         
         if self.state == c.SELECT_ITEM:
             text_sprites = self.make_text_sprites(self.make_item_text())
@@ -141,10 +139,33 @@ class InfoBox(object):
             text_sprites = self.make_text_sprites(self.make_magic_text())
             text_sprites.draw(surface)
         else:
-            text_surface = self.font.render(self.state_dict[self.state], True, c.NEAR_BLACK)
+            text_surface = self.font.render(self.state_dict[self.state], True, c.WHITE)
             text_rect = text_surface.get_rect(x=50, y=50)
             surface.blit(text_surface, text_rect)
 
+        for i in range(10):
+            temppos = [(345, 33), (440,33), (440,98), (345,98), (394,23), (470, 78), (430, 143), (355,143), (315,78), (390,55)]
+            if i < 4:
+                if i < self.notecount:
+                    tempnote = self.noteon[0]
+                else:
+                    tempnote = self.noteoff[0]
+            elif i < 9:
+                if i < self.notecount:
+                    tempnote = self.noteon[1]
+                else:
+                    tempnote = self.noteoff[1]
+                    
+            else:
+                if i < self.notecount:
+                    tempnote = self.noteon[2]
+                else:
+                    tempnote = self.noteoff[2]
+            
+            temprect = tempnote.get_rect(x=temppos[i][0],y=temppos[i][1])
+            
+            surface.blit(tempnote, temprect)
+            
         return surface
 
     def set_enemy_damage(self, enemy_damage):
