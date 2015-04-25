@@ -15,7 +15,7 @@ class InfoBox(object):
     Info box that describes attack damage and other battle
     related information.
     """
-    def __init__(self, game_data, experience, gold):
+    def __init__(self, game_data, experience, gold, playerentities, monsterentities):
         self.game_data = game_data
         self.enemy_damage = 0
         self.player_damage = 0
@@ -24,13 +24,17 @@ class InfoBox(object):
         self.big_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 38)
         self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
         self.title_font.set_underline(True)
+        self.med_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 28)
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 18)
         self.experience_points = experience
         self.gold_earned = gold
         self.state_dict = self.make_state_dict()
         self.noteoff = [setup.GFX['8thnoteempty'], setup.GFX['wholenoteempty'], setup.GFX['gclefempty']]
         self.noteon = [setup.GFX['8thnotefilled'], setup.GFX['wholenotefilled'], setup.GFX['gcleffilled']]
-        self.notecount = 4
+        self.playerentities = playerentities
+        self.monsterentities = monsterentities
+        self.currentmonster = 0
+        self.notecount = monsterentities[self.currentmonster].stats['curr']['notes']
         self.image = self.make_image()
         self.rect = self.image.get_rect(bottom=640)
         self.item_text_list = self.make_item_text()[1:]
@@ -47,9 +51,10 @@ class InfoBox(object):
                         c.ITEM: 'ITEM',
                         c.SYMPHONY: 'SYMPHONY',
                         c.WAIT: 'WAIT',
+                        c.RUN_AWAY: 'RUN',
+                        c.SELECT_ENEMY: self.last_option(),
                         c.ENEMY_ATTACK: 'Enemy attacks player!',
                         c.PLAYER_ATTACK: 'Player attacks enemy! ',
-                        c.RUN_AWAY: 'RUN',
                         c.ENEMY_DAMAGED: self.enemy_damaged(),
                         c.ENEMY_DEAD: 'Enemy killed.',
                         c.PLAYER_DAMAGED: self.player_hit(),
@@ -62,23 +67,28 @@ class InfoBox(object):
                         c.SHOW_GOLD: self.show_gold()}
 
         return state_dict
+    
+    def last_option(self):
+        return self.state
 
     def check_input(self, keys):
         if self.allow_input:
             if keys[pg.K_RIGHT]:
-                #self.notify(c.CLICK)
-                self.index += 1
-                if self.index > len(self.command_list)-1:
-                    self.index = 0
-                self.state = self.command_list[self.index]
-                self.allow_input = False
+                if self.state in self.command_list:
+                    #self.notify(c.CLICK)
+                    self.index += 1
+                    if self.index > len(self.command_list)-1:
+                        self.index = 0
+                    self.state = self.command_list[self.index]
+                    self.allow_input = False
             elif keys[pg.K_LEFT]:
-                #self.notify(c.CLICK)
-                self.index -= 1
-                if self.index < 0:
-                    self.index = len(self.command_list)-1
-                self.state = self.command_list[self.index]
-                self.allow_input = False
+                if self.state in self.command_list:
+                    #self.notify(c.CLICK)
+                    self.index -= 1
+                    if self.index < 0:
+                        self.index = len(self.command_list)-1
+                    self.state = self.command_list[self.index]
+                    self.allow_input = False
 
 
         if keys[pg.K_DOWN] == False and keys[pg.K_UP] == False \
@@ -169,6 +179,18 @@ class InfoBox(object):
             text_rect = text_surface.get_rect(x=640, y=75)
             text_rect.centerx = rect.centerx+230
             surface.blit(text_surface, text_rect)
+            text_surface = self.big_font.render(self.monsterentities[self.currentmonster].name, True, c.WHITE)
+            text_rect = text_surface.get_rect(x=20,y=15)
+            surface.blit(text_surface, text_rect)
+            text_surface = self.font.render('(' + self.monsterentities[self.currentmonster].species + ')', True, c.WHITE)
+            text_rect = text_surface.get_rect(x=text_rect.right+10, y=text_rect.centery-6)
+            surface.blit(text_surface, text_rect)
+            text_surface = self.med_font.render('Health: ' + str(self.monsterentities[self.currentmonster].stats['curr']['HP']) + '/' + str(self.monsterentities[self.currentmonster].stats['base']['HP']), True, c.WHITE)
+            text_rect = text_surface.get_rect(x=20,y=55)
+            surface.blit(text_surface, text_rect)
+            text_surface = self.med_font.render('Status: ' + str(self.monsterentities[self.currentmonster].stats['curr']['notes']) + " notes", True, c.WHITE)
+            text_rect = text_surface.get_rect(x=20, y=90)
+            surface.blit(text_surface, text_rect)
 
         for i in range(10):
             temppos = [(345, 33), (440,33), (440,98), (345,98), (394,23), (470, 78), (430, 143), (355,143), (315,78), (390,55)]
@@ -215,9 +237,10 @@ class InfoBox(object):
         else:
             return "Enemy missed!"
 
-    def update(self, keys):
+    def update(self, keys, currentmonster):
         """Updates info box"""
         self.check_input(keys)
+        self.currentmonster = currentmonster
         self.image = self.make_image()
 
     def show_experience(self):
@@ -305,10 +328,10 @@ class SelectArrow(object):
 
     def make_state_dict(self):
         """Make state dictionary"""
-        state_dict = {'select action': self.select_action,
-                      'select enemy': self.select_enemy,
-                      'select item': self.select_item,
-                      'select magic': self.select_magic,
+        state_dict = {c.SELECT_ACTION: self.select_action,
+                      c.SELECT_ENEMY: self.select_enemy,
+                      c.SELECT_ITEM: self.select_item,
+                      c.SELECT_MAGIC: self.select_magic,
                       'invisible': self.become_invisible_surface}
 
         return state_dict
@@ -348,14 +371,27 @@ class SelectArrow(object):
 
     def check_input(self, keys):
         if self.allow_input:
-            if keys[pg.K_RIGHT] and self.index < (len(self.pos_list) - 1):
+            if keys[pg.K_DOWN] and self.index < (len(self.pos_list) - 1):
                 self.notify(c.CLICK)
                 self.index += 1
                 self.allow_input = False
-            elif keys[pg.K_LEFT] and self.index > 0:
+            elif keys[pg.K_UP] and self.index > 0:
                 self.notify(c.CLICK)
                 self.index -= 1
                 self.allow_input = False
+            elif keys[pg.K_RIGHT]:
+                if self.state == c.SELECT_ENEMY:
+                    if self.index+3 < len(self.pos_list)-1:
+                        self.notify(c.CLICK)
+                        self.index += 3
+                self.allow_input = False
+            elif keys[pg.K_LEFT]:
+                if self.state == c.SELECT_ENEMY:
+                    if self.index-3 > -1:
+                        self.notify(c.CLICK)
+                        self.index -=3
+                self.allow_input = False
+                        
 
 
         if keys[pg.K_DOWN] == False and keys[pg.K_UP] == False \

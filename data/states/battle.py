@@ -28,13 +28,17 @@ class Battle(tools._State):
         self.timer = current_time
         self.allow_input = False
         self.game_data = game_data
-        self.inventory = game_data['conductors'][0].inventory
         self.state = 'transition in'
         self.next = game_data['last state']
         self.run_away = False
 
         self.players, self.playerentities = self.make_player()
         self.monsters, self.monsterentities = self.make_monster()
+        self.currentmonster = 0
+        self.inventory = self.monsterentities[self.currentmonster].master.inventory
+        self.maxhits = 1
+        for p in self.players:
+            p.attacked_enemy = None
         self.attack_animations = pg.sprite.Group()
         self.enemy_group, self.enemy_pos_list, self.enemy_list = self.make_enemies()
         self.experience_points = self.get_experience_points()
@@ -42,7 +46,9 @@ class Battle(tools._State):
         self.background = self.make_background()
         self.info_box = battlegui.InfoBox(game_data, 
                                           self.experience_points, 
-                                          self.new_gold)
+                                          self.new_gold,
+                                          self.playerentities,
+                                          self.monsterentities)
         self.arrow = battlegui.SelectArrow(self.enemy_pos_list,
                                            self.info_box)
         '''
@@ -65,11 +71,6 @@ class Battle(tools._State):
         self.just_leveled_up = False
         self.transition_rect = setup.SCREEN.get_rect()
         self.transition_alpha = 255
-        self.temp_notes = self.game_data['conductors'][0].monsters[0].stats['curr']['notes']
-        self.maxhits = 1
-        for p in self.players:
-            p.attacked_enemy = None
-        self.currentmonster = 0
         
 
     def make_player_action_dict(self):
@@ -212,10 +213,11 @@ class Battle(tools._State):
         """
         Make a dictionary of states with arrow coordinates as keys.
         """
-        pos_list = self.arrow.make_select_action_pos_list()
-        state_list = [self.enter_select_enemy_state, self.enter_select_item_state,
-                      self.enter_select_magic_state, self.try_to_run_away]
-        return dict(izip(pos_list, state_list))
+        index_list = range(6)
+        state_list = [self.enter_select_enemy_state, self.enter_select_magic_state,
+                      self.enter_select_item_state, self.enter_select_symphony_state,
+                      self.next_turn, self.try_to_run_away]
+        return dict(izip(index_list, state_list))
 
     def update(self, surface, keys, current_time):
         """
@@ -231,7 +233,7 @@ class Battle(tools._State):
         for m in self.monsters:
             m.update(keys, current_time)
         self.attack_animations.update()
-        self.info_box.update(keys)
+        self.info_box.update(keys, self.currentmonster)
         self.arrow.update(keys)
         self.damage_points.update()
         self.execute_player_actions()
@@ -243,10 +245,10 @@ class Battle(tools._State):
         Check user input to navigate GUI.
         """
         if self.allow_input:
-            if keys[pg.K_SPACE]:
+            if keys[pg.K_z]:
                 if self.state == c.SELECT_ACTION:
                     self.notify(c.CLICK2)
-                    enter_state_function = self.select_action_state_dict[self.arrow.rect.topleft]
+                    enter_state_function = self.select_action_state_dict[self.info_box.index]
                     enter_state_function()
 
                 elif self.state == c.SELECT_ENEMY:
@@ -286,9 +288,23 @@ class Battle(tools._State):
                             self.player_actions.append(c.OFF_SPELL)
                             self.action_selected = True
 
+            elif keys[pg.K_x]:
+                if self.state == c.SELECT_ENEMY:
+                    self.state = self.arrow.state = c.SELECT_ACTION
+                    self.info_box.state = c.ATTACK
+                    self.arrow.index = 0
+            
+            elif keys[pg.K_RETURN]:
+                self.game_data['last state'] = self.name
+                self.game_data['battle counter'] = random.randint(50, 255)
+                self.game_data['battle type'] = None
+                self.state = 'transition out'
+                    
             self.allow_input = False
+        
 
-        if keys[pg.K_RETURN] == False and keys[pg.K_SPACE] == False:
+
+        if keys[pg.K_RETURN] == False and keys[pg.K_z] == False:
             self.allow_input = True
 
     def check_timed_events(self):
@@ -468,7 +484,7 @@ class Battle(tools._State):
             surface.blit(transition_image, self.transition_rect)
             self.transition_alpha -= c.TRANSITION_SPEED 
             if self.transition_alpha <= 0:
-                self.state = c.ATTACK
+                self.state = c.SELECT_ACTION
                 self.transition_alpha = 0
 
         elif self.state == 'transition out':
@@ -581,8 +597,14 @@ class Battle(tools._State):
         """
         Transition battle into the select enemy state.
         """
-        self.state = self.arrow.state = c.SELECT_ENEMY
+        self.state = self.arrow.state = self.info_box.state = c.SELECT_ENEMY
         self.arrow.index = 0
+        
+    def enter_select_symphony_state(self):
+        pass
+    
+    def next_turn(self):
+        pass
 
     def enter_select_item_state(self):
         """
@@ -683,7 +705,8 @@ class Battle(tools._State):
         """
         Transition battle into the select action state
         """
-        self.state = self.info_box.state = c.ATTACK
+        self.state = c.SELECT_ACTION
+        self.info_box.state = c.ATTACK
         self.arrow.index = 0
         self.arrow.state = c.SELECT_ACTION
 

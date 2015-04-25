@@ -1083,7 +1083,7 @@ class MenuGui(object):
                 elif self.arrow.state == 'monsterinfo':
                     self.notify(c.CLOSE)
                     self.bottom_box.state = 'monstats'
-                    self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
+                    self.bottom_box.compstate = (0,0)
                     self.arrow.state = 'monsterselect'
                     self.arrow_index = 0
 
