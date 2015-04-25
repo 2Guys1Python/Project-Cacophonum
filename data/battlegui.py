@@ -145,12 +145,12 @@ class InfoBox(object):
             if i == 0:
                 x = 195
                 y = 10
-                surface = self.title_font.render(text, True, c.NEAR_BLACK)
+                surface = self.title_font.render(text, True, c.WHITE)
                 rect = surface.get_rect(x=x, y=y)
             else:
                 x = 100
                 y = (i * 30) + 20
-                surface = self.font.render(text, True, c.NEAR_BLACK)
+                surface = self.font.render(text, True, c.WHITE)
                 rect = surface.get_rect(x=x, y=y)
             sprite.image = surface
             sprite.rect = rect
@@ -361,6 +361,7 @@ class SelectArrow(object):
         Select what enemy you want to take action on.
         """
         self.pos_list = self.enemy_pos_list
+        self.image = setup.GFX['arrowright']
 
         if self.pos_list:
             pos = self.pos_list[self.index]
@@ -484,7 +485,6 @@ class SelectArrow(object):
         """
         Update arrow position.
         """
-        self.image = setup.GFX['smallarrow']
         state_function = self.state_dict[self.state]
         state_function(keys)
 
