@@ -40,6 +40,7 @@ class InfoBox(object):
         self.item_text_list = self.make_item_text()[1:]
         self.magic_text_list = self.make_magic_text()[1:]
         self.command_list = [c.ATTACK, c.SPELL, c.ITEM, c.SYMPHONY, c.WAIT, c.RUN_AWAY]
+        self.itemindex = 0
         self.allow_input = True
 
     def make_state_dict(self):
@@ -105,19 +106,14 @@ class InfoBox(object):
         """
         Make the text for when the player selects items.
         """
-        inventory = self.game_data['player inventory']
-        allowed_item_list = ['Healing Potion', 'Ether Potion']
-        title = 'SELECT ITEM'
-        item_text_list = [title]
+        consum_list = []
+        inventory = self.monsterentities[self.currentmonster].master.inventory
+        
+        for x in range(inventory.getSize()):
+            if inventory.getItem(x).itemType is "Consumable":
+                consum_list.append(inventory.getItem(x).name)
 
-        for item in allowed_item_list:
-            if item in inventory:
-                text = item + ": " + str(inventory[item]['quantity'])
-                item_text_list.append(text)
-
-        item_text_list.append('BACK')
-
-        return item_text_list
+        return consum_list
 
     def make_magic_text(self):
         """
@@ -130,6 +126,10 @@ class InfoBox(object):
         spell_list = [item for item in inventory if item in allowed_item_list]
         magic_text_list.extend(spell_list)
         magic_text_list.append('BACK')
+        
+        magic_text_list = []
+        for m in self.monsterentities[self.currentmonster].spells:
+            magic_text_list.append(m.name)
 
         return magic_text_list
 
@@ -142,21 +142,25 @@ class InfoBox(object):
         for i, text in enumerate(text_list):
             sprite = pg.sprite.Sprite()
 
-            if i == 0:
-                x = 195
-                y = 10
-                surface = self.title_font.render(text, True, c.WHITE)
-                rect = surface.get_rect(x=x, y=y)
+            if len(text_list)-(self.itemindex*4)>4:
+                for x in range(4):
+                    text = text_list[x+(self.itemindex*4)]
+                    posx = 65
+                    posy = 30 + (x*35)
+                
             else:
-                x = 100
-                y = (i * 30) + 20
-                surface = self.font.render(text, True, c.WHITE)
-                rect = surface.get_rect(x=x, y=y)
-            sprite.image = surface
-            sprite.rect = rect
+                for x in range(len(text_list) - self.itemindex*4):
+                    text = text_list[x+(self.itemindex*4)]
+                    posx = 65
+                    posy = 30 + (x*35)
+            sprite.image = self.med_font.render(text, True, c.WHITE)
+            sprite.rect = sprite.image.get_rect(x=posx, y=posy)
             sprite_group.add(sprite)
-
+        
+        
         return sprite_group
+        
+        
 
     def make_image(self):
         """
@@ -404,10 +408,11 @@ class SelectArrow(object):
         Select item to use.
         """
         self.pos_list = self.make_select_item_pos_list()
+        self.image = setup.GFX['arrowright']
 
         pos = self.pos_list[self.index]
-        self.rect.x = pos[0] - 60
-        self.rect.y = pos[1] + 20
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
 
         self.check_input(keys)
 
@@ -417,11 +422,10 @@ class SelectArrow(object):
         """
         pos_list = []
         text_list = self.info_box.make_item_text()
-        text_list = text_list[1:]
 
         for i in range(len(text_list)):
-            left = 90
-            top = (i * 29) + 488
+            left = 3
+            top = (i * 35) + 475
             pos_list.append((left, top))
 
         return pos_list
@@ -431,10 +435,11 @@ class SelectArrow(object):
         Select magic to use.
         """
         self.pos_list = self.make_select_magic_pos_list()
+        self.image = setup.GFX['arrowright']
 
         pos = self.pos_list[self.index]
-        self.rect.x = pos[0] - 60
-        self.rect.y = pos[1] + 20
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
 
         self.check_input(keys)
 
@@ -444,11 +449,10 @@ class SelectArrow(object):
         """
         pos_list = []
         text_list = self.info_box.make_magic_text()
-        text_list = text_list[1:]
 
         for i in range(len(text_list)):
-            left = 90
-            top = (i * 29) + 488
+            left = 3
+            top = (i * 35) + 475
             pos_list.append((left, top))
 
         return pos_list

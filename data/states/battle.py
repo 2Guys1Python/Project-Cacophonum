@@ -293,6 +293,16 @@ class Battle(tools._State):
                     self.state = self.arrow.state = c.SELECT_ACTION
                     self.info_box.state = c.ATTACK
                     self.arrow.index = 0
+                elif self.state == c.SELECT_ITEM:
+                    self.notify(c.CLICK2)
+                    self.enter_select_action_state()
+                    self.info_box.state = c.ITEM
+                    self.info_box.itemindex = 0
+                elif self.state == c.SELECT_MAGIC:
+                    self.notify(c.CLICK2)
+                    self.enter_select_action_state()
+                    self.info_box.state = c.SPELL
+                    self.info_box.itemindex = 0
             
             elif keys[pg.K_RETURN]:
                 self.game_data['last state'] = self.name
@@ -304,7 +314,7 @@ class Battle(tools._State):
         
 
 
-        if keys[pg.K_RETURN] == False and keys[pg.K_z] == False:
+        if keys[pg.K_RETURN] == False and keys[pg.K_z] == False and keys[pg.K_x] == False:
             self.allow_input = True
 
     def check_timed_events(self):
