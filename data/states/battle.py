@@ -20,7 +20,6 @@ class Battle(tools._State):
         self.music = setup.MUSIC['high_action']
         self.volume = 0.4
         self.monlist = monlist
-        print self.monlist
 
     def startup(self, current_time, game_data):
         """
@@ -154,8 +153,10 @@ class Battle(tools._State):
                 self.game_data['start of game'] = False
             else:
                 for enemy in range(random.randint(1, 6)):
-                    enemy_group.add(person.Enemy('devil', 0, 0,
-                                                  'down', 'battle resting'))
+                    ran = random.randint(0,len(self.monlist)-1)
+                    enemy_group.add(person.Enemy(self.monlist[ran], 0, 0,
+                                                 'down', 'battle resting'))
+                    ent_list.append(copy.deepcopy(entityclasses.WildMonster(self.monlist[ran], 1)))
 
         for i, enemy in enumerate(enemy_group):
             enemy.rect.topleft = pos_list[i]
@@ -463,15 +464,17 @@ class Battle(tools._State):
 
     def attack_enemy(self, enemy_damage):
         enemy = self.monsters[self.currentmonster].attacked_enemy
-        enemy.health -= enemy_damage
+        enemyindex = self.enemy_list.index(enemy)
+        self.enemyentities[enemyindex].damage(enemy_damage)
         self.set_enemy_indices()
 
         if enemy:
             enemy.enter_knock_back_state()
-            if enemy.health <= 0 and len(self.player_actions) == 0:
+            if self.enemyentities[enemyindex].stats['curr']['HP'] <= 0 and len(self.player_actions) == 1:
                 self.enemy_list.pop(enemy.index)
+                self.enemyentities.pop(enemyindex)
                 enemy.state = c.FADE_DEATH
-                self.arrow.remove_pos(self.player.attacked_enemy)
+                self.arrow.remove_pos(self.monsters[self.currentmonster].attacked_enemy)
             self.enemy_index = 0
 
     def set_enemy_indices(self):
@@ -763,7 +766,9 @@ class Battle(tools._State):
         Transition battle into the enemy damaged state.
         """
         self.state = self.info_box.state = c.ENEMY_DAMAGED
-        enemy_damage = 5 #self.monsterentities[self.currentmonster].calculate_hit(self.currhit)
+        enemy = self.monsters[self.currentmonster].attacked_enemy
+        enemyindex = self.enemy_list.index(enemy)
+        enemy_damage = int(self.monsterentities[self.currentmonster].calculate_attack_damage(self.enemyentities[enemyindex], self.currhits))
         self.damage_points.add(
             attackitems.HealthPoints(enemy_damage,
                                      self.monsters[self.currentmonster].attacked_enemy.rect.topright))

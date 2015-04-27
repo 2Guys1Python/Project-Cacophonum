@@ -213,12 +213,43 @@ class TamedMonster(Monster):
 		print "%d dealt! %d HP left." %(num, self.stats['curr']['HP'])
 		if self.stats['curr']['HP'] == 0:
 			self.isDead = True
-			print "%s died" %self.name
 			
 	def heal(self, num):
 		self.stats['curr']['HP'] += int(num)
 		if self.stats['curr']['HP'] > (self.stats['base']['HP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP']):
 			self.stats['curr']['HP'] = (self.stats['base']['HP'] + self.stats['bonus']['bonusHP'] - self.stats['penalty']['penaltyHP'])
+	
+	def calculate_attack_damage(self, target, currhits):
+		atk = (self.stats['base']['atk'] + self.stats['bonus']['bonusatk'] - self.stats['penalty']['penaltyatk'])
+		enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1000))
+		
+		if self.equipment['instrument'] == None:
+			return (atk*0.25*enemydefmod)
+		
+		elif self.equipment['instrument'].stats['base']['type'] == 'wind':
+		#Wind instruments ignore proration and some defense when critting
+			equipmentmultiplier = self.equipment['instrument'].stats['base']['atkmult']
+			enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1200))
+			currentDamage = atk * equipmentmultiplier * enemydefmod * (self.equipment['instrument'].stats['base']['proration'] ** currhits)
+			if self.equipment['instrument'].stats['base']['critchance'] > random.randint(0, 100):
+				print "Critical!"
+				enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1200))
+				return (atk*equipmentmultiplier*enemydefmod*self.equipment['instrument'].stats['base']['critmult'])
+			else:
+				return (currentDamage)
+		
+		elif self.equipment['instrument'].stats['base']['type'] == 'string':
+			currentDamage = atk * equipmentmultiplier * enemydefmod * (self.equipment['instrument'].stats['base']['proration'] ** currhits)
+			if self.equipment['instrument'].stats['base']['critchance'] > random.randint(0, 100):
+				print "Critical!"
+				return (currentDamage*self.equipment['instrument'].stats['base']['critmult'])
+			else:
+				return (currentDamage)
+		
+		elif self.equipment['instrument'].stats['base']['type'] == 'percussion':
+			currentDamage = atk * equipmentmultiplier * (self.equipment['instrument'].stats['base']['proration'] ** currhits)
+			return (currentDamage)
+	
 	
 	def attack(self, target):
 		print "%s attacked %s!" %(self.name, target.name)
