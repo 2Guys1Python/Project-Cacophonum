@@ -14,11 +14,13 @@ if sys.version_info[0] == 2:
 
 
 class Battle(tools._State):
-    def __init__(self):
+    def __init__(self, monlist):
         super(Battle, self).__init__()
         self.name = 'battle'
         self.music = setup.MUSIC['high_action']
         self.volume = 0.4
+        self.monlist = monlist
+        print self.monlist
 
     def startup(self, current_time, game_data):
         """

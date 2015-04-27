@@ -55,6 +55,7 @@ class LevelState(tools._State):
         self.player = self.make_player()
         self.blockers = self.make_blockers()
         self.sprites = self.make_sprites()
+        self.encounters = self.make_encounterlist()
 
         self.collision_handler = collision.CollisionHandler(self.player,
                                                             self.blockers,
@@ -116,6 +117,15 @@ class LevelState(tools._State):
 
         return pg.Surface(size).convert()
 
+    def make_encounterlist(self):
+        mon_list = []
+        for object in self.renderer.tmx_data.getObjects():
+            properties = object.__dict__
+            if properties['name'] == 'monster':
+                mon_list.append(properties['monname'])
+        
+        return mon_list
+    
     def make_player(self):
         """
         Make the player and sets location.

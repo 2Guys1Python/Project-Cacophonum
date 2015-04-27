@@ -43,7 +43,11 @@ class Control(object):
         previous, self.state_name = self.state_name, self.state.next
         previous_music = self.state.music_title
         persist = self.state.cleanup()
-        self.state = self.state_dict[self.state_name]
+        if self.state_name == 'battle':
+            monlist = self.state.encounters
+            self.state = self.state_dict[self.state_name](monlist)
+        else:
+            self.state = self.state_dict[self.state_name]
         self.state.previous = previous
         self.state.previous_music = previous_music
         self.state.startup(self.current_time, persist)

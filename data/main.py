@@ -52,7 +52,7 @@ def main():
                   SCRIPTORIUM: shop.Scriptorium(),
                   SUNDRIES: shop.Sundries(),
                   MAGIC_SHOP: shop.MagicShop(),
-                  BATTLE: battle.Battle(),
+                  BATTLE: battle.Battle,
                   DUNGEON: levels.LevelState(DUNGEON, True),
                   DUNGEON2: levels.LevelState(DUNGEON2, True),
                   DUNGEON3: levels.LevelState(DUNGEON3, True),

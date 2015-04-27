@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="306">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="307">
  <tileset firstgid="1" name="tileset1" tilewidth="16" tileheight="16">
   <image source="../graphics/tileset1.png" width="160" height="80"/>
  </tileset>
  <tileset firstgid="51" name="tileset2" tilewidth="16" tileheight="16">
   <image source="../graphics/tileset2.png" width="160" height="180"/>
+  <tile id="74">
+   <properties>
+    <property name="monname" value="Slime"/>
+    <property name="name" value="monster"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="161" name="medievalsigns" tilewidth="16" tileheight="16">
   <image source="../graphics/medievalsigns.png" width="64" height="64"/>
@@ -43,8 +49,7 @@
    eJzt17ENwDAIRUEPk9r7jxeloHVnQOROYoCvV7HW2U64Dp6E60BPPfXUs5qeeuqpZ7W/9AQAAGbr9Gfd8u2LP2vy1tgXeyfzNwMAAABArRca2TZ3
   </data>
  </layer>
- <objectgroup name="Object Layer 1">
-  <object id="302" name="Slime" x="0" y="0"/>
+ <objectgroup name="Object Layer 1" opacity="0.69">
   <object id="2" name="blocker" gid="120" x="240" y="800"/>
   <object id="3" name="blocker" gid="120" x="240" y="784"/>
   <object id="4" name="blocker" gid="120" x="224" y="768"/>
@@ -217,6 +222,11 @@
    <properties>
     <property name="direction" value="down"/>
     <property name="state" value="instructions"/>
+   </properties>
+  </object>
+  <object id="306" name="monster" gid="125" x="416" y="288">
+   <properties>
+    <property name="monname" value="Slime"/>
    </properties>
   </object>
  </objectgroup>
