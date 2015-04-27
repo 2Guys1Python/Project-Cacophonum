@@ -1,9 +1,9 @@
 """This is the state that handles battles against
 monsters"""
-import random, sys
+import random, sys, copy
 from itertools import izip
 import pygame as pg
-from .. import tools, battlegui, observer, setup
+from .. import tools, battlegui, observer, setup, entityclasses, compositeclasses
 from .. components import person, attack, attackitems
 from .. import constants as c
 
@@ -43,7 +43,7 @@ class Battle(tools._State):
         for p in self.players:
             p.attacked_enemy = None
         self.attack_animations = pg.sprite.Group()
-        self.enemy_group, self.enemy_pos_list, self.enemy_list = self.make_enemies()
+        self.enemy_group, self.enemy_pos_list, self.enemy_list, self.enemyentities = self.make_enemies()
         self.experience_points = self.get_experience_points()
         self.new_gold = self.get_new_gold()
         self.background = self.make_background()
@@ -130,6 +130,7 @@ class Battle(tools._State):
         Make the enemies for the battle. Return sprite group.
         """
         pos_list = []
+        ent_list = []
 
         for column in range(3):
             for row in range(3):
@@ -146,8 +147,10 @@ class Battle(tools._State):
         else:
             if self.game_data['start of game']:
                 for enemy in range(3):
-                    enemy_group.add(person.Enemy('devil', 0, 0,
+                    ran = random.randint(0,len(self.monlist)-1)
+                    enemy_group.add(person.Enemy(self.monlist[ran], 0, 0,
                                                  'down', 'battle resting'))
+                    ent_list.append(copy.deepcopy(entityclasses.WildMonster(self.monlist[ran], 1)))
                 self.game_data['start of game'] = False
             else:
                 for enemy in range(random.randint(1, 6)):
@@ -161,7 +164,7 @@ class Battle(tools._State):
 
         enemy_list = [enemy for enemy in enemy_group]
 
-        return enemy_group, pos_list[0:len(enemy_group)], enemy_list
+        return enemy_group, pos_list[0:len(enemy_group)], enemy_list, ent_list
 
     def make_player(self):
         """
