@@ -53,7 +53,8 @@ class InfoBox(object):
                         c.SYMPHONY: 'SYMPHONY',
                         c.WAIT: 'WAIT',
                         c.RUN_AWAY: 'RUN',
-                        c.SELECT_ENEMY: self.last_option(),
+                        c.SELECT_ENEMY_ATTACK: 'ATTACK',
+                        c.SELECT_ENEMY_SPELL: '',
                         c.ENEMY_ATTACK: 'Enemy attacks player!',
                         c.PLAYER_ATTACK: 'Player attacks enemy! ',
                         c.ENEMY_DAMAGED: self.enemy_damaged(),
@@ -189,35 +190,35 @@ class InfoBox(object):
             text_surface = self.font.render('(' + self.monsterentities[self.currentmonster].species + ')', True, c.WHITE)
             text_rect = text_surface.get_rect(x=text_rect.right+10, y=text_rect.centery-6)
             surface.blit(text_surface, text_rect)
-            text_surface = self.med_font.render('Health: ' + str(self.monsterentities[self.currentmonster].stats['curr']['HP']) + '/' + str(self.monsterentities[self.currentmonster].stats['base']['HP']), True, c.WHITE)
+            text_surface = self.med_font.render('Health: ' + str(self.monsterentities[self.currentmonster].stats['curr']['HP']) + '/' + str(self.monsterentities[self.currentmonster].stats['base']['HP'] + self.monsterentities[self.currentmonster].stats['bonus']['bonusHP'] - self.monsterentities[self.currentmonster].stats['penalty']['penaltyHP']), True, c.WHITE)
             text_rect = text_surface.get_rect(x=20,y=55)
             surface.blit(text_surface, text_rect)
             text_surface = self.med_font.render('Status: ' + str(self.monsterentities[self.currentmonster].stats['curr']['notes']) + " notes", True, c.WHITE)
             text_rect = text_surface.get_rect(x=20, y=90)
             surface.blit(text_surface, text_rect)
 
-        for i in range(10):
-            temppos = [(345, 33), (440,33), (440,98), (345,98), (394,23), (470, 78), (430, 143), (355,143), (315,78), (390,55)]
-            if i < 4:
-                if i < self.notecount:
-                    tempnote = self.noteon[0]
+            for i in range(10):
+                temppos = [(345, 33), (440,33), (440,98), (345,98), (394,23), (470, 78), (430, 143), (355,143), (315,78), (390,55)]
+                if i < 4:
+                    if i < self.notecount:
+                        tempnote = self.noteon[0]
+                    else:
+                        tempnote = self.noteoff[0]
+                elif i < 9:
+                    if i < self.notecount:
+                        tempnote = self.noteon[1]
+                    else:
+                        tempnote = self.noteoff[1]
+                        
                 else:
-                    tempnote = self.noteoff[0]
-            elif i < 9:
-                if i < self.notecount:
-                    tempnote = self.noteon[1]
-                else:
-                    tempnote = self.noteoff[1]
-                    
-            else:
-                if i < self.notecount:
-                    tempnote = self.noteon[2]
-                else:
-                    tempnote = self.noteoff[2]
-            
-            temprect = tempnote.get_rect(x=temppos[i][0],y=temppos[i][1])
-            
-            surface.blit(tempnote, temprect)
+                    if i < self.notecount:
+                        tempnote = self.noteon[2]
+                    else:
+                        tempnote = self.noteoff[2]
+                
+                temprect = tempnote.get_rect(x=temppos[i][0],y=temppos[i][1])
+                
+                surface.blit(tempnote, temprect)
             
         return surface
 
@@ -333,7 +334,8 @@ class SelectArrow(object):
     def make_state_dict(self):
         """Make state dictionary"""
         state_dict = {c.SELECT_ACTION: self.select_action,
-                      c.SELECT_ENEMY: self.select_enemy,
+                      c.SELECT_ENEMY_ATTACK: self.select_enemy_attack,
+                      c.SELECT_ENEMY_SPELL: self.select_enemy_spell,
                       c.SELECT_ITEM: self.select_item,
                       c.SELECT_MAGIC: self.select_magic,
                       'invisible': self.become_invisible_surface}
@@ -360,7 +362,21 @@ class SelectArrow(object):
 
         return pos_list
 
-    def select_enemy(self, keys):
+    def select_enemy_attack(self, keys):
+        """
+        Select what enemy you want to take action on.
+        """
+        self.pos_list = self.enemy_pos_list
+        self.image = setup.GFX['arrowright']
+
+        if self.pos_list:
+            pos = self.pos_list[self.index]
+            self.rect.x = pos[0] - 60
+            self.rect.y = pos[1] + 20
+
+        self.check_input(keys)
+    
+    def select_enemy_spell(self, keys):
         """
         Select what enemy you want to take action on.
         """
@@ -385,13 +401,13 @@ class SelectArrow(object):
                 self.index -= 1
                 self.allow_input = False
             elif keys[pg.K_RIGHT]:
-                if self.state == c.SELECT_ENEMY:
+                if self.state in (c.SELECT_ENEMY_ATTACK, c.SELECT_ENEMY_SPELL):
                     if self.index+3 < len(self.pos_list)-1:
                         self.notify(c.CLICK)
                         self.index += 3
                 self.allow_input = False
             elif keys[pg.K_LEFT]:
-                if self.state == c.SELECT_ENEMY:
+                if self.state in (c.SELECT_ENEMY_ATTACK, c.SELECT_ENEMY_SPELL):
                     if self.index-3 > -1:
                         self.notify(c.CLICK)
                         self.index -=3
@@ -472,18 +488,6 @@ class SelectArrow(object):
     def become_select_magic_state(self):
         self.index = 0
         self.state = c.SELECT_MAGIC
-
-    def enter_select_action(self):
-        """
-        Assign values for the select action state.
-        """
-        pass
-
-    def enter_select_enemy(self):
-        """
-        Assign values for the select enemy state.
-        """
-        pass
 
     def update(self, keys):
         """

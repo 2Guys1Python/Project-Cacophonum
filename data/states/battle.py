@@ -36,6 +36,7 @@ class Battle(tools._State):
         self.monsters, self.monsterentities = self.make_monster()
         self.currentmonster = 0
         self.inventory = self.monsterentities[self.currentmonster].master.inventory
+        self.currhits = 0
         self.maxhits = 1
         for p in self.players:
             p.attacked_enemy = None
@@ -84,22 +85,6 @@ class Battle(tools._State):
                        c.DRINK_ETHER_POTION: self.enter_drink_ether_potion_state}
 
         return action_dict
-
-    def make_enemy_level_dict(self):
-        new_dict = {c.OVERWORLD: 1,
-                    c.DUNGEON: 2,
-                    c.DUNGEON2: 2,
-                    c.DUNGEON3: 2,
-                    c.DUNGEON4: 2,
-                    c.DUNGEON5: 4}
-
-        return new_dict
-
-    def set_enemy_level(self, enemy_list):
-        dungeon_level_dict = self.make_enemy_level_dict()
-
-        for enemy in enemy_list:
-            enemy.level = dungeon_level_dict[self.previous]
 
     def get_experience_points(self):
         """
@@ -214,7 +199,7 @@ class Battle(tools._State):
         Make a dictionary of states with arrow coordinates as keys.
         """
         index_list = range(6)
-        state_list = [self.enter_select_enemy_state, self.enter_select_magic_state,
+        state_list = [self.enter_select_enemy_attack_state, self.enter_select_magic_state,
                       self.enter_select_item_state, self.enter_select_symphony_state,
                       self.next_turn, self.try_to_run_away]
         return dict(izip(index_list, state_list))
@@ -251,13 +236,30 @@ class Battle(tools._State):
                     enter_state_function = self.select_action_state_dict[self.info_box.index]
                     enter_state_function()
 
-                elif self.state == c.SELECT_ENEMY:
+                elif self.state == c.SELECT_ENEMY_ATTACK:
                     self.notify(c.CLICK2)
-                    for x in range(0,5):
-						self.player_actions.append(c.PLAYER_ATTACK)
-						self.enemies_to_attack.append(self.get_enemy_to_attack())
-                    self.maxhits = 5
+                    self.player_actions.append(c.PLAYER_ATTACK)
+                    self.enemies_to_attack.append(self.get_enemy_to_attack())
+                    if self.monsterentities[self.currentmonster].equipment['instrument']:
+                        self.maxhits = self.monsterentities[self.currentmonster].equipment['instrument'].stats['base']['hits']
+                    else:
+                        self.maxhits = 5
+                    for x in range(self.maxhits):
+                        self.player_actions.append(c.PLAYER_ATTACK)
+                        self.enemies_to_attack.append(self.get_enemy_to_attack())
                     self.action_selected = True
+                
+                elif self.state == c.SELECT_ENEMY_SPELL:
+                    self.notify(c.CLICK2)
+                    if self.info_box.state == c.ATTACK:
+                        if self.monsterentities[self.currentmonster].equipment['instrument']:
+                            self.maxhits = self.monsterentities[self.currentmonster].equipment['instrument'].stats['base']['hits']
+                        else:
+                            self.maxhits = 5
+                        for x in range(maxhits):
+                            self.player_actions.append(c.PLAYER_ATTACK)
+                            self.enemies_to_attack.append(self.get_enemy_to_attack())
+                    self.action_selected = True 
 
                 elif self.state == c.SELECT_ITEM:
                     self.notify(c.CLICK2)
@@ -289,9 +291,13 @@ class Battle(tools._State):
                             self.action_selected = True
 
             elif keys[pg.K_x]:
-                if self.state == c.SELECT_ENEMY:
+                if self.state == c.SELECT_ENEMY_ATTACK:
                     self.state = self.arrow.state = c.SELECT_ACTION
                     self.info_box.state = c.ATTACK
+                    self.arrow.index = 0
+                elif self.state == c.SELECT_ENEMY_SPELL:
+                    self.state = self.arrow.state = c.SELECT_ACTION
+                    self.info_box.state = c.SPELL
                     self.arrow.index = 0
                 elif self.state == c.SELECT_ITEM:
                     self.notify(c.CLICK2)
@@ -327,18 +333,20 @@ class Battle(tools._State):
                         c.DRINK_HEALING_POTION,
                         c.DRINK_ETHER_POTION]
         long_delay = timed_states[1:]
-
         if self.state in long_delay:
-            if (self.current_time - self.timer) > 150:
+            if (self.current_time - self.timer) > 400:
                 if self.state == c.ENEMY_DAMAGED:
                     if self.player_actions:
                         self.player_action_dict[self.player_actions[0]]()
                         self.player_actions.pop(0)
+                        self.currhits += 1
                     else:
                         if not len(self.enemy_list):
                             self.enter_battle_won_state()
-                        elif self.currentmonster < len(self.monsters):
+                        elif self.currentmonster < len(self.monsters)-1:
+                            self.enter_select_action_state()
                             self.currentmonster+=1
+                            self.info_box.currentmonster+=1
                         elif len(self.enemy_list):
                             self.enter_enemy_attack_state()
                         
@@ -449,7 +457,7 @@ class Battle(tools._State):
         self.state = 'transition out'
 
     def attack_enemy(self, enemy_damage):
-        enemy = self.player.attacked_enemy
+        enemy = self.monsters[self.currentmonster].attacked_enemy
         enemy.health -= enemy_damage
         self.set_enemy_indices()
 
@@ -603,11 +611,11 @@ class Battle(tools._State):
         self.info_box.state = c.DRINK_HEALING_POTION
         self.notify(c.POWERUP)
 
-    def enter_select_enemy_state(self):
+    def enter_select_enemy_attack_state(self):
         """
         Transition battle into the select enemy state.
         """
-        self.state = self.arrow.state = self.info_box.state = c.SELECT_ENEMY
+        self.state = self.arrow.state = self.info_box.state = c.SELECT_ENEMY_ATTACK
         self.arrow.index = 0
         
     def enter_select_symphony_state(self):
@@ -654,13 +662,14 @@ class Battle(tools._State):
         self.state = self.info_box.state = c.PLAYER_ATTACK
         enemy_to_attack = self.enemies_to_attack.pop(0)
         if enemy_to_attack in self.enemy_list:
-            self.player.enter_attack_state(enemy_to_attack)
+            self.monsters[self.currentmonster].enter_attack_state(enemy_to_attack)
         else:
             if self.enemy_list:
-                self.player.enter_attack_state(self.enemy_list[0])
+                self.monsters[self.currentmonster].enter_attack_state(self.enemy_list[0])
             else:
                 self.enter_battle_won_state()
         self.arrow.state = 'invisible'
+        self.notify(c.ENEMY_DAMAGED)
 
     def get_enemy_to_attack(self):
         """
@@ -749,10 +758,10 @@ class Battle(tools._State):
         Transition battle into the enemy damaged state.
         """
         self.state = self.info_box.state = c.ENEMY_DAMAGED
-        enemy_damage = self.player.calculate_hit()
+        enemy_damage = 5 #self.monsterentities[self.currentmonster].calculate_hit(self.currhit)
         self.damage_points.add(
             attackitems.HealthPoints(enemy_damage,
-                                     self.player.attacked_enemy.rect.topright))
+                                     self.monsters[self.currentmonster].attacked_enemy.rect.topright))
 
         self.info_box.set_enemy_damage(enemy_damage)
 
@@ -822,10 +831,12 @@ class Battle(tools._State):
             enter_state = self.player_action_dict[self.player_actions[0]]
             enter_state()
             self.player_actions.pop(0)
+            self.currhits += 1
             self.action_selected = False
 			
         else:
             if self.action_selected:
+                self.currhits = 0
                 self.enter_select_action_state()
                 self.action_selected = False
 
