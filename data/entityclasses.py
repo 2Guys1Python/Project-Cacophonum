@@ -17,15 +17,11 @@ class WildMonster(Monster):
 		self.AI, self.stats = init.wildMonster_Init(name)
 		self.itemDrops = []
 		
-	def attack(self, target):
+	def calculate_attack_damage(self, target, currhits):
 		atk = (self.stats['base']['atk'] + self.stats['bonus']['bonusatk'] - self.stats['penalty']['penaltyatk'])
 		enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1000))
-		hits = random.randint(1, 5)
-		currentdamage = atk*0.25
-		for x in range(0,self.stats['curr']['hits']):
-			print "Hit %d:" %(x+1)
-			target.damage(currentdamage*enemydefmod)
-			currentdamage *= self.proration
+		currentdamage = atk*0.25 * enemydefmod * (self.stats['curr']['proration'] ** currhits)
+		return currentdamage
 	
 	def damage(self, num):
 		if num <= self.stats['curr']['HP']:

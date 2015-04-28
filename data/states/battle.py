@@ -3,7 +3,7 @@ monsters"""
 import random, sys, copy
 from itertools import izip
 import pygame as pg
-from .. import tools, battlegui, observer, setup, entityclasses, compositeclasses
+from .. import tools, battlegui, observer, setup, entityclasses, compositeclasses, spellhandler, itemhandler
 from .. components import person, attack, attackitems
 from .. import constants as c
 
@@ -67,8 +67,11 @@ class Battle(tools._State):
         self.observers.append(observer.SoundEffects())
         self.damage_points = pg.sprite.Group()
         self.player_actions = []
+        self.enemy_actions = []
         self.player_action_dict = self.make_player_action_dict()
+        self.enemy_action_dict = self.make_enemy_action_dict()
         self.enemies_to_attack = []
+        self.monsters_to_attack = []
         self.action_selected = False
         self.just_leveled_up = False
         self.transition_rect = setup.SCREEN.get_rect()
@@ -85,6 +88,11 @@ class Battle(tools._State):
                        c.DRINK_HEALING_POTION: self.enter_drink_healing_potion_state,
                        c.DRINK_ETHER_POTION: self.enter_drink_ether_potion_state}
 
+        return action_dict
+        
+    def make_enemy_action_dict(self):
+        action_dict = {c.ENEMY_ATTACK: self.enter_enemy_attack_state}
+        
         return action_dict
 
     def get_experience_points(self):
@@ -338,9 +346,9 @@ class Battle(tools._State):
                         c.ENEMY_DEAD,
                         c.DRINK_HEALING_POTION,
                         c.DRINK_ETHER_POTION]
-        long_delay = timed_states[1:]
+        long_delay = timed_states
         if self.state in long_delay:
-            if (self.current_time - self.timer) > 400:
+            if (self.current_time - self.timer) > 300:
                 if self.state == c.ENEMY_DAMAGED:
                     if self.player_actions:
                         self.player_action_dict[self.player_actions[0]]()
@@ -354,7 +362,19 @@ class Battle(tools._State):
                             self.currentmonster+=1
                             self.info_box.currentmonster+=1
                         elif len(self.enemy_list):
-                            self.enter_enemy_attack_state()
+                            self.enter_enemy_AI_state()
+                
+                elif self.state == c.PLAYER_DAMAGED:
+                    if self.enemy_actions:
+                        self.enemy_action_dict[self.enemy_actions.pop(0)]()
+                        self.currhits+=1
+                    elif self.enemy_index == (len(self.enemy_list) - 1):
+                        if self.run_away:
+                            self.enter_run_away_state()
+                        else:
+                            self.enter_select_action_state()
+                    else:
+                        self.switch_enemy()
                         
                 elif (self.state == c.DRINK_HEALING_POTION or
                       self.state == c.DEF_SPELL or
@@ -364,7 +384,7 @@ class Battle(tools._State):
                         self.player_actions.pop(0)
                     else:
                         if len(self.enemy_list):
-                            self.enter_enemy_attack_state()
+                            self.enter_enemy_AI_state()
                         else:
                             self.enter_battle_won_state()
                 self.timer = self.current_time
@@ -379,7 +399,7 @@ class Battle(tools._State):
                         self.player_actions.pop(0)
                 else:
                     if len(self.enemy_list):
-                        self.enter_enemy_attack_state()
+                        self.enter_enemy_AI_state()
                     else:
                         self.enter_battle_won_state()
                 self.timer = self.current_time
@@ -424,16 +444,6 @@ class Battle(tools._State):
                 else:
                     self.end_battle()
 
-        elif self.state == c.PLAYER_DAMAGED:
-            if (self.current_time - self.timer) > 600:
-                if self.enemy_index == (len(self.enemy_list) - 1):
-                    if self.run_away:
-                        self.enter_run_away_state()
-                    else:
-                        self.enter_select_action_state()
-                else:
-                    self.switch_enemy()
-                self.timer = self.current_time
 
     def check_if_battle_won(self):
         """
@@ -532,10 +542,10 @@ class Battle(tools._State):
                 self.done = True
                 self.next = c.DEATH_SCENE
 
-    def player_damaged(self, damage):
-        self.game_data['player stats']['health']['current'] -= damage
-        if self.game_data['player stats']['health']['current'] <= 0:
-            self.game_data['player stats']['health']['current'] = 0
+    def player_damaged(self, monster, damage):
+        monster.damage(damage)
+        if monster.isDead:
+            monster.stats['curr']['HP'] = 0
             self.state = c.DEATH_FADE
 
     def player_healed(self, heal, magic_points=0):
@@ -618,7 +628,7 @@ class Battle(tools._State):
         self.player_healed(HEAL_AMOUNT, MAGIC_POINTS)
         self.info_box.state = c.DRINK_HEALING_POTION
         self.notify(c.POWERUP)
-
+    
     def enter_select_enemy_attack_state(self):
         """
         Transition battle into the select enemy state.
@@ -655,13 +665,73 @@ class Battle(tools._State):
         self.enemy_index = 0
         self.enter_enemy_attack_state()
 
+    def enter_enemy_AI_state(self):
+        enemy = self.enemy_list[self.enemy_index]
+        enemyent = self.enemyentities[self.enemy_index]
+        for action in enemyent.AI:
+            if action[4] > random.randint(0, 99):    # will the action occur at all by probability
+                print ("%s passed probability test") %(action[0])
+                if action[2] is not None:            # does the action have a specific condition
+                    if action[2].endswith(('<', '>', '=')):    # is it an absolute comparison action, thus using action[3]
+                        if action[1] == 'enemy':
+                            targetgroup = self.monsterentities
+                        elif action[1] == 'ally':
+                            targetgroup = self.enemyentities
+                        elif action[1] == 'self':
+                            targetgroup = [enemyent]
+                        
+                        if action[2] == 'turn>':
+                            comparison = (turn>action[3])
+                        elif action[2] == 'turn<':
+                            comparison = (turn<action[3])
+                        elif action[2] == 'turn=':
+                            comparison = (turn==action[3])
+                        elif action[2].startswith("self"):
+                            comparison, target = spellhandler.compareStat(action[2], action[3], self, [enemyent])
+                        elif action[2].startswith("ally"):
+                            comparison, target = spellhandler.compareStat(action[2], action[3], self, self.enemyentities)
+                        elif action[2].startswith("enemy"):
+                            comparison, target = spellhandler.compareStat(action[2], action[3], self, self.monsterentities)
+                        else:                                    # default, no prefix
+                            comparison, target = spellhandler.compareStat(action[2], action[3], self, targetgroup)
+                        
+                        if comparison:
+                            act = [action[0], target]
+                            break
+                    
+                    else:                            # if finding extreme value rather than simple comparison
+                        if action[1] == "ally":
+                            targetgroup = self.enemyentities
+                        elif action[1] == "enemy":
+                            targetgroup = self.monsterentities
+                            
+                        target = spellhandler.findExtreme(action[2], targetgroup)
+                        act = [action[0], target]
+                        break
+                            
+                        
+                        
+                else:                                # if the action has no specific condition
+                    act = [action[0], self.monsterentities[random.randint(0,len(self.monsterentities)-1)]]
+                        
+        print ("%s will use %s on %s here") %(enemyent.name, act[0], act[1].name)
+        
+        if act[0] == 'attack':
+            self.maxhits = random.randint(1,5)
+            for x in range(self.maxhits):
+                self.enemy_actions.append(c.ENEMY_ATTACK)
+                self.monsters_to_attack.append(self.monsters[self.monsterentities.index(act[1])])
+        
+        self.enemy_action_dict[self.enemy_actions.pop(0)]()
+        
     def enter_enemy_attack_state(self):
         """
         Transition battle into the Enemy attack state.
         """
         self.state = self.info_box.state = c.ENEMY_ATTACK
+        monster_to_attack = self.monsters_to_attack.pop(0)
         enemy = self.enemy_list[self.enemy_index]
-        enemy.enter_enemy_attack_state()
+        enemy.enter_enemy_attack_state(monster_to_attack)
 
     def enter_player_attack_state(self):
         """
@@ -745,19 +815,21 @@ class Battle(tools._State):
         if self.enemy_index > len(self.enemy_list) - 1:
             self.enemy_index = 0
         enemy = self.enemy_list[self.enemy_index]
-        player_damage = enemy.calculate_hit(self.inventory['equipped armor'],
-                                            self.inventory)
+        target = enemy.attacked_monster
+        targetindex = self.monsters.index(target)
+        player_damage = int(self.enemyentities[self.enemy_index].calculate_attack_damage(self.monsterentities[targetindex], self.currhits))
+
         self.damage_points.add(
             attackitems.HealthPoints(player_damage,
-                                     self.player.rect.topright))
+                                     target.rect.topright))
         self.info_box.set_player_damage(player_damage)
         self.set_timer_to_current_time()
-        self.player_damaged(player_damage)
+        self.player_damaged(self.monsterentities[targetindex], player_damage)
         if player_damage:
             sfx_num = random.randint(1,3)
             self.notify('punch{}'.format(sfx_num))
-            self.player.damaged = True
-            self.player.enter_knock_back_state()
+            target.damaged = True
+            target.enter_knock_back_state()
         else:
             self.notify(c.MISS)
 

@@ -355,12 +355,13 @@ class Person(pg.sprite.Sprite):
                 self.image = pg.transform.scale2x(self.image)
                 self.notify(c.PLAYER_FINISHED_ATTACK)
 
-    def enter_enemy_attack_state(self):
+    def enter_enemy_attack_state(self, mon):
         """
         Set values for enemy attack state.
         """
         self.x_vel = -5
         self.state = 'enemy attack'
+        self.attacked_monster = mon
         self.origin_pos = self.rect.topleft
         self.move_counter = 0
 
@@ -613,6 +614,7 @@ class Enemy(Person):
         super(Enemy, self).__init__(sheet_key, x, y, direction, state, index)
         self.level = 1
         self.type = 'enemy'
+        self.attacked_monster = None
 
 
 class Chest(Person):

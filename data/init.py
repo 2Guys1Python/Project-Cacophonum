@@ -9,7 +9,7 @@ Tamed Monster masterlist format:
 '''
 
 masterlist_tm = {
-	'Kobold': [4500, 3000, 3000, 3000, 3000, 3000, 3000,
+	'Kobold': [1500, 1550, 1350, 1100, 1200, 1250, 1200,
 				5,4,3,5,5,5,6]
 }
 
@@ -42,25 +42,25 @@ Wild Monster masterlist format:
 '''
 
 masterlist_wm = {
-	'Swamp Thing': [4500, 3000, 3000, 3000, 3000, 3000, 3000,
+	'Wild Hare': [700, 500, 300, 300, 300, 300, 300,
 					4, 0.85,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],
-	'Slime': [2500, 1500, 1500, 1500, 1500, 3000, 3000,
+	'Slime': [500, 350, 400, 420, 400, 420, 400,
 					4, 0.85,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],
-	'Wolf': [5500, 3500, 4500, 3500, 3500, 3500, 3500,
+	'Wolf': [1200, 1100, 700, 150, 150, 250, 250,
 					4, 0.85,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['Healing Howl', 'ally','lowestHP' ,None, 95],
 					['attack', 'enemy', None, None, 100]]],
-	'Husk': [6500, 6000, 4000, 2500, 2500, 2500, 3000,
+	'Husk': [2300, 1250, 1250, 500, 500, 500, 500,
 					4, 0.85,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['Healing Howl', 'ally','lowestHP' ,None, 60],
 					['attack', 'enemy', None, None, 100]]],
-	'Orthrus': [7000, 7000, 3000, 7000, 7000, 7000, 7000,
+	'Orthrus': [5000, 5000, 5000, 5000, 5000, 5000, 5000,
 					4, 0.85,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['Healing Howl', 'self','HP<' ,2500, 60],

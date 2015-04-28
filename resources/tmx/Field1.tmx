@@ -5,12 +5,6 @@
  </tileset>
  <tileset firstgid="51" name="tileset2" tilewidth="16" tileheight="16">
   <image source="../graphics/tileset2.png" width="160" height="180"/>
-  <tile id="74">
-   <properties>
-    <property name="monname" value="Slime"/>
-    <property name="name" value="monster"/>
-   </properties>
-  </tile>
  </tileset>
  <tileset firstgid="161" name="medievalsigns" tilewidth="16" tileheight="16">
   <image source="../graphics/medievalsigns.png" width="64" height="64"/>
@@ -224,7 +218,7 @@
     <property name="state" value="instructions"/>
    </properties>
   </object>
-  <object id="306" name="monster" gid="125" x="416" y="288">
+  <object id="306" name="monster" gid="125" x="416" y="304">
    <properties>
     <property name="monname" value="Slime"/>
    </properties>
