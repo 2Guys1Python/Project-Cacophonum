@@ -239,7 +239,10 @@ class BottomBox(pg.sprite.Sprite):
         
         for i in range(3):
             text = default_text[i+2]
-            text += str(conductor.aptitude[text[:len(text)-2].lower()])
+            if i == 0:
+                text += str(conductor.aptitude[text[:len(text)-2]])
+            else:
+                text += str(conductor.aptitude[text[:len(text)-2].lower()])
             text_image = self.font.render(text, True, c.WHITE)
             text_rect = text_image.get_rect(x=450+(i*85)+((i-1)*15), y = 75)
             surface.blit(text_image, text_rect)
@@ -359,7 +362,7 @@ class BottomBox(pg.sprite.Sprite):
 
             text = default_text[i+2]
             if i == 0:
-                text = "(" + str(conductor.aptitude[text[:len(text)-2].lower()] * monster.stats['gains'][text[:len(text)-2]]) + ")"
+                text = "(" + str(conductor.aptitude[text[:len(text)-2]] * monster.stats['gains'][text[:len(text)-2]]) + ")"
             else:
                 text = "(" + str(conductor.aptitude[text[:len(text)-2].lower()] * monster.stats['gains'][text[:len(text)-2].lower()]) + ")"
             text_image = self.font.render(text, True, c.WHITE)
@@ -1013,6 +1016,10 @@ class MenuGui(object):
                     self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
                     self.arrow_index = 0
                     self.bottom_box.state = 'training'
+                
+                elif self.arrow.state == 'training':
+                    self.notify(c.CLICK2)
+                    self.game_data['conductors'][self.bottom_box.compstate[0]].trainMonster(self.bottom_box.compstate[1], self.arrow_index)
 
                 elif self.arrow.state == 'itemtypeselect':
                     self.notify(c.CLICK2)
@@ -1078,6 +1085,13 @@ class MenuGui(object):
                     self.left_box.state = 'invisible'
                     self.bottom_box.state = 'invisible'
                     self.arrow.state = 'selectmenu'
+                    self.arrow_index = 0
+                
+                elif self.arrow.state == 'selectmenu':
+                    self.notify(c.CLOSE)
+                    self.level.state = 'normal'
+                    self.left_box.state = 'invisible'
+                    self.bottom_box.state = 'invisible'
                     self.arrow_index = 0
 
                 elif self.arrow.state == 'monsterinfo':

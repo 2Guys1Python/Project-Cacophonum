@@ -42,20 +42,20 @@ Wild Monster masterlist format:
 '''
 
 masterlist_wm = {
-	'Kedama': [700, 500, 300, 300, 300, 300, 300,
+	'Kedama': [1600, 700, 800, 300, 300, 300, 300,
 					4, 0.85, 25,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],
-	'Slime': [500, 350, 400, 420, 400, 420, 400,
+	'Slime': [1400, 750, 850, 420, 400, 420, 400,
 					4, 0.85, 25,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],
-	'Wolf': [1200, 1100, 700, 150, 150, 250, 250,
+	'Wolf': [2100, 800, 975, 150, 150, 250, 250,
 					4, 0.85, 75,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['Healing Howl', 'ally','lowestHP' ,None, 95],
 					['attack', 'enemy', None, None, 100]]],
-	'Husk': [2300, 1250, 1250, 500, 500, 500, 500,
+	'Husk': [3000, 1250, 1050, 500, 500, 500, 500,
 					4, 0.85, 250,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['Healing Howl', 'ally','lowestHP' ,None, 60],
@@ -100,11 +100,11 @@ Instrument masterlist format:
 masterlist_instrument = {
 	'Flute': [8,0,60,0,30,0,0,0,0,
 				0,0,0,0,0,0,0,0,
-				'wind', 0.2, 15, 2.5, 0.9,
+				'wind', 0.2, 2, 2.5, 0.9,
 				None],
 	'Gria Auliet': [9,15,150,0,0,0,0,0,0,
 					0,0,0,0,0,0,0,0,
-					'wind', 0.3, 20, 2.5, 0.95,
+					'wind', 0.3, 5, 2.5, 0.95,
 					None]
 }
 
@@ -147,12 +147,12 @@ masterlist_status = {
 
 masterlist_conductor = {
 	'Hanami Otozono': {
-			'hp': 5, 'atk': 5, 'def': 5,
+			'HP': 5, 'atk': 5, 'def': 5,
 			'mus': 5,'foc': 5,'cla': 5,'rhy': 5,
 			'string': 8,'wind': 5,'percussion': 2
 		},
 	'Gir-Nas': {
-			'hp': 6, 'atk': 7, 'def': 7,
+			'HP': 6, 'atk': 7, 'def': 7,
 			'mus': 5,'foc': 3,'cla': 3,'rhy': 6,
 			'string': 5,'wind': 3,'percussion': 8
 		}

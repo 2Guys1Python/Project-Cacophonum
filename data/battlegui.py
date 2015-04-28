@@ -504,12 +504,8 @@ class SelectArrow(object):
         """
         surface.blit(self.image, self.rect)
 
-    def remove_pos(self, enemy):
-        enemy_list = self.enemy_pos_list
-        enemy_pos = list(enemy.rect.topleft)
-        enemy_pos[0] += 4
-
-        self.enemy_pos_list = [pos for pos in enemy_list if pos != enemy_pos]
+    def remove_pos(self, i):
+        self.enemy_pos_list.pop(i)
 
 '''
 class PlayerHealth(object):

@@ -225,7 +225,7 @@ class TamedMonster(Monster):
 		enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1000))
 		
 		if self.equipment['instrument'] == None:
-			return (atk*0.25*enemydefmod)
+			return (atk*0.1*enemydefmod)
 		
 		elif self.equipment['instrument'].stats['base']['type'] == 'wind':
 		#Wind instruments ignore proration and some defense when critting
@@ -325,7 +325,13 @@ class Conductor:
 		self.items[itemIndex].use(target)
 	'''
 	
-	'''
-	def trainMonster(self, monster):
+
+	def trainMonster(self, monsterindex, statindex):
+		basearr = ['HP', 'atk', 'def', 'mus', 'foc', 'cla', 'rhy', 'string', 'wind', 'percussion']
 		
-	'''
+		if self.monsters[monsterindex].stats['tp']['tp'] > 0:
+			self.monsters[monsterindex].stats['tp']['tp'] -= 1
+			if statindex < 7:
+				self.monsters[monsterindex].stats['base'][basearr[statindex]] += (self.monsters[monsterindex].stats['gains'][basearr[statindex]] * self.aptitude[basearr[statindex]])
+			else:
+				self.monsters[monsterindex].stats['base'][basearr[statindex]] += self.aptitude[basearr[statindex]]

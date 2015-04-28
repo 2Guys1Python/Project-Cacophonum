@@ -253,15 +253,13 @@ class Battle(tools._State):
 
                 elif self.state == c.SELECT_ENEMY_ATTACK:
                     self.notify(c.CLICK2)
-                    self.player_actions.append(c.PLAYER_ATTACK)
-                    self.enemies_to_attack.append(self.get_enemy_to_attack())
                     if self.monsterentities[self.currentmonster].equipment['instrument']:
                         self.maxhits = self.monsterentities[self.currentmonster].equipment['instrument'].stats['base']['hits']
                     else:
                         self.maxhits = 5
                     for x in range(self.maxhits):
                         self.player_actions.append(c.PLAYER_ATTACK)
-                        self.enemies_to_attack.append(self.get_enemy_to_attack())
+                        self.enemies_to_attack.append(self.enemy_list[self.arrow.index])
                     self.action_selected = True
                 
                 elif self.state == c.SELECT_MAGIC:
@@ -330,12 +328,6 @@ class Battle(tools._State):
                     self.enter_select_action_state()
                     self.info_box.state = c.SPELL
                     self.info_box.itemindex = 0
-            
-            elif keys[pg.K_RETURN]:
-                self.game_data['last state'] = self.name
-                self.game_data['battle counter'] = random.randint(50, 255)
-                self.game_data['battle type'] = None
-                self.state = 'transition out'
                     
             self.allow_input = False
         
@@ -371,6 +363,7 @@ class Battle(tools._State):
                             self.info_box.currentmonster+=1
                         elif len(self.enemy_list):
                             self.enemy_index = 0
+                            self.currhits = 0
                             self.enter_enemy_AI_state()
                 
                 elif self.state == c.PLAYER_DAMAGED:
@@ -379,6 +372,7 @@ class Battle(tools._State):
                         self.currhits+=1
                     elif self.enemy_index == (len(self.enemy_list) - 1):
                         self.currhits = 0
+                        self.currentmonster = 0
                         if self.run_away:
                             self.enter_run_away_state()
                         else:
@@ -482,7 +476,7 @@ class Battle(tools._State):
                 self.enemy_list.pop(enemy.index)
                 self.enemyentities.pop(enemyindex)
                 enemy.state = c.FADE_DEATH
-                self.arrow.remove_pos(self.monsters[self.currentmonster].attacked_enemy)
+                self.arrow.remove_pos(enemyindex)
             self.enemy_index = 0
 
     def set_enemy_indices(self):
@@ -639,13 +633,16 @@ class Battle(tools._State):
     
     def next_turn(self):
         if self.currentmonster < len(self.monsters)-1:
+            print "case1"
             self.enter_select_action_state()
             self.currhits = 0
             self.currentmonster+=1
             self.info_box.currentmonster+=1
         elif len(self.enemy_list):
+            print "case2"
             self.arrow.index = 0
-            self.currentmonster = 0
+            self.currhits = 0
+            self.enemy_index = 0
             self.arrow.state = 'invisible'
             self.enter_enemy_AI_state()
 
@@ -670,6 +667,7 @@ class Battle(tools._State):
         self.run_away = True
         self.arrow.state = 'invisible'
         self.enemy_index = 0
+        self.currentmonster = len(self.monsterentities)
         self.enter_enemy_AI_state()
 
     def enter_enemy_AI_state(self):
@@ -723,12 +721,19 @@ class Battle(tools._State):
                         
         #print ("%s will use %s on %s here") %(enemyent.name, act[0], act[1].name)
 
+        '''
         if act[0] == 'attack':
             self.maxhits = random.randint(1,5)
             for x in range(self.maxhits):
                 self.enemy_actions.append(c.ENEMY_ATTACK)
                 self.monsters_to_attack.append(self.monsters[self.monsterentities.index(act[1])])
             self.enemy_action_dict[self.enemy_actions.pop(0)]()
+        '''
+        self.maxhits = random.randint(1,5)
+        for x in range(self.maxhits):
+            self.enemy_actions.append(c.ENEMY_ATTACK)
+            self.monsters_to_attack.append(self.monsters[self.monsterentities.index(act[1])])
+        self.enemy_action_dict[self.enemy_actions.pop(0)]()
         
         
     def enter_enemy_attack_state(self):
@@ -756,20 +761,6 @@ class Battle(tools._State):
         self.arrow.state = 'invisible'
         self.notify(c.ENEMY_DAMAGED)
 
-    def get_enemy_to_attack(self):
-        """
-        Get enemy for player to attack by arrow position.
-        """
-        enemy_posx = self.arrow.rect.x + 60
-        enemy_posy = self.arrow.rect.y - 20
-        enemy_pos = (enemy_posx, enemy_posy)
-        enemy_to_attack = None
-
-        for enemy in self.enemy_list:
-            if enemy.rect.topleft == enemy_pos:
-                enemy_to_attack = enemy
-
-        return enemy_to_attack
 
 
     def enter_drink_healing_potion_state(self):
