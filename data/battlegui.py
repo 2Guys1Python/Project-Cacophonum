@@ -65,7 +65,6 @@ class InfoBox(object):
                         c.OFF_SPELL: 'FIRE BLAST!',
                         c.BATTLE_WON: 'Battle won!',
                         c.SHOW_EXPERIENCE: self.show_experience(),
-                        c.TWO_ACTIONS: 'Two actions per turn mode is now available.',
                         c.SHOW_GOLD: self.show_gold()}
 
         return state_dict

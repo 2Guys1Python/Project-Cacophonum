@@ -43,20 +43,20 @@ Wild Monster masterlist format:
 
 masterlist_wm = {
 	'Wild Hare': [700, 500, 300, 300, 300, 300, 300,
-					4, 0.85,
+					4, 0.85, 25,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],
 	'Slime': [500, 350, 400, 420, 400, 420, 400,
-					4, 0.85,
+					4, 0.85, 25,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],
 	'Wolf': [1200, 1100, 700, 150, 150, 250, 250,
-					4, 0.85,
+					4, 0.85, 75,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['Healing Howl', 'ally','lowestHP' ,None, 95],
 					['attack', 'enemy', None, None, 100]]],
 	'Husk': [2300, 1250, 1250, 500, 500, 500, 500,
-					4, 0.85,
+					4, 0.85, 250,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['Healing Howl', 'ally','lowestHP' ,None, 60],
 					['attack', 'enemy', None, None, 100]]],
@@ -198,7 +198,7 @@ def wildMonster_Init(indexName):
 			'mus': masterlist_wm[indexName][3], 'foc': masterlist_wm[indexName][4], 'cla': masterlist_wm[indexName][5], 'rhy': masterlist_wm[indexName][6],
 	}
 	tempdict['curr'] = {
-			'HP': masterlist_wm[indexName][0], 'hits': masterlist_wm[indexName][7], 'proration': masterlist_wm[indexName][8]
+			'HP': masterlist_wm[indexName][0], 'hits': masterlist_wm[indexName][7], 'proration': masterlist_wm[indexName][8], 'TP': masterlist_wm[indexName][9]
 	}
 	tempdict['bonus'] = {
 			'bonusHP': 0, 'bonusatk': 0, 'bonusdef': 0,
@@ -209,7 +209,7 @@ def wildMonster_Init(indexName):
 			'penaltymus': 0,'penaltyfoc': 0,'penaltycla': 0,'penaltyrhy': 0
 	}
 
-	return masterlist_wm[indexName][9], tempdict
+	return masterlist_wm[indexName][10], tempdict
 
 def itemPrice_Init(indexName):
 	

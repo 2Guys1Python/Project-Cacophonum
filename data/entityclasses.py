@@ -142,18 +142,23 @@ class TamedMonster(Monster):
 			
 			#when leveling up
 			if self.stats['tp']['tpprog'] ==  self.stats['tp']['nexttp']:
-				self.stats['tp'] += 1
-				self.stats['totaltp'] += 1
+				self.stats['tp']['tp'] += 1
+				self.stats['tp']['totaltp'] += 1
 				if (self.stats['tp']['totaltp'] >= 500):
 					self.stats['tp']['nexttp'] *= 1.005
 				elif (self.stats['tp']['totaltp'] >= 250):
 					self.stats['tp']['nexttp'] *= 1.015
 				elif (self.stats['tp']['totaltp'] >= 100):
 					self.stats['tp']['nexttp'] *= 1.025
+				elif (self.stats['tp']['totaltp'] >= 50):
+					self.stats['tp']['nexttp'] *= 1.75
+				elif (self.stats['tp']['totaltp'] >= 20):
+					self.stats['tp']['nexttp'] *= 1.8
 				else:
-					self.stats['tp']['nexttp'] *= 1.035
-		
-		
+					self.stats['tp']['nexttp'] *= 2
+			
+			self.stats['tp']['nexttp'] = int(self.stats['tp']['nexttp'])
+
 	def setMaster(self, newmaster):
 		self.master = newmaster
 		

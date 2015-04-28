@@ -36,6 +36,7 @@ class Battle(tools._State):
         self.players, self.playerentities = self.make_player()
         self.monsters, self.monsterentities = self.make_monster()
         self.currentmonster = 0
+        self.enemy_index = 0
         self.inventory = self.monsterentities[self.currentmonster].master.inventory
         self.currhits = 0
         self.maxhits = 1
@@ -102,8 +103,8 @@ class Battle(tools._State):
         """
         experience_total = 0
 
-        for enemy in self.enemy_list:
-            experience_total += (random.randint(5,10))
+        for enemy in self.enemyentities:
+            experience_total += enemy.stats['curr']['TP']
 
         return experience_total
 
@@ -273,7 +274,7 @@ class Battle(tools._State):
                         for x in range(maxhits):
                             self.player_actions.append(c.PLAYER_ATTACK)
                             self.enemies_to_attack.append(self.get_enemy_to_attack())
-                    self.action_selected = True 
+                    self.action_selected = True
 
                 elif self.state == c.SELECT_ITEM:
                     self.notify(c.CLICK2)
@@ -359,9 +360,11 @@ class Battle(tools._State):
                             self.enter_battle_won_state()
                         elif self.currentmonster < len(self.monsters)-1:
                             self.enter_select_action_state()
+                            self.currhits = 0
                             self.currentmonster+=1
                             self.info_box.currentmonster+=1
                         elif len(self.enemy_list):
+                            self.currentmonster = 0
                             self.enter_enemy_AI_state()
                 
                 elif self.state == c.PLAYER_DAMAGED:
@@ -369,11 +372,13 @@ class Battle(tools._State):
                         self.enemy_action_dict[self.enemy_actions.pop(0)]()
                         self.currhits+=1
                     elif self.enemy_index == (len(self.enemy_list) - 1):
+                        self.currhits = 0
                         if self.run_away:
                             self.enter_run_away_state()
                         else:
                             self.enter_select_action_state()
                     else:
+                        self.currhits = 0
                         self.switch_enemy()
                         
                 elif (self.state == c.DRINK_HEALING_POTION or
@@ -424,23 +429,10 @@ class Battle(tools._State):
         #        else:
         #            self.end_battle()
 
-        elif self.state == c.TWO_ACTIONS:
-            if (self.current_time - self.timer) > 3000:
-                self.end_battle()
-
         elif self.state == c.SHOW_EXPERIENCE:
             if (self.current_time - self.timer) > 2200:
-                player_stats = self.game_data['player stats']
-                player_stats['experience to next level'] -= self.experience_points
-                if player_stats['experience to next level'] <= 0:
-                    extra_experience = player_stats['experience to next level'] * -1
-                    player_stats['Level'] += 1
-                    player_stats['health']['maximum'] += int(player_stats['health']['maximum']*.25)
-                    player_stats['magic']['maximum'] += int(player_stats['magic']['maximum']*.20)
-                    new_experience = int((player_stats['Level'] * 50) * .75)
-                    player_stats['experience to next level'] = new_experience - extra_experience
-                    self.enter_level_up_state()
-                    self.just_leveled_up = True
+                for m in self.monsterentities:
+                    m.gainTP(self.experience_points)
                 else:
                     self.end_battle()
 
@@ -640,7 +632,16 @@ class Battle(tools._State):
         pass
     
     def next_turn(self):
-        pass
+        if self.currentmonster < len(self.monsters)-1:
+            self.enter_select_action_state()
+            self.currhits = 0
+            self.currentmonster+=1
+            self.info_box.currentmonster+=1
+        elif len(self.enemy_list):
+            self.arrow.index = 0
+            self.currentmonster = 0
+            self.arrow.state = 'invisible'
+            self.enter_enemy_AI_state()
 
     def enter_select_item_state(self):
         """
@@ -663,14 +664,14 @@ class Battle(tools._State):
         self.run_away = True
         self.arrow.state = 'invisible'
         self.enemy_index = 0
-        self.enter_enemy_attack_state()
+        self.enter_enemy_AI_state()
 
     def enter_enemy_AI_state(self):
         enemy = self.enemy_list[self.enemy_index]
         enemyent = self.enemyentities[self.enemy_index]
         for action in enemyent.AI:
             if action[4] > random.randint(0, 99):    # will the action occur at all by probability
-                print ("%s passed probability test") %(action[0])
+                #print ("%s passed probability test") %(action[0])
                 if action[2] is not None:            # does the action have a specific condition
                     if action[2].endswith(('<', '>', '=')):    # is it an absolute comparison action, thus using action[3]
                         if action[1] == 'enemy':
@@ -714,15 +715,22 @@ class Battle(tools._State):
                 else:                                # if the action has no specific condition
                     act = [action[0], self.monsterentities[random.randint(0,len(self.monsterentities)-1)]]
                         
-        print ("%s will use %s on %s here") %(enemyent.name, act[0], act[1].name)
+        #print ("%s will use %s on %s here") %(enemyent.name, act[0], act[1].name)
         
+        '''
         if act[0] == 'attack':
             self.maxhits = random.randint(1,5)
             for x in range(self.maxhits):
                 self.enemy_actions.append(c.ENEMY_ATTACK)
                 self.monsters_to_attack.append(self.monsters[self.monsterentities.index(act[1])])
-        
+            self.enemy_action_dict[self.enemy_actions.pop(0)]()
+        '''
+        self.maxhits = random.randint(1,5)
+        for x in range(self.maxhits):
+            self.enemy_actions.append(c.ENEMY_ATTACK)
+            self.monsters_to_attack.append(self.monsters[self.monsterentities.index(act[1])])
         self.enemy_action_dict[self.enemy_actions.pop(0)]()
+        
         
     def enter_enemy_attack_state(self):
         """
@@ -804,6 +812,8 @@ class Battle(tools._State):
         """
         self.state = c.SELECT_ACTION
         self.info_box.state = c.ATTACK
+        self.info_box.index = 0
+        self.info_box.itemindex = 0
         self.arrow.index = 0
         self.arrow.state = c.SELECT_ACTION
 
@@ -857,7 +867,7 @@ class Battle(tools._State):
         """
         if self.enemy_index < len(self.enemy_list) - 1:
             self.enemy_index += 1
-            self.enter_enemy_attack_state()
+            self.enter_enemy_AI_state()
 
     def enter_run_away_state(self):
         """
@@ -865,7 +875,10 @@ class Battle(tools._State):
         """
         self.state = self.info_box.state = c.RUN_AWAY
         self.arrow.state = 'invisible'
-        self.player.state = c.RUN_AWAY
+        for p in self.players:
+            p.state = c.RUN_AWAY
+        for m in self.monsters:
+            m.state = c.RUN_AWAY
         self.set_timer_to_current_time()
         self.notify(c.RUN_AWAY)
 
@@ -875,14 +888,15 @@ class Battle(tools._State):
         """
         self.notify(c.BATTLE_WON)
         self.state = self.info_box.state = c.BATTLE_WON
-        self.player.state = c.VICTORY_DANCE
+        for p in self.players:
+            p.state = c.VICTORY_DANCE
         self.set_timer_to_current_time()
 
     def enter_show_gold_state(self):
         """
         Transition battle into the show gold state.
         """
-        self.inventory['GOLD']['quantity'] += self.new_gold
+        self.game_data['gold'] += self.new_gold
         self.state = self.info_box.state = c.SHOW_GOLD
         self.set_timer_to_current_time()
 
