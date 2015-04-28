@@ -175,9 +175,9 @@ class Battle(tools._State):
             enemy.index = i
         
         
-        print [e.name for e in enemy_list]
-        print [x.name for x in ent_list]
-        print [g.name for g in enemy_group.sprites()]
+        #print [e.name for e in enemy_list]
+        #print [x.name for x in ent_list]
+        #print [g.name for g in enemy_group.sprites()]
         
 
         return enemy_group, pos_list[0:len(enemy_group)], enemy_list, ent_list
