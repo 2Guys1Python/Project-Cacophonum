@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="37" tilewidth="16" tileheight="16" nextobjectid="195">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="37" tilewidth="16" tileheight="16" nextobjectid="197">
  <tileset firstgid="1" name="tileset1" tilewidth="16" tileheight="16">
   <image source="../graphics/tileset1.png" width="160" height="80"/>
  </tileset>
@@ -187,5 +187,15 @@
   <object id="192" name="portal" type="Field1" gid="139" x="112" y="16"/>
   <object id="193" name="portal" type="Field1" gid="139" x="128" y="16"/>
   <object id="194" name="portal" type="Field1" gid="139" x="144" y="16"/>
+  <object id="195" name="monster" gid="80" x="160" y="144">
+   <properties>
+    <property name="monname" value="Husk"/>
+   </properties>
+  </object>
+  <object id="196" name="monster" gid="80" x="176" y="144">
+   <properties>
+    <property name="monname" value="Wolf"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

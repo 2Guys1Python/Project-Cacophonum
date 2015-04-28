@@ -58,7 +58,6 @@ masterlist_wm = {
 	'Husk': [3000, 1250, 1050, 500, 500, 500, 500,
 					4, 0.85, 250,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
-					['Healing Howl', 'ally','lowestHP' ,None, 60],
 					['attack', 'enemy', None, None, 100]]],
 	'Orthrus': [5000, 5000, 5000, 5000, 5000, 5000, 5000,
 					4, 0.85,

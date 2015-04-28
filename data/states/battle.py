@@ -17,7 +17,7 @@ class Battle(tools._State):
     def __init__(self, monlist):
         super(Battle, self).__init__()
         self.name = 'battle'
-        self.music = setup.MUSIC['high_action']
+        self.music = setup.MUSIC['precarious']
         self.volume = 0.4
         self.monlist = monlist
 
@@ -51,7 +51,8 @@ class Battle(tools._State):
                                           self.experience_points, 
                                           self.new_gold,
                                           self.playerentities,
-                                          self.monsterentities)
+                                          self.monsterentities,
+                                          self.enemyentities)
         self.arrow = battlegui.SelectArrow(self.enemy_pos_list,
                                            self.info_box)
         '''
@@ -139,6 +140,7 @@ class Battle(tools._State):
         """
         pos_list = []
         ent_list = []
+        enemy_list = []
 
         for column in range(3):
             for row in range(3):
@@ -146,7 +148,7 @@ class Battle(tools._State):
                 y = (row * 130) + 70
                 pos_list.append([x, y])
 
-        enemy_group = pg.sprite.Group()
+        enemy_group = pg.sprite.OrderedUpdates()
 
         if self.game_data['battle type']:
             enemy = person.Enemy('evilwizard', 0, 0,
@@ -156,23 +158,27 @@ class Battle(tools._State):
             if self.game_data['start of game']:
                 for enemy in range(3):
                     ran = random.randint(0,len(self.monlist)-1)
-                    enemy_group.add(person.Enemy(self.monlist[ran], 0, 0,
+                    enemy_list.append(person.Enemy(self.monlist[ran], 0, 0,
                                                  'down', 'battle resting'))
                     ent_list.append(copy.deepcopy(entityclasses.WildMonster(self.monlist[ran], 1)))
                 self.game_data['start of game'] = False
             else:
                 for enemy in range(random.randint(1, 6)):
                     ran = random.randint(0,len(self.monlist)-1)
-                    enemy_group.add(person.Enemy(self.monlist[ran], 0, 0,
+                    enemy_list.append(person.Enemy(self.monlist[ran], 0, 0,
                                                  'down', 'battle resting'))
                     ent_list.append(copy.deepcopy(entityclasses.WildMonster(self.monlist[ran], 1)))
-
+        enemy_group.add(enemy_list.__iter__())
         for i, enemy in enumerate(enemy_group):
             enemy.rect.topleft = pos_list[i]
             enemy.image = pg.transform.scale2x(enemy.image)
             enemy.index = i
-
-        enemy_list = [enemy for enemy in enemy_group]
+        
+        
+        print [e.name for e in enemy_list]
+        print [x.name for x in ent_list]
+        print [g.name for g in enemy_group.sprites()]
+        
 
         return enemy_group, pos_list[0:len(enemy_group)], enemy_list, ent_list
 
@@ -752,8 +758,10 @@ class Battle(tools._State):
         self.state = self.info_box.state = c.PLAYER_ATTACK
         enemy_to_attack = self.enemies_to_attack.pop(0)
         if enemy_to_attack in self.enemy_list:
+            print "case1"
             self.monsters[self.currentmonster].enter_attack_state(enemy_to_attack)
         else:
+            print "case2"
             if self.enemy_list:
                 self.monsters[self.currentmonster].enter_attack_state(self.enemy_list[0])
             else:
@@ -844,8 +852,14 @@ class Battle(tools._State):
         self.damage_points.add(
             attackitems.HealthPoints(enemy_damage,
                                      self.monsters[self.currentmonster].attacked_enemy.rect.topright))
-
+        self.info_box.set_enemy_index(enemyindex)
         self.info_box.set_enemy_damage(enemy_damage)
+        
+        #print "%s %s %d %d" %(enemy.name, self.enemyentities[enemyindex].name, enemyindex, self.info_box.enemyindex)
+        #print [e.name for e in self.enemy_list]
+        #print [x.name for x in self.enemyentities]
+        #print [i.name for i in self.info_box.enemyentities]
+        #print [g.name for g in self.enemy_group.sprites()]
 
         self.arrow.index = 0
         self.attack_enemy(enemy_damage)

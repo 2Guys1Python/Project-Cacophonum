@@ -15,7 +15,7 @@ class InfoBox(object):
     Info box that describes attack damage and other battle
     related information.
     """
-    def __init__(self, game_data, experience, gold, playerentities, monsterentities):
+    def __init__(self, game_data, experience, gold, playerentities, monsterentities, enemyentities):
         self.game_data = game_data
         self.enemy_damage = 0
         self.player_damage = 0
@@ -28,12 +28,14 @@ class InfoBox(object):
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 18)
         self.experience_points = experience
         self.gold_earned = gold
+        self.playerentities = playerentities
+        self.monsterentities = monsterentities
+        self.enemyentities = enemyentities
+        self.currentmonster = 0
+        self.enemyindex = 0
         self.state_dict = self.make_state_dict()
         self.noteoff = [setup.GFX['8thnoteempty'], setup.GFX['wholenoteempty'], setup.GFX['gclefempty']]
         self.noteon = [setup.GFX['8thnotefilled'], setup.GFX['wholenotefilled'], setup.GFX['gcleffilled']]
-        self.playerentities = playerentities
-        self.monsterentities = monsterentities
-        self.currentmonster = 0
         self.notecount = monsterentities[self.currentmonster].stats['curr']['notes']
         self.image = self.make_image()
         self.rect = self.image.get_rect(bottom=640)
@@ -100,7 +102,7 @@ class InfoBox(object):
         """
         Return text of enemy being hit using calculated damage.
         """
-        return "Enemy hit with {} damage.".format(self.enemy_damage)
+        return "{} hit with {} damage.".format(self.enemyentities[self.enemyindex].name,self.enemy_damage)
 
     def make_item_text(self):
         """
@@ -232,7 +234,10 @@ class InfoBox(object):
         """
         self.enemy_damage = enemy_damage
         self.state_dict[c.ENEMY_DAMAGED] = self.enemy_damaged()
-
+    
+    def set_enemy_index(self, enemy_index):
+        self.enemyindex = enemy_index
+        
     def set_player_damage(self, player_damage):
         """
         Set player damage in state dictionary.
@@ -404,7 +409,7 @@ class SelectArrow(object):
                 self.allow_input = False
             elif keys[pg.K_RIGHT]:
                 if self.state in (c.SELECT_ENEMY_ATTACK, c.SELECT_ENEMY_SPELL):
-                    if self.index+3 < len(self.pos_list)-1:
+                    if self.index+3 < len(self.pos_list):
                         self.notify(c.CLICK)
                         self.index += 3
                 self.allow_input = False
