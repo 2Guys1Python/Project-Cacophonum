@@ -15,8 +15,8 @@ if sys.version_info[0] == 2:
 class Menu(tools._State):
     def __init__(self):
         super(Menu, self).__init__()
-        self.music = setup.MUSIC['kings_theme']
-        self.music_title = 'kings_theme'
+        self.music = setup.MUSIC['aqua']
+        self.music_title = 'aqua'
         self.volume = 0.4
         self.next = c.INSTRUCTIONS
         self.tmx_map = setup.TMX['title']
@@ -32,7 +32,6 @@ class Menu(tools._State):
         self.title_box = setup.GFX['title_box']
         self.title_rect = self.title_box.get_rect()
         self.title_rect.midbottom = self.viewport.midbottom
-        self.title_rect.y -= 30
         self.state_dict = self.make_state_dict()
         self.state = c.TRANSITION_IN
         self.alpha = 255
