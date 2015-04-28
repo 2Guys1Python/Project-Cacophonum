@@ -123,7 +123,7 @@ class LevelState(tools._State):
             properties = object.__dict__
             if properties['name'] == 'monster':
                 mon_list.append(properties['monname'])
-        
+        print mon_list
         return mon_list
     
     def make_player(self):

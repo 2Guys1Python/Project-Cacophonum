@@ -42,7 +42,7 @@ Wild Monster masterlist format:
 '''
 
 masterlist_wm = {
-	'Wild Hare': [700, 500, 300, 300, 300, 300, 300,
+	'Kedama': [700, 500, 300, 300, 300, 300, 300,
 					4, 0.85, 25,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],

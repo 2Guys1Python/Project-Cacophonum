@@ -264,6 +264,12 @@ class Battle(tools._State):
                         self.enemies_to_attack.append(self.get_enemy_to_attack())
                     self.action_selected = True
                 
+                elif self.state == c.SELECT_MAGIC:
+                    self.notify(c.CLICK2)
+                    trueindex = self.arrow.index + self.info_box.itemindex
+                    print trueindex
+                    self.enter_select_action_state()
+                
                 elif self.state == c.SELECT_ENEMY_SPELL:
                     self.notify(c.CLICK2)
                     if self.info_box.state == c.ATTACK:
@@ -364,7 +370,7 @@ class Battle(tools._State):
                             self.currentmonster+=1
                             self.info_box.currentmonster+=1
                         elif len(self.enemy_list):
-                            self.currentmonster = 0
+                            self.enemy_index = 0
                             self.enter_enemy_AI_state()
                 
                 elif self.state == c.PLAYER_DAMAGED:
@@ -716,20 +722,13 @@ class Battle(tools._State):
                     act = [action[0], self.monsterentities[random.randint(0,len(self.monsterentities)-1)]]
                         
         #print ("%s will use %s on %s here") %(enemyent.name, act[0], act[1].name)
-        
-        '''
+
         if act[0] == 'attack':
             self.maxhits = random.randint(1,5)
             for x in range(self.maxhits):
                 self.enemy_actions.append(c.ENEMY_ATTACK)
                 self.monsters_to_attack.append(self.monsters[self.monsterentities.index(act[1])])
             self.enemy_action_dict[self.enemy_actions.pop(0)]()
-        '''
-        self.maxhits = random.randint(1,5)
-        for x in range(self.maxhits):
-            self.enemy_actions.append(c.ENEMY_ATTACK)
-            self.monsters_to_attack.append(self.monsters[self.monsterentities.index(act[1])])
-        self.enemy_action_dict[self.enemy_actions.pop(0)]()
         
         
     def enter_enemy_attack_state(self):

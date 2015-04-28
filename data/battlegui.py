@@ -55,8 +55,8 @@ class InfoBox(object):
                         c.RUN_AWAY: 'RUN',
                         c.SELECT_ENEMY_ATTACK: 'ATTACK',
                         c.SELECT_ENEMY_SPELL: '',
-                        c.ENEMY_ATTACK: 'Enemy attacks player!',
-                        c.PLAYER_ATTACK: 'Player attacks enemy! ',
+                        c.ENEMY_ATTACK: self.player_hit(),
+                        c.PLAYER_ATTACK: self.enemy_damaged(),
                         c.ENEMY_DAMAGED: self.enemy_damaged(),
                         c.ENEMY_DEAD: 'Enemy killed.',
                         c.PLAYER_DAMAGED: self.player_hit(),
@@ -178,9 +178,14 @@ class InfoBox(object):
         elif self.state == c.SELECT_MAGIC:
             text_sprites = self.make_text_sprites(self.make_magic_text())
             text_sprites.draw(surface)
+        elif self.state in (c.SHOW_EXPERIENCE, c.SHOW_GOLD, c.ENEMY_DAMAGED, c.PLAYER_DAMAGED, c.ENEMY_ATTACK, c.PLAYER_ATTACK, c.BATTLE_WON):
+            text_surface = self.med_font.render(self.state_dict[self.state], True, c.WHITE)
+            text_rect = text_surface.get_rect(x=300, y=75)
+            text_rect.centerx = rect.centerx-10
+            surface.blit(text_surface, text_rect)
         else:
             text_surface = self.big_font.render(self.state_dict[self.state], True, c.WHITE)
-            text_rect = text_surface.get_rect(x=640, y=75)
+            text_rect = text_surface.get_rect(x=470, y=75)
             text_rect.centerx = rect.centerx+230
             surface.blit(text_surface, text_rect)
             text_surface = self.big_font.render(self.monsterentities[self.currentmonster].name, True, c.WHITE)
@@ -238,8 +243,6 @@ class InfoBox(object):
     def player_hit(self):
         if self.player_damage:
             return "Player hit with {} damage".format(self.player_damage)
-        else:
-            return "Enemy missed!"
 
     def update(self, keys, currentmonster):
         """Updates info box"""
