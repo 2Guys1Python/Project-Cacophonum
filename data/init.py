@@ -124,10 +124,12 @@ Spell masterlist format:
 	'Name': [cost, type, inst, target, [[eff1, [args]], [eff2, [args]], ...]]
 	
 	[!] type = off/def/buf/deb [!]
+    [!] inst = wind/string/percussion
+    [!] target = one/row/col/aoe
 '''
 
 masterlist_spell = {
-	'Black Aria': [2, 'off', 'wind', 'aoe', 
+	'Black Aria': [4, 'off', 'wind', 'aoe', 
 					[['dmg_HP', [5, 'mus', 0.14]],
 					['apply_debuff', ['Poison', 25, 2]]]]
 }

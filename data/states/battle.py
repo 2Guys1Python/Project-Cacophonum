@@ -151,9 +151,9 @@ class Battle(tools._State):
         enemy_group = pg.sprite.OrderedUpdates()
 
         if self.game_data['battle type']:
-            enemy = person.Enemy('evilwizard', 0, 0,
-                                  'down', 'battle resting')
-            enemy_group.add(enemy)
+            enemy_list.append(person.Enemy('Orthrus', 0, 0,
+                                  'down', 'battle resting'))
+            ent_list.append(copy.deepcopy(entityclasses.WildMonster('Orthrus', 1)))
         else:
             if self.game_data['start of game']:
                 for enemy in range(3):
@@ -259,14 +259,18 @@ class Battle(tools._State):
 
                 elif self.state == c.SELECT_ENEMY_ATTACK:
                     self.notify(c.CLICK2)
-                    if self.monsterentities[self.currentmonster].equipment['instrument']:
-                        self.maxhits = self.monsterentities[self.currentmonster].equipment['instrument'].stats['base']['hits']
-                    else:
-                        self.maxhits = 5
-                    for x in range(self.maxhits):
-                        self.player_actions.append(c.PLAYER_ATTACK)
-                        self.enemies_to_attack.append(self.enemy_list[self.arrow.index])
-                    self.action_selected = True
+                    print self.currentmonster
+                    print self.monsterentities[self.currentmonster].stats['curr']['notes']
+                    if self.monsterentities[self.currentmonster].stats['curr']['notes'] > 1:
+                        if self.monsterentities[self.currentmonster].equipment['instrument']:
+                            self.maxhits = self.monsterentities[self.currentmonster].equipment['instrument'].stats['base']['hits']
+                        else:
+                            self.maxhits = 5
+                        self.monsterentities[self.currentmonster].stats['curr']['notes'] -= 2
+                        for x in range(self.maxhits):
+                            self.player_actions.append(c.PLAYER_ATTACK)
+                            self.enemies_to_attack.append(self.enemy_list[self.arrow.index])
+                        self.action_selected = True
                 
                 elif self.state == c.SELECT_MAGIC:
                     self.notify(c.CLICK2)
@@ -363,11 +367,13 @@ class Battle(tools._State):
                         if not len(self.enemy_list):
                             self.enter_battle_won_state()
                         elif self.currentmonster < len(self.monsters)-1:
-                            self.enter_select_action_state()
-                            self.currhits = 0
+                            self.monsterentities[self.currentmonster].stats['curr']['notes'] += self.monsterentities[self.currentmonster].stats['curr']['notegain'] + self.monsterentities[self.currentmonster].stats['bonus']['bonusnotegain'] - self.monsterentities[self.currentmonster].stats['penalty']['penaltynotegain']
                             self.currentmonster+=1
                             self.info_box.currentmonster+=1
+                            self.enter_select_action_state()
+                            self.currhits = 0
                         elif len(self.enemy_list):
+                            self.monsterentities[self.currentmonster].stats['curr']['notes'] += self.monsterentities[self.currentmonster].stats['curr']['notegain'] + self.monsterentities[self.currentmonster].stats['bonus']['bonusnotegain'] - self.monsterentities[self.currentmonster].stats['penalty']['penaltynotegain']
                             self.enemy_index = 0
                             self.currhits = 0
                             self.enter_enemy_AI_state()
@@ -468,6 +474,9 @@ class Battle(tools._State):
         self.game_data['last state'] = self.name
         self.game_data['battle counter'] = random.randint(50, 255)
         self.game_data['battle type'] = None
+        for co in self.game_data['conductors']:
+            for m in co.monsters:
+                m.stats['curr']['notes'] = 4
         self.state = 'transition out'
 
     def attack_enemy(self, enemy_damage):
@@ -638,6 +647,8 @@ class Battle(tools._State):
         pass
     
     def next_turn(self):
+        self.monsterentities[self.currentmonster].stats['curr']['notes'] += self.monsterentities[self.currentmonster].stats['curr']['notegain'] + self.monsterentities[self.currentmonster].stats['bonus']['bonusnotegain'] - self.monsterentities[self.currentmonster].stats['penalty']['penaltynotegain']
+        self.action_selected = False
         if self.currentmonster < len(self.monsters)-1:
             print "case1"
             self.enter_select_action_state()
