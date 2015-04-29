@@ -116,9 +116,7 @@ def findExtreme(str, targetgroup):
 # args: [hits, scaling stat, scalar]
 def dmg_HP(args, source, target):
 	scalingstat = getStat(args[1], source.stats, target.stats)
-	for x in range(0, args[0]):
-		print "Hit %d" %(x+1)
-		target.damage(scalingstat*args[2])
+	return scalingstat*args[2]
 
 # args: [scaling stat, scalar]		
 def rec_HP(args, source, target):

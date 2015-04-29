@@ -85,8 +85,8 @@ class Battle(tools._State):
         Make the dict to execute player actions.
         """
         action_dict = {c.PLAYER_ATTACK: self.enter_player_attack_state,
-                       c.OFF_SPELL: self.cast_cure,
-                       c.DEF_SPELL: self.cast_fire_blast,
+                       c.OFF_SPELL: self.enter_player_spell_state,
+                       c.DEF_SPELL: self.enter_player_spell_state,
                        c.DRINK_HEALING_POTION: self.enter_drink_healing_potion_state,
                        c.DRINK_ETHER_POTION: self.enter_drink_ether_potion_state}
 
@@ -272,9 +272,21 @@ class Battle(tools._State):
                 
                 elif self.state == c.SELECT_MAGIC:
                     self.notify(c.CLICK2)
-                    trueindex = self.arrow.index + self.info_box.itemindex
-                    print trueindex
-                    self.enter_select_action_state()
+                    self.spellindex = self.arrow.index + self.info_box.itemindex
+                    spell = self.monsterentities[self.currentmonster].spells[self.spellindex]
+                    if self.monsterentities[self.currentmonster].stats['curr']['notes'] >= spell.cost:
+                        self.monsterentities[self.currentmonster].stats['curr']['notes'] -= spell.cost
+                        if spell.type == 'off':
+                            for func in spell.effectsList:
+                                if func[0] == 'dmg_HP':
+                                    self.maxhits = func[1][0]
+                                    if spell.target == 'aoe':
+                                        for x in range(self.maxhits):
+                                            self.player_actions.append(c.OFF_SPELL)
+                                            self.enemies_to_attack.append(self.enemy_list)
+                        self.action_selected = True
+                    else:
+                        self.enter_select_action_state()
                 
                 elif self.state == c.SELECT_ENEMY_SPELL:
                     self.notify(c.CLICK2)
@@ -283,7 +295,7 @@ class Battle(tools._State):
                             self.maxhits = self.monsterentities[self.currentmonster].equipment['instrument'].stats['base']['hits']
                         else:
                             self.maxhits = 5
-                        for x in range(maxhits):
+                        for x in range(self.maxhits):
                             self.player_actions.append(c.PLAYER_ATTACK)
                             self.enemies_to_attack.append(self.get_enemy_to_attack())
                     self.action_selected = True
@@ -327,13 +339,13 @@ class Battle(tools._State):
                     self.info_box.state = c.SPELL
                     self.arrow.index = 0
                 elif self.state == c.SELECT_ITEM:
+                    self.state = self.arrow.state = c.SELECT_ACTION
                     self.notify(c.CLICK2)
-                    self.enter_select_action_state()
                     self.info_box.state = c.ITEM
                     self.info_box.itemindex = 0
                 elif self.state == c.SELECT_MAGIC:
+                    self.state = self.arrow.state = c.SELECT_ACTION
                     self.notify(c.CLICK2)
-                    self.enter_select_action_state()
                     self.info_box.state = c.SPELL
                     self.info_box.itemindex = 0
                     
@@ -351,12 +363,13 @@ class Battle(tools._State):
         timed_states = [c.PLAYER_DAMAGED,
                         c.ENEMY_DAMAGED,
                         c.ENEMY_DEAD,
+                        c.ENEMY_DAMAGED_SPELL,
                         c.DRINK_HEALING_POTION,
                         c.DRINK_ETHER_POTION]
         long_delay = timed_states
         if self.state in long_delay:
             if (self.current_time - self.timer) > 300:
-                if self.state == c.ENEMY_DAMAGED:
+                if self.state == c.ENEMY_DAMAGED or self.state == c.ENEMY_DAMAGED_SPELL:
                     if self.player_actions:
                         self.player_action_dict[self.player_actions[0]]()
                         self.player_actions.pop(0)
@@ -365,13 +378,14 @@ class Battle(tools._State):
                         if not len(self.enemy_list):
                             self.enter_battle_won_state()
                         elif self.currentmonster < len(self.monsters)-1:
-                            self.monsterentities[self.currentmonster].stats['curr']['notes'] += self.monsterentities[self.currentmonster].stats['curr']['notegain'] + self.monsterentities[self.currentmonster].stats['bonus']['bonusnotegain'] - self.monsterentities[self.currentmonster].stats['penalty']['penaltynotegain']
+                            self.monsterentities[self.currentmonster].regenNotes()
                             self.currentmonster+=1
                             self.info_box.currentmonster+=1
                             self.enter_select_action_state()
                             self.currhits = 0
+                            self.arrow.index = 0
                         elif len(self.enemy_list):
-                            self.monsterentities[self.currentmonster].stats['curr']['notes'] += self.monsterentities[self.currentmonster].stats['curr']['notegain'] + self.monsterentities[self.currentmonster].stats['bonus']['bonusnotegain'] - self.monsterentities[self.currentmonster].stats['penalty']['penaltynotegain']
+                            self.monsterentities[self.currentmonster].regenNotes()
                             self.enemy_index = 0
                             self.currhits = 0
                             self.enter_enemy_AI_state()
@@ -402,21 +416,6 @@ class Battle(tools._State):
                             self.enter_enemy_AI_state()
                         else:
                             self.enter_battle_won_state()
-                self.timer = self.current_time
-
-        elif self.state == c.OFF_SPELL or self.state == c.DEF_SPELL:
-            if (self.current_time - self.timer) > 1500:
-                if self.player_actions:
-                    if not len(self.enemy_list):
-                        self.enter_battle_won_state()
-                    else:
-                        self.player_action_dict[self.player_actions[0]]()
-                        self.player_actions.pop(0)
-                else:
-                    if len(self.enemy_list):
-                        self.enter_enemy_AI_state()
-                    else:
-                        self.enter_battle_won_state()
                 self.timer = self.current_time
 
         elif self.state == c.RUN_AWAY:
@@ -491,6 +490,26 @@ class Battle(tools._State):
                 enemy.state = c.FADE_DEATH
                 self.arrow.remove_pos(enemyindex)
             self.enemy_index = 0
+    
+    def spell_damage_enemy(self, enemy_damage):
+        enemy_arr = self.monsters[self.currentmonster].attacked_enemy
+        self.set_enemy_indices()
+        x = 0
+        
+        while x in range(len(enemy_arr)) and self.enemy_list:
+            enemy = enemy_arr[x]
+            enemyindex = self.enemy_list.index(enemy)
+            self.enemyentities[enemyindex].damage(enemy_damage)
+            enemy.enter_knock_back_state()
+            x+=1
+            if self.enemyentities[enemyindex].stats['curr']['HP'] <= 0 and len(self.player_actions) == 1:
+                self.set_enemy_indices()
+                x-=1
+                self.enemy_list.pop(enemyindex)
+                self.enemyentities.pop(enemyindex)
+                enemy.state = c.FADE_DEATH
+                self.arrow.remove_pos(enemyindex)
+            
 
     def set_enemy_indices(self):
         for i, enemy in enumerate(self.enemy_list):
@@ -587,52 +606,6 @@ class Battle(tools._State):
     def set_timer_to_current_time(self):
         """Set the timer to the current time."""
         self.timer = self.current_time
-
-    def cast_fire_blast(self):
-        """
-        Cast fire blast on all enemies.
-        """
-        self.notify(c.FIRE)
-        self.state = self.info_box.state = c.OFF_SPELL
-        POWER = self.inventory['Fire Blast']['power']
-        MAGIC_POINTS = self.inventory['Fire Blast']['magic points']
-        self.game_data['player stats']['magic']['current'] -= MAGIC_POINTS
-        for enemy in self.enemy_list:
-            DAMAGE = random.randint(POWER//2, POWER)
-            self.damage_points.add(
-                attackitems.HealthPoints(DAMAGE, enemy.rect.topright))
-            enemy.health -= DAMAGE
-            posx = enemy.rect.x - 32
-            posy = enemy.rect.y - 64
-            fire_sprite = attack.Fire(posx, posy)
-            self.attack_animations.add(fire_sprite)
-            if enemy.health <= 0:
-                enemy.kill()
-                self.arrow.remove_pos(enemy)
-            else:
-                enemy.enter_knock_back_state()
-        self.enemy_list = [enemy for enemy in self.enemy_list if enemy.health > 0]
-        self.enemy_index = 0
-        self.arrow.index = 0
-        self.arrow.state = 'invisible'
-        self.set_timer_to_current_time()
-
-    def cast_cure(self):
-        """
-        Cast cure spell on player.
-        """
-        self.state = c.DEF_SPELL
-        HEAL_AMOUNT = self.inventory['Cure']['power']
-        MAGIC_POINTS = self.inventory['Cure']['magic points']
-        self.player.healing = True
-        self.set_timer_to_current_time()
-        self.arrow.state = 'invisible'
-        self.enemy_index = 0
-        self.damage_points.add(
-            attackitems.HealthPoints(HEAL_AMOUNT, self.player.rect.topright, False))
-        self.player_healed(HEAL_AMOUNT, MAGIC_POINTS)
-        self.info_box.state = c.DRINK_HEALING_POTION
-        self.notify(c.POWERUP)
     
     def enter_select_enemy_attack_state(self):
         """
@@ -645,7 +618,7 @@ class Battle(tools._State):
         pass
     
     def next_turn(self):
-        self.monsterentities[self.currentmonster].stats['curr']['notes'] += self.monsterentities[self.currentmonster].stats['curr']['notegain'] + self.monsterentities[self.currentmonster].stats['bonus']['bonusnotegain'] - self.monsterentities[self.currentmonster].stats['penalty']['penaltynotegain']
+        self.monsterentities[self.currentmonster].regenNotes()
         self.action_selected = False
         if self.currentmonster < len(self.monsters)-1:
             self.enter_select_action_state()
@@ -774,6 +747,15 @@ class Battle(tools._State):
         self.arrow.state = 'invisible'
         self.notify(c.ENEMY_DAMAGED)
 
+    def enter_player_spell_state(self):
+        self.state = self.info_box.state = c.OFF_SPELL
+        enemy_arr = self.enemies_to_attack.pop(0)
+        if self.enemy_list:
+            self.monsters[self.currentmonster].enter_spell_state(enemy_arr)
+        else:
+            self.enter_battle_won_state()
+        self.arrow.state = 'invisible'
+        self.notify(c.ENEMY_DAMAGED_SPELL)
 
 
     def enter_drink_healing_potion_state(self):
@@ -820,6 +802,70 @@ class Battle(tools._State):
         self.arrow.index = 0
         self.arrow.state = c.SELECT_ACTION
 
+    def cast_def_spell(self):
+        """
+        Cast cure spell on player.
+        """
+        self.state = c.DEF_SPELL
+        HEAL_AMOUNT = self.inventory['Cure']['power']
+        MAGIC_POINTS = self.inventory['Cure']['magic points']
+        self.player.healing = True
+        self.set_timer_to_current_time()
+        self.arrow.state = 'invisible'
+        self.enemy_index = 0
+        self.damage_points.add(
+            attackitems.HealthPoints(HEAL_AMOUNT, self.player.rect.topright, False))
+        self.player_healed(HEAL_AMOUNT, MAGIC_POINTS)
+        self.info_box.state = c.DRINK_HEALING_POTION
+        self.notify(c.POWERUP)
+        
+    def cast_off_spell(self):
+        """
+        Cast fire blast on all enemies.
+        """
+        self.state = self.info_box.state = c.ENEMY_DAMAGED_SPELL
+        enemy_arr = self.monsters[self.currentmonster].attacked_enemy
+        for e in enemy_arr:
+            enemyindex = self.enemy_list.index(e)
+            damage = int(self.monsterentities[self.currentmonster].useSpell(self.spellindex, self.enemyentities[enemyindex]))
+            self.damage_points.add(
+                attackitems.HealthPoints(damage, e.rect.topright))
+            posx = e.rect.x - 32
+            posy = e.rect.y - 64
+            fire_sprite = attack.Fire(posx, posy)
+            self.attack_animations.add(fire_sprite)
+            self.spell_damage_enemy(damage)
+            #if enemy.health <= 0:
+            #    enemy.kill()
+            #    self.arrow.remove_pos(enemy)
+            #else:
+            #    enemy.enter_knock_back_state()
+        self.set_timer_to_current_time()
+
+    def enter_enemy_damaged_state(self):
+        """
+        Transition battle into the enemy damaged state.
+        """
+        self.state = self.info_box.state = c.ENEMY_DAMAGED
+        enemy = self.monsters[self.currentmonster].attacked_enemy
+        enemyindex = self.enemy_list.index(enemy)
+        enemy_damage = int(self.monsterentities[self.currentmonster].calculate_attack_damage(self.enemyentities[enemyindex], self.currhits))
+        self.damage_points.add(
+            attackitems.HealthPoints(enemy_damage,
+                                     self.monsters[self.currentmonster].attacked_enemy.rect.topright))
+        self.info_box.set_enemy_index(enemyindex)
+        self.info_box.set_enemy_damage(enemy_damage)
+        
+        #print "%s %s %d %d" %(enemy.name, self.enemyentities[enemyindex].name, enemyindex, self.info_box.enemyindex)
+        #print [e.name for e in self.enemy_list]
+        #print [x.name for x in self.enemyentities]
+        #print [i.name for i in self.info_box.enemyentities]
+        #print [g.name for g in self.enemy_group.sprites()]
+
+        self.arrow.index = 0
+        self.attack_enemy(enemy_damage)
+        self.set_timer_to_current_time()        
+        
     def enter_player_damaged_state(self):
         """
         Transition battle into the player damaged state.
@@ -846,30 +892,6 @@ class Battle(tools._State):
             target.enter_knock_back_state()
         else:
             self.notify(c.MISS)
-
-    def enter_enemy_damaged_state(self):
-        """
-        Transition battle into the enemy damaged state.
-        """
-        self.state = self.info_box.state = c.ENEMY_DAMAGED
-        enemy = self.monsters[self.currentmonster].attacked_enemy
-        enemyindex = self.enemy_list.index(enemy)
-        enemy_damage = int(self.monsterentities[self.currentmonster].calculate_attack_damage(self.enemyentities[enemyindex], self.currhits))
-        self.damage_points.add(
-            attackitems.HealthPoints(enemy_damage,
-                                     self.monsters[self.currentmonster].attacked_enemy.rect.topright))
-        self.info_box.set_enemy_index(enemyindex)
-        self.info_box.set_enemy_damage(enemy_damage)
-        
-        #print "%s %s %d %d" %(enemy.name, self.enemyentities[enemyindex].name, enemyindex, self.info_box.enemyindex)
-        #print [e.name for e in self.enemy_list]
-        #print [x.name for x in self.enemyentities]
-        #print [i.name for i in self.info_box.enemyentities]
-        #print [g.name for g in self.enemy_group.sprites()]
-
-        self.arrow.index = 0
-        self.attack_enemy(enemy_damage)
-        self.set_timer_to_current_time()
 
     def switch_enemy(self):
         """

@@ -27,6 +27,7 @@ class Battle(object):
         """
         event_dict = {c.ENEMY_DEAD: self.enemy_dead,
                       c.ENEMY_DAMAGED: self.enemy_damaged,
+                      c.ENEMY_DAMAGED_SPELL: self.enemy_damaged_spell,
                       c.PLAYER_DAMAGED: self.player_damaged}
 
         return event_dict
@@ -46,6 +47,9 @@ class Battle(object):
         Make an attack animation over attacked enemy.
         """
         self.level.enter_enemy_damaged_state()
+    
+    def enemy_damaged_spell(self):
+        self.level.cast_off_spell()
 
     def enemy_dead(self):
         """

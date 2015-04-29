@@ -329,6 +329,12 @@ class Person(pg.sprite.Sprite):
         self.attacked_enemy = enemy
         self.x_vel = -5
         self.state = 'attack'
+    
+    def enter_spell_state(self, enemies):
+        self.notify(c.FIRE)
+        self.attacked_enemy = enemies
+        self.x_vel = -5
+        self.state = 'attack'
 
 
     def attack(self):

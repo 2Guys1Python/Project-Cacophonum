@@ -161,6 +161,11 @@ class TamedMonster(Monster):
 
 	def setMaster(self, newmaster):
 		self.master = newmaster
+
+	def regenNotes(self):
+		self.stats['curr']['notes'] += self.stats['curr']['notegain'] + self.stats['bonus']['bonusnotegain'] - self.stats['penalty']['penaltynotegain']
+		if self.stats['curr']['notes'] >=10:
+			self.stats['curr']['notes'] = 10
 		
 	def equip(self, equipment, slot):
 		self.equipment[slot] = equipment
@@ -211,7 +216,7 @@ class TamedMonster(Monster):
 			self.stats['curr']['HP'] -= int(num)
 		else:
 			self.stats['curr']['HP'] = 0
-		print "%d dealt! %d HP left." %(num, self.stats['curr']['HP'])
+		#print "%d dealt! %d HP left." %(num, self.stats['curr']['HP'])
 		if self.stats['curr']['HP'] == 0:
 			self.isDead = True
 			
@@ -263,9 +268,14 @@ class TamedMonster(Monster):
 				
 	def useSpell(self, index, target):
 		spell = self.spells[index]
+		for i, eff in enumerate(spell.effectsList):
+			if eff[0] == 'dmg_HP':
+				args = eff[1]
+		'''
 		if spell.target == "one":
 			print "%s used %s on %s!" %(self.name, spell.name, target.name)
 			spellhandler.useSpell(spell, self, target)
+		
 		else:
 			namecoll = []
 			for x in range(0,len(target)):
@@ -273,7 +283,8 @@ class TamedMonster(Monster):
 			print "%s used %s on " %(self.name, spell.name)
 			print namecoll
 			spellhandler.useSpellAoE(spell, self, target)
-		self.stats['curr']['notes'] -= spell.cost
+		'''
+		return spellhandler.dmg_HP(args, self, target)
 	
 class Conductor:
 	def __init__(self, name):

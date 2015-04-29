@@ -61,6 +61,7 @@ class InfoBox(object):
                         c.ENEMY_ATTACK: self.player_hit(),
                         c.PLAYER_ATTACK: self.enemy_damaged(),
                         c.ENEMY_DAMAGED: self.enemy_damaged(),
+                        c.ENEMY_DAMAGED_SPELL: '',
                         c.ENEMY_DEAD: 'Enemy killed.',
                         c.PLAYER_DAMAGED: self.player_hit(),
                         c.DRINK_HEALING_POTION: 'Player healed.',
@@ -103,7 +104,7 @@ class InfoBox(object):
         """
         Return text of enemy being hit using calculated damage.
         """
-        return "{} hit with {} damage. {}/{}".format(self.enemyentities[self.enemyindex].name,self.enemy_damage, self.enemyentities[self.enemyindex].stats['curr']['HP'] - self.enemy_damage, self.enemyentities[self.enemyindex].stats['base']['HP'] + self.enemyentities[self.enemyindex].stats['bonus']['bonusHP'] - self.enemyentities[self.enemyindex].stats['penalty']['penaltyHP'])
+        return "{} hit with {} damage. {}/{}".format(self.enemyentities[self.enemyindex].name,self.enemy_damage, self.enemyentities[self.enemyindex].stats['curr']['HP'], self.enemyentities[self.enemyindex].stats['base']['HP'] + self.enemyentities[self.enemyindex].stats['bonus']['bonusHP'] - self.enemyentities[self.enemyindex].stats['penalty']['penaltyHP'])
 
     def make_item_text(self):
         """
@@ -251,12 +252,13 @@ class InfoBox(object):
 
     def player_hit(self):
         if self.player_damage:
-            return "{} hit with {} damage. {}/{}".format(self.monsterentities[self.playerindex].name, self.player_damage, self.monsterentities[self.playerindex].stats['curr']['HP'] - self.player_damage, self.monsterentities[self.playerindex].stats['base']['HP'] + self.monsterentities[self.playerindex].stats['bonus']['bonusHP'] - self.monsterentities[self.playerindex].stats['penalty']['penaltyHP'])
+            return "{} hit with {} damage. {}/{}".format(self.monsterentities[self.playerindex].name, self.player_damage, self.monsterentities[self.playerindex].stats['curr']['HP'], self.monsterentities[self.playerindex].stats['base']['HP'] + self.monsterentities[self.playerindex].stats['bonus']['bonusHP'] - self.monsterentities[self.playerindex].stats['penalty']['penaltyHP'])
 
     def update(self, keys, currentmonster):
         """Updates info box"""
         self.check_input(keys)
         self.currentmonster = currentmonster
+        self.notecount = self.monsterentities[currentmonster].stats['curr']['notes']
         self.image = self.make_image()
 
     def show_experience(self):
