@@ -37,14 +37,14 @@ class Arrow(pg.sprite.Sprite):
         Update arrow position.
         """
         if self.allow_input:
-            if (keys[pg.K_DOWN] or keys[pg.K_RIGHT]) and not keys[pg.K_UP] and self.index == 1:
-                self.index = 0
+            if (keys[pg.K_DOWN] or keys[pg.K_RIGHT]) and not keys[pg.K_UP] and self.index == 0:
+                self.index = 1
                 self.image = setup.GFX['arrowright']
                 self.allow_input = False
                 self.notify(c.CLICK)
-            elif (keys[pg.K_UP] or keys[pg.K_LEFT]) and not keys[pg.K_DOWN] and self.index == 0:
-                self.index = 1
-                self.image = setup.GFX['arrowleft']
+            elif (keys[pg.K_UP] or keys[pg.K_LEFT]) and not keys[pg.K_DOWN] and self.index == 1:
+                self.index = 0
+                self.image = setup.GFX['arrowright']
                 self.allow_input = False
                 self.notify(c.CLICK)
 
@@ -69,13 +69,14 @@ class DeathScene(tools._State):
         self.game_data = game_data
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
         self.background = pg.Surface(setup.SCREEN_RECT.size)
-        self.background.fill(c.BLACK_BLUE)
+        self.background.fill(c.NEAR_BLACK)
         self.player = person.Player('down', self.game_data, 1, 1, 'resting', 1)
         self.player.image = pg.transform.scale2x(self.player.image)
         self.player.rect = self.player.image.get_rect()
         self.player.rect.center = setup.SCREEN_RECT.center
         self.message_box = self.make_message_box()
-        self.arrow = Arrow(300, 532)
+        self.arrow = Arrow(300, 515)
+        self.arrow.pos_list[1] = (300, 545)
         self.state_dict = self.make_state_dict()
         self.state = c.TRANSITION_IN
         self.alpha = 255
@@ -102,16 +103,16 @@ class DeathScene(tools._State):
         box_image = setup.GFX['battlebox']
         box_rect = box_image.get_rect()
         text = 'You have died. Restart from last save point?'
-        text_render = self.font.render(text, True, c.NEAR_BLACK) 
+        text_render = self.font.render(text, True, c.WHITE) 
         text_rect = text_render.get_rect(centerx=box_rect.centerx,
                                          y=30)
         text2 = 'Yes'
-        text2_render = self.font.render(text2, True, c.NEAR_BLACK)
+        text2_render = self.font.render(text2, True, c.WHITE)
         text2_rect = text2_render.get_rect(centerx=box_rect.centerx,
                                            y=70)
 
         text3 = 'No'
-        text3_render = self.font.render(text3, True, c.NEAR_BLACK)
+        text3_render = self.font.render(text3, True, c.WHITE)
         text3_rect = text3_render.get_rect(centerx=box_rect.centerx,
                                            y=105)
 

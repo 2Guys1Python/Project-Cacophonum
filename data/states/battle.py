@@ -288,6 +288,14 @@ class Battle(tools._State):
                     else:
                         self.enter_select_action_state()
                 
+                elif self.state == c.SELECT_ITEM:
+                    self.notify(c.CLICK2)
+                    self.useditemindex = self.arrow.index + self.info_box.itemindex
+                    self.monsterentities[self.currentmonster].stats['curr']['notes'] -= 1
+                    self.player_actions.append(c.DRINK_HEALING_POTION)
+                    self.maxhits = 1
+                    self.action_selected = True
+                
                 elif self.state == c.SELECT_ENEMY_SPELL:
                     self.notify(c.CLICK2)
                     if self.info_box.state == c.ATTACK:
@@ -300,34 +308,6 @@ class Battle(tools._State):
                             self.enemies_to_attack.append(self.get_enemy_to_attack())
                     self.action_selected = True
 
-                elif self.state == c.SELECT_ITEM:
-                    self.notify(c.CLICK2)
-                    if self.arrow.index == (len(self.arrow.pos_list) - 1):
-                        self.enter_select_action_state()
-                    elif self.info_box.item_text_list[self.arrow.index][:14] == 'Healing Potion':
-                        if 'Healing Potion' in self.game_data['player inventory']:
-                            self.player_actions.append(c.DRINK_HEALING_POTION)
-                            self.action_selected = True
-                    elif self.info_box.item_text_list[self.arrow.index][:5] == 'Ether':
-                        if 'Ether Potion' in self.game_data['player inventory']:
-                            self.player_actions.append(c.DRINK_ETHER_POTION)
-                            self.action_selected = True
-                elif self.state == c.SELECT_MAGIC:
-                    self.notify(c.CLICK2)
-                    if self.arrow.index == (len(self.arrow.pos_list) - 1):
-                        self.enter_select_action_state()
-                    elif self.info_box.magic_text_list[self.arrow.index] == 'Cure':
-                        magic_points = self.game_data['player inventory']['Cure']['magic points']
-                        if self.temp_magic >= magic_points:
-                            self.temp_magic -= magic_points
-                            self.player_actions.append(c.DEF_SPELL)
-                            self.action_selected = True
-                    elif self.info_box.magic_text_list[self.arrow.index] == 'Fire Blast':
-                        magic_points = self.game_data['player inventory']['Fire Blast']['magic points']
-                        if self.temp_magic >= magic_points:
-                            self.temp_magic -= magic_points
-                            self.player_actions.append(c.OFF_SPELL)
-                            self.action_selected = True
 
             elif keys[pg.K_x]:
                 if self.state == c.SELECT_ENEMY_ATTACK:
@@ -413,6 +393,7 @@ class Battle(tools._State):
                         self.player_actions.pop(0)
                     else:
                         if len(self.enemy_list):
+                            self.monsterentities[self.currentmonster].regenNotes()
                             self.enter_enemy_AI_state()
                         else:
                             self.enter_battle_won_state()
@@ -568,24 +549,22 @@ class Battle(tools._State):
 
     def player_damaged(self, monster, damage):
         monster.damage(damage)
+        deathflag = True
         if monster.isDead:
             monster.stats['curr']['HP'] = 0
-            self.state = c.DEATH_FADE
+            for m in self.monsterentities:
+                if not m.isDead:
+                    deathflag = False
+            if deathflag:
+                self.state = c.DEATH_FADE
 
     def player_healed(self, heal, magic_points=0):
         """
         Add health from potion to game data.
         """
-        health = self.game_data['player stats']['health']
-
-        health['current'] += heal
-        if health['current'] > health['maximum']:
-            health['current'] = health['maximum']
 
         if self.state == c.DRINK_HEALING_POTION:
-            self.game_data['player inventory']['Healing Potion']['quantity'] -= 1
-            if self.game_data['player inventory']['Healing Potion']['quantity'] == 0:
-                del self.game_data['player inventory']['Healing Potion']
+            self.monsterentities[self.currentmonster].heal(heal)
         elif self.state == c.DEF_SPELL:
             self.game_data['player stats']['magic']['current'] -= magic_points
 
@@ -621,13 +600,11 @@ class Battle(tools._State):
         self.monsterentities[self.currentmonster].regenNotes()
         self.action_selected = False
         if self.currentmonster < len(self.monsters)-1:
-            print "case1"
             self.enter_select_action_state()
             self.currhits = 0
             self.currentmonster+=1
             self.info_box.currentmonster+=1
         elif len(self.enemy_list):
-            print "case2"
             self.arrow.index = 0
             self.currhits = 0
             self.enemy_index = 0
@@ -764,15 +741,23 @@ class Battle(tools._State):
         Transition battle into the Drink Healing Potion state.
         """
         self.state = self.info_box.state = c.DRINK_HEALING_POTION
-        self.player.healing = True
+        self.monsters[self.currentmonster].healing = True
         self.set_timer_to_current_time()
         self.arrow.state = 'invisible'
         self.enemy_index = 0
+        inventory = self.monsterentities[self.currentmonster].master.inventory
+        temparr = []
+        for x in range(inventory.getSize()):
+            if inventory.getItem(x).itemType is "Consumable":
+                temparr.append(x)
+        print temparr
+        item = temparr[self.useditemindex]
+        healed = self.monsterentities[self.currentmonster].useItem(item, self.monsterentities[self.currentmonster])
         self.damage_points.add(
-            attackitems.HealthPoints(30,
-                                     self.player.rect.topright,
+            attackitems.HealthPoints(healed,
+                                     self.monsters[self.currentmonster].rect.topright,
                                      False))
-        self.player_healed(30)
+        self.player_healed(healed)
         self.notify(c.POWERUP)
 
     def enter_drink_ether_potion_state(self):

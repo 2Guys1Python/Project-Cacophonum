@@ -226,6 +226,7 @@ class LoadGame(Instructions):
     def __init__(self):
         super(LoadGame, self).__init__()
         self.arrow = death.Arrow(500, 555)
+        self.arrow.index = 0
         self.allow_input = False
 
     def set_image(self):

@@ -15,7 +15,7 @@ class Fire(pg.sprite.Sprite):
     """
     def __init__(self, x, y):
         super(Fire, self).__init__()
-        self.spritesheet = setup.GFX['explosion']
+        self.spritesheet = setup.GFX['Black Aria']
         self.get_image = tools.get_image
         self.image_list = self.make_image_list()
         self.index = 0

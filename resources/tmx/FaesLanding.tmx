@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="938">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="939">
  <tileset firstgid="1" name="tileset1" tilewidth="16" tileheight="16">
   <image source="../graphics/tileset1.png" width="160" height="80"/>
  </tileset>
@@ -663,6 +663,12 @@
    <properties>
     <property name="direction" value="down"/>
     <property name="state" value="Inn"/>
+   </properties>
+  </object>
+  <object id="938" name="start point" gid="123" x="224" y="784">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="state" value="death scene"/>
    </properties>
   </object>
  </objectgroup>

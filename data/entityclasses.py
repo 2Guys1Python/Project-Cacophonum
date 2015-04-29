@@ -258,13 +258,18 @@ class TamedMonster(Monster):
 				
 	def useItem(self, index, target):
 		item = self.master.removeItem(index)
+		for i, eff in enumerate(item.effectsList):
+			if eff[0] == 'rec_HP':
+				args = eff[1]
+		'''
 		print "%s used %s on %s!" %(self.name, item.name, target.name)
 		if item.itemType == "Consumable":
 			if item.target == "one":
 				itemhandler.useItem(item, target)
 			else:
 				itemhandler.useItemAoE(item, target)
-		self.stats['curr']['notes'] -= 1
+		'''
+		return itemhandler.rec_HP(args, target)
 				
 	def useSpell(self, index, target):
 		spell = self.spells[index]
