@@ -17,11 +17,11 @@ class Arrow(pg.sprite.Sprite):
     """
     def __init__(self, x, y):
         super(Arrow, self).__init__()
-        self.image = setup.GFX['smallarrow']
+        self.image = setup.GFX['arrowright']
         self.rect = self.image.get_rect(x=x,
                                         y=y)
         self.index = 0
-        self.pos_list = [y, y+34]
+        self.pos_list = [(x,y), (400,40)]
         self.allow_input = False
         self.observers = [observer.SoundEffects()]
        
@@ -37,16 +37,18 @@ class Arrow(pg.sprite.Sprite):
         Update arrow position.
         """
         if self.allow_input:
-            if keys[pg.K_DOWN] and not keys[pg.K_UP] and self.index == 0:
-                self.index = 1
+            if (keys[pg.K_DOWN] or keys[pg.K_RIGHT]) and not keys[pg.K_UP] and self.index == 1:
+                self.index = 0
+                self.image = setup.GFX['arrowright']
                 self.allow_input = False
                 self.notify(c.CLICK)
-            elif keys[pg.K_UP] and not keys[pg.K_DOWN] and self.index == 1:
-                self.index = 0
+            elif (keys[pg.K_UP] or keys[pg.K_LEFT]) and not keys[pg.K_DOWN] and self.index == 0:
+                self.index = 1
+                self.image = setup.GFX['arrowleft']
                 self.allow_input = False
                 self.notify(c.CLICK)
 
-            self.rect.y = self.pos_list[self.index]
+            self.rect = self.image.get_rect(x=pos_list[self.index][0], y=pos_list[self.index][1])
 
         if not keys[pg.K_DOWN] and not keys[pg.K_UP]:
             self.allow_input = True

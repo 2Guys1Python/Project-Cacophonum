@@ -73,6 +73,7 @@ Item price masterlist format:
 '''
 
 masterlist_price = {
+	'Room': [30,0],
 	'Potion': [50, 25],
 	'Flute': [600, 300],
 	'Mouthpiece': [200, 100],

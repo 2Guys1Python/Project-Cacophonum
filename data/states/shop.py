@@ -200,6 +200,7 @@ class Inn(Shop):
         """Make list of items to be chosen"""
 
         item = Room('Room', 1)
+        item.dialogue = "Room (30g)"
 		
         return [item]
 

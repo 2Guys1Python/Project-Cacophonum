@@ -225,8 +225,7 @@ class Instructions(tools._State):
 class LoadGame(Instructions):
     def __init__(self):
         super(LoadGame, self).__init__()
-        self.arrow = death.Arrow(234, 294)
-        self.arrow.pos_list[1] += 34
+        self.arrow = death.Arrow(500, 555)
         self.allow_input = False
 
     def set_image(self):
@@ -243,25 +242,27 @@ class LoadGame(Instructions):
     
     def normal_update(self, keys):
         if self.allow_input:
-            if keys[pg.K_DOWN] and self.arrow.index == 0:
-                self.arrow.index = 1
-                self.notify(c.CLICK)
-                self.allow_input = False
-            elif keys[pg.K_UP] and self.arrow.index == 1:
+            if (keys[pg.K_DOWN] or keys[pg.K_RIGHT]) and self.arrow.index == 1:
                 self.arrow.index = 0
+                self.arrow.image = setup.GFX['arrowright']
                 self.notify(c.CLICK)
                 self.allow_input = False
-            elif keys[pg.K_SPACE]:
+            elif (keys[pg.K_UP] or keys[pg.K_LEFT]) and self.arrow.index == 0:
+                self.arrow.index = 1
+                self.arrow.image = setup.GFX['arrowleft']
+                self.notify(c.CLICK)
+                self.allow_input = False
+            elif keys[pg.K_z]:
                 if self.arrow.index == 0:
                     self.game_data = pickle.load(open("save.p", "rb"))
-                    self.next = c.TOWN
+                    self.next = c.FAESLANDING
                     self.state = c.TRANSITION_OUT
                 else:
                     self.next = c.OVERWORLD
                     self.state = c.TRANSITION_OUT
                 self.notify(c.CLICK2)
 
-            self.arrow.rect.y = self.arrow.pos_list[self.arrow.index]  
+            self.arrow.rect = self.arrow.pos_list[self.arrow.index]  
 
         if not keys[pg.K_DOWN] and not keys[pg.K_UP]:
             self.allow_input = True

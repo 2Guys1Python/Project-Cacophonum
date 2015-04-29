@@ -55,7 +55,7 @@ class Gui(object):
         self.dialogue_box = self.make_dialogue_box(self.dialogue, self.index)
         self.gold_box = self.make_gold_box()
         if self.name in self.no_selling:
-            choices = self.items[0]['dialogue']
+            choices = self.items[0].dialogue
         else:
             choices = ['Buy', 'Sell', 'Leave']
         self.selection_box = self.make_selection_box(choices)
@@ -72,14 +72,14 @@ class Gui(object):
         """
         Make the sprite that controls the dialogue.
         """
-        image = setup.GFX['dialoguebox']
+        image = setup.GFX['battlebox']
         rect = image.get_rect()
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
         surface.blit(image, rect)
         dialogue = self.font.render(dialogue_list[index],
                                     True,
-                                    c.NEAR_BLACK)
+                                    c.WHITE)
         dialogue_rect = dialogue.get_rect(left=50, top=50)
         surface.blit(dialogue, dialogue_rect)
         sprite = pg.sprite.Sprite()
@@ -119,7 +119,7 @@ class Gui(object):
 
     def make_selection_box(self, choices):
         """Make the box for the player to select options"""
-        image = setup.GFX['shopbox']
+        image = setup.GFX['battlebox']
         rect = image.get_rect(bottom=640)
 
         surface = pg.Surface(rect.size)
@@ -127,20 +127,20 @@ class Gui(object):
         surface.blit(image, (0, 0))
 
         if len(choices) == 2:
-            choice1 = self.font.render(choices[0], True, c.NEAR_BLACK)
+            choice1 = self.font.render(choices[0], True, c.WHITE)
             choice1_rect = choice1.get_rect(x=200, y=35)
-            choice2 = self.font.render(choices[1], True, c.NEAR_BLACK)
+            choice2 = self.font.render(choices[1], True, c.WHITE)
             choice2_rect = choice2.get_rect(x=200, y=75)
 
             surface.blit(choice1, choice1_rect)
             surface.blit(choice2, choice2_rect)
 
         elif len(choices) == 3:
-            choice1 = self.font.render(choices[0], True, c.NEAR_BLACK)
+            choice1 = self.font.render(choices[0], True, c.WHITE)
             choice1_rect = choice1.get_rect(x=200, y=15)
-            choice2 = self.font.render(choices[1], True, c.NEAR_BLACK)
+            choice2 = self.font.render(choices[1], True, c.WHITE)
             choice2_rect = choice2.get_rect(x=200, y=55)
-            choice3 = self.font.render(choices[2], True, c.NEAR_BLACK)
+            choice3 = self.font.render(choices[2], True, c.WHITE)
             choice3_rect = choice3.get_rect(x=200, y=95)
 
             surface.blit(choice1, choice1_rect)
@@ -177,7 +177,7 @@ class Gui(object):
         self.dialogue_box = self.make_dialogue_box(self.dialogue, self.index)
 
         if self.index < (len(self.dialogue) - 1) and self.allow_input:
-            if keys[pg.K_SPACE]:
+            if keys[pg.K_z]:
                 self.index += 1
                 self.allow_input = False
 
@@ -185,7 +185,7 @@ class Gui(object):
                     self.state = self.begin_new_transaction()
                 self.notify(c.CLICK2)
 
-        if not keys[pg.K_SPACE]:
+        if not keys[pg.K_z]:
             self.allow_input = True
 
     def begin_new_transaction(self):
@@ -202,7 +202,7 @@ class Gui(object):
         """Control the selection"""
         choices = []
         for item in self.items:
-            choices.append(item['dialogue'])
+            choices.append(item.dialogue)
         if self.name in self.no_selling:
             choices.append('Leave')
         else:
@@ -232,7 +232,7 @@ class Gui(object):
                 self.arrow_index -= 1
                 self.allow_input = False
                 self.notify(c.CLICK)
-        elif keys[pg.K_SPACE] and self.allow_input:
+        elif keys[pg.K_z] and self.allow_input:
             if self.arrow_index == 0:
                 self.state = 'confirmpurchase'
                 self.item_to_be_purchased = self.items[0]
@@ -252,7 +252,7 @@ class Gui(object):
             self.arrow_index = 0
             self.allow_input = False
 
-        if not keys[pg.K_SPACE] and not keys[pg.K_UP] and not keys[pg.K_DOWN]:
+        if not keys[pg.K_z] and not keys[pg.K_UP] and not keys[pg.K_DOWN]:
             self.allow_input = True
 
 
@@ -276,7 +276,7 @@ class Gui(object):
                 self.arrow_index -= 1
                 self.allow_input = False
                 self.notify(c.CLICK)
-        elif keys[pg.K_SPACE] and self.allow_input:
+        elif keys[pg.K_z] and self.allow_input:
             if self.arrow_index == 0:
                 self.buy_item()
             elif self.arrow_index == 1:
@@ -285,7 +285,7 @@ class Gui(object):
             self.arrow_index = 0
             self.allow_input = False
 
-        if not keys[pg.K_SPACE] and not keys[pg.K_DOWN] and not keys[pg.K_UP]:
+        if not keys[pg.K_z] and not keys[pg.K_DOWN] and not keys[pg.K_UP]:
             self.allow_input = True
 
 
@@ -293,57 +293,26 @@ class Gui(object):
         """Attempt to allow player to purchase item"""
         item = self.item_to_be_purchased
 
-        self.player_inventory['GOLD']['quantity'] -= item['price']
+        self.game_data['gold'] -= item.prices['buy']
 
-        if self.player_inventory['GOLD']['quantity'] < 0:
-            self.player_inventory['GOLD']['quantity'] += item['price']
+        if self.game_data['gold'] < 0:
+            self.game_data['gold'] += item.prices['buy']
             self.state = 'reject'
         else:
-            if (item['type'] in self.player_inventory and
-                        not self.name == c.POTION_SHOP):
-                self.state = 'hasitem'
-                self.player_inventory['GOLD']['quantity'] += item['price']
-            else:
-                self.notify(c.CLOTH_BELT)
-                self.state = 'accept'
-                self.add_player_item(item)
+            self.notify(c.CLOTH_BELT)
+            self.state = 'accept'
+            self.add_player_item(item)
 
 
     def add_player_item(self, item):
         """
         Add item to player's inventory.
         """
-        item_type = item['type']
-        quantity = item['quantity']
-        value = item['price']
-        power = item['power']
-        magic_list = ['Cure', 'Fire Blast']
-        player_armor = ['Chain Mail', 'Wooden Shield']
-        player_weapons = ['Rapier', 'Long Sword']
-        player_items = self.level.game_data['player inventory']
-        player_health = self.level.game_data['player stats']['health']
-        player_magic = self.level.game_data['player stats']['magic']
-        equipped_armor = self.level.game_data['player inventory']['equipped armor']
-
-        item_to_add = {'quantity': quantity,
-                       'value': value,
-                       'power': power}
-
-        if item_type in magic_list:
-            item_to_add = {'magic points': item['magic points'],
-                           'power': item['power']}
-            player_items[item_type] = item_to_add
-        if item_type in player_armor:
-            equipped_armor.append(item_type)
-        if item_type in player_weapons:
-            player_items['equipped weapon'] = item_type
-        if item_type in player_items and item_type not in magic_list:
-            player_items[item_type]['quantity'] += quantity
-        elif quantity > 0:
-            player_items[item_type] = item_to_add
-        elif item_type == 'room':
-            player_health['current'] = player_health['maximum']
-            player_magic['current'] = player_magic['maximum']
+        if item.itemType == 'Room':
+            for c in self.game_data['conductors']:
+                for m in c.monsters:
+                    m.stats['curr']['HP'] = m.stats['base']['HP'] + m.stats['bonus']['bonusHP'] - m.stats['penalty']['penaltyHP']
+                    m.status = []
             pickle.dump(self.game_data, open( "save.p", "wb"))
 
     def confirm_sell(self, keys, current_time):
@@ -366,7 +335,7 @@ class Gui(object):
                 self.arrow_index -= 1
                 self.allow_input = False
                 self.notify(c.CLICK)
-        elif keys[pg.K_SPACE] and self.allow_input:
+        elif keys[pg.K_z] and self.allow_input:
             if self.arrow_index == 0:
                 self.sell_item_from_inventory()
             elif self.arrow_index == 1:
@@ -375,7 +344,7 @@ class Gui(object):
             self.allow_input = False
             self.arrow_index = 0
 
-        if not keys[pg.K_SPACE] and not keys[pg.K_UP] and not keys[pg.K_DOWN]:
+        if not keys[pg.K_z] and not keys[pg.K_UP] and not keys[pg.K_DOWN]:
             self.allow_input = True
 
 
@@ -419,13 +388,13 @@ class Gui(object):
         dialogue = ["You don't have enough gold!"]
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
 
-        if keys[pg.K_SPACE] and self.allow_input:
+        if keys[pg.K_z] and self.allow_input:
             self.notify(c.CLICK2)
             self.state = self.begin_new_transaction()
             self.selection_arrow.rect.topleft = self.arrow_pos1
             self.allow_input = False
 
-        if not keys[pg.K_SPACE]:
+        if not keys[pg.K_z]:
             self.allow_input = True
 
     def accept_purchase(self, keys, current_time):
@@ -433,13 +402,13 @@ class Gui(object):
         self.dialogue_box = self.make_dialogue_box(self.accept_dialogue, 0)
         self.gold_box = self.make_gold_box()
 
-        if keys[pg.K_SPACE] and self.allow_input:
+        if keys[pg.K_z] and self.allow_input:
             self.notify(c.CLICK2)
             self.state = self.begin_new_transaction()
             self.selection_arrow.rect.topleft = self.arrow_pos1
             self.allow_input = False
 
-        if not keys[pg.K_SPACE]:
+        if not keys[pg.K_z]:
             self.allow_input = True
 
     def accept_sale(self, keys, current_time):
@@ -447,13 +416,13 @@ class Gui(object):
         self.dialogue_box = self.make_dialogue_box(self.accept_sale_dialogue, 0)
         self.gold_box = self.make_gold_box()
 
-        if keys[pg.K_SPACE] and self.allow_input:
+        if keys[pg.K_z] and self.allow_input:
             self.notify(c.CLICK2)
             self.state = self.begin_new_transaction()
             self.selection_arrow.rect.topleft = self.arrow_pos1
             self.allow_input = False
 
-        if not keys[pg.K_SPACE]:
+        if not keys[pg.K_z]:
             self.allow_input = True
 
 
@@ -462,13 +431,13 @@ class Gui(object):
         dialogue = ["You have that item already."]
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
 
-        if keys[pg.K_SPACE] and self.allow_input:
+        if keys[pg.K_z] and self.allow_input:
             self.state = self.begin_new_transaction()
             self.selection_arrow.rect.topleft = self.arrow_pos1
             self.allow_input = False
             self.notify(c.CLICK2)
 
-        if not keys[pg.K_SPACE]:
+        if not keys[pg.K_z]:
             self.allow_input = True
 
 
@@ -491,7 +460,7 @@ class Gui(object):
                 self.arrow_index -= 1
                 self.allow_input = False
                 self.notify(c.CLICK)
-        elif keys[pg.K_SPACE] and self.allow_input:
+        elif keys[pg.K_z] and self.allow_input:
             if self.arrow_index == 0:
                 self.state = 'select'
                 self.allow_input = False
@@ -512,7 +481,7 @@ class Gui(object):
             self.arrow_index = 0
             self.notify(c.CLICK2)
 
-        if not keys[pg.K_SPACE] and not keys[pg.K_DOWN] and not keys[pg.K_UP]:
+        if not keys[pg.K_z] and not keys[pg.K_DOWN] and not keys[pg.K_UP]:
             self.allow_input = True
 
     def check_for_sellable_items(self):
@@ -553,7 +522,7 @@ class Gui(object):
                 self.arrow_index -= 1
                 self.allow_input = False
                 self.notify(c.CLICK)
-        elif keys[pg.K_SPACE] and self.allow_input:
+        elif keys[pg.K_z] and self.allow_input:
             if self.arrow_index == 0:
                 self.state = 'confirmsell'
                 self.allow_input = False
@@ -573,7 +542,7 @@ class Gui(object):
             self.arrow_index = 0
             self.notify(c.CLICK2)
 
-        if not keys[pg.K_SPACE] and not keys[pg.K_DOWN] and not keys[pg.K_UP]:
+        if not keys[pg.K_z] and not keys[pg.K_DOWN] and not keys[pg.K_UP]:
             self.allow_input = True
 
 
@@ -582,13 +551,13 @@ class Gui(object):
         dialogue = ["You don't have anything to sell!"]
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
 
-        if keys[pg.K_SPACE] and self.allow_input:
+        if keys[pg.K_z] and self.allow_input:
             self.state = 'buysell'
             self.allow_input = False
             self.notify(c.CLICK2)
 
 
-        if not keys[pg.K_SPACE]:
+        if not keys[pg.K_z]:
             self.allow_input = True
 
     def cant_sell_equipped_weapon(self, keys, *args):
@@ -598,12 +567,12 @@ class Gui(object):
         dialogue = ["You can't sell an equipped weapon."]
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
 
-        if keys[pg.K_SPACE] and self.allow_input:
+        if keys[pg.K_z] and self.allow_input:
             self.state = 'buysell'
             self.allow_input = False
             self.notify(c.CLICK2)
 
-        if not keys[pg.K_SPACE]:
+        if not keys[pg.K_z]:
             self.allow_input = True
 
     def cant_sell_equipped_armor(self, keys, *args):
@@ -613,11 +582,11 @@ class Gui(object):
         dialogue = ["You can't sell equipped armor."]
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
 
-        if keys[pg.K_SPACE] and self.allow_input:
+        if keys[pg.K_z] and self.allow_input:
             self.state = 'buysell'
             self.allow_input = False
 
-        if not keys[pg.K_SPACE]:
+        if not keys[pg.K_z]:
             self.allow_input = True
 
 
@@ -634,8 +603,8 @@ class Gui(object):
         state_list2 = ['select', 'confirmpurchase', 'buysell', 'sell', 'confirmsell']
 
         surface.blit(self.dialogue_box.image, self.dialogue_box.rect)
-        surface.blit(self.gold_box.image, self.gold_box.rect)
         if self.state in state_list2:
             surface.blit(self.selection_box.image, self.selection_box.rect)
             surface.blit(self.selection_arrow.image, self.selection_arrow.rect)
+        surface.blit(self.gold_box.image, self.gold_box.rect)
 

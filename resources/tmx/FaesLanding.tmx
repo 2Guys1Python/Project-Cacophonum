@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="906">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="58" height="51" tilewidth="16" tileheight="16" nextobjectid="938">
  <tileset firstgid="1" name="tileset1" tilewidth="16" tileheight="16">
   <image source="../graphics/tileset1.png" width="160" height="80"/>
  </tileset>
@@ -20,27 +20,27 @@
  </tileset>
  <layer name="Tile Layer 1" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJzt2EEOgjAQheHuWXsZNhyAJXHniYzujAf1BGLiJGXsUCZBZtq+xb+AMKFfGiVpF0LoVjod0Nr7jwpOOOGE0zo4f7vO3eCE00Ga9T7mng04S/4fGhTRujUzgwPjp1HR9E0zMzowwgknnHBaG8l5j0pd55y5eWvjP52XKGsjOc9RqeucMzdvbWzNSQZu4h7ufLGkeWsjd+6dR+eWSv+uwLk00ozWam3c6pwScxqrtRH72e7vs3Rnr4icmpnegbGl/YQTTjjbcErnENZG7pTWCecy6RzC2sid0jrhTD/D71kbuVNaZ63Ovc6FPDtze4XvJ5zWRjjrc9bSG2A8h6o=
+   eJzt2E0KwjAQhuHuu/Yy3fQAXRZ33qcguhMP2hNYwUAYZxIHm05+PuFdVDs0D8EW2ndd1wc6HVDo+kcFJ5xwwmkdnN9dt25wwplBmvU+tp4NOEu+D42K3Lo1M2MGxneTovmTZmbKwAgnnHDCaW10zrsXdxxzxuatjSmdFy9ro3OevbjjmDM2b21szekM1EQ91LmSpHlrI3XuXY7OX0r9XOE+NTst93P2ZrTWFOtO4ZyZOY3V2oj9tPl/wvl/gyLn1MwMGRhb2k844YSzDaf0HsLaSJ3SOiXn0oBzYZzSewhrI3VK65Sc9PfanNxe+ufQ76yN1Cmtk3OGzinFudd7oZydofD8LNfJ3WtqdLayn7U5a+kFebOJeQ==
   </data>
  </layer>
  <layer name="Tile Layer 2" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJztl0EKwjAQRbPPQnuHuK0XEvSYLj2TJzCCxWFoMMRO8kf/4mFbyjD/P7BtDCFEQgghhJhwA9ihF1eAHQghb5Lz+bXMzuej9E2f9Omxb/r8HZ+nF6Mz0qef+T36vgs8+LTaJYH5tNrFskOkXRB91mQ9Zy4Gc3v6/LTTkrEma1JzR2cs7VTK25IR0ae89s280tzRWP7fjs72j1g+V0Znk7vwPQG3w9Zdkjj30GHrLhbPAVSfFhkRfXqYi9Y7fdKnN5/o32UW3dHnWJ+y/0PDLOTv7LDS//P4WJlN9mX5frWF0yWzdizR3kruEDPKfPp8VsSV6/r+0kxrdpl9ZhK/E0C3W/MAQbWdoA==
+   eJztmE0KwkAMhbPvQnuHruuFBL1Nr+TSM3mCttDQMDo42maS6Bv4KP0hvJcH6TANETUAAAAAUOHuQEMtbg40AABWuuD1S+mD1/fSb+SJPCP2G3n+Tp7nBWuPyDNO/Rr9fggi5KmlpXOWp5aWrT18tZBnmZYSr5eJq0LdGrCWd5rYY4nXLqlr7TGnKef3G48e85TPttTL1bVGc95ae/tHNP8r1t6kFq/7hChaPM2hdP7v6dljnhr/Aa95anj0mGeEut76jjyRJwCaDAvWOmr4tNbwKfOsIHqej7OXU4FPuV/sSXd/tRXWKs9NWOdA62KPw/Iud0bi0aP0l95zPrzYYy9Iv8/V1OYwcZxoxbV10Nu9GQGUHZ2l
   </data>
  </layer>
  <layer name="Tile Layer 3" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJzt0kEKACEIhWH3s+52c/9zzDaGkqwItT9wE4nvq4qIFKVE2a/X/3yv72mUNl+baVmjM7SZlr5oztnCifO0c/VuWkavzt1v6cW5asvitGSN6rRmjeicyerZOZo5o3M2q2dnLxvOdn9m586/4NE52hPRuVI4cUZyvlXd4Mz+nrf8W5w4ceLEiRMnTpw4ceLEiRMnTpw4ceLEiRMnzojOD1+DjFI=
+   eJzt0ksKwCAMRdHMO+7uuv91dCpFg1Ep+Vwhk9KQd4y3iNxKifK9Pd//R31Xp7T52kzLmZ2hzbT0RXOuFk6cfzt376Zn9Oo8vUsvzl1bFqcla1SnNWtE50pWz87ZzBmdq1k9O0fZcPb7MztPvgWPztmeiM6dwokzkvNpqoIz+z6rvFucOHHixIkTJ06cOHHixIkTJ06cOHHixIlz1ylFnFX2GcX5AkRbjEc=
   </data>
  </layer>
  <layer name="Tile Layer 4" width="58" height="51">
   <data encoding="base64" compression="zlib">
-   eJztmDsOgzAQRLenTsOxiNJxplwVySdIg6XE8nfZeNdmkF4DGOZ5+AgWIloqeTCoPbYVOI4lb0tzIeVnvfNUNr/M6Nnac2ketN247rn9cs7aPhLzYb3Tl8BYzn3JOe+VrP/o1mKf8JTz1M7Uy1c7Sw9P7RwAgHnZT7Rz9HSc0XenX89Ur+H2kfrfIrlTHuH6t4H83D49rsF/BFL5HcV9RvQsdeQCvsdpZ+d4HozsB43Tq8+4MsauwTEsU3qP1FwLo3i2PkclnruW/gnl3GLXBLDP80Q7Ry9X7QwAAAAAALVY/Q4AAADQF7wPwJ34AMLuqp0=
+   eJztmUEOgjAQRWePWzccS8OOM3lVEk5gTGhSJ7S0Q9uZwid5MaiF/+YLCxmIaEjkKSD12FaQOB55W5pFKT/rnYeyue2Knrk9H81B203qHvtezFnbp8Q8rHc6FVgruS4l5z2TtUa3FvuEZzlP7UytfLWztPDUzgEAuC7zhnaOlo5X9J3p3zPUK/+8p/5fO7lDHvz9j4H80j4da4Z/D4Tyr7Tv06PnUUcrw19XK5PbanguguwLne/VdyK2X9rz9zoK1o7sGLn4/zvW8uOekl4k12krr1jW1Ny933dz3PZ+E8A+7w3tHK1ctTMAAAAAAKRi6dkwAADEuMv96nGz+ZKBmYP78QXWsan4
   </data>
  </layer>
  <layer name="Tile Layer 5" width="58" height="51" opacity="0.9">
   <data encoding="base64" compression="zlib">
-   eJztmjlOAzEUhj3sS5GwSQgBJaEkdKwVN0DpEHUuElHBJaBDwEGoQ50z5AS8aGzpybzM2OPZHn7FJ1nj+cf+5JFnsTtKqQ6iC2xZx7gzc/oGNv8544g9nwlcr1d31jUTs+dA84rKrn01578FZN89sua8r5xMlufAo72msq6ZLM8hKu959nUU4Dn0yLq2lzXfPnn0selsXmYSiWcs4ymeaZYrlOdPJJ7zxpMj4lnc864ixLNZz4eSEM/2eL6g/ibAArAILAHLwAqwCqwB68AGOt9kOXjafoYp0NNMtafB9uXiaVxs+hqqrsfQE7tg5wsY6MuErusz8twGdoBdq/+mfAWO1wldh7N5ntS/IJsqPQ+BI+AYOCC4AcfbhK7D2bZ7nqj0XjxV9PNiX0PV4Wyep/0f6IM4VqXnmUrvxfMCnjjr6zkijjX53mc8y37vq+u7LBZPV+41ZV+X8pmHeDbnGfJ/RDzb61lmH8RTPMWTh2fImjsnz5C1aI6eRdaiOXnidspsQzz9PEPmD/Fsn6eZMz6V//zB0bPI84Baz2675yMqu+5rGlvX5obPeMbgOVF/91B3VT37m+vcsz1r7xcN5wAp
+   eJztmktOwzAQhh3ej0XLS0IIWFKWlB3lseIGqDvEuhepWMElYIeAg7Au656hJ2Cq2NLInSbj2E0yxJU+KYr9x/7kxGlrt5RSLUQb2LHOSWfq9ANs/3NGDfZ8IeBer+wsN9Nkz77mDR1z+2rqv3tkPxyypt53TibLs+/QXlVZbibLc4CODxz7OvTwHDhkue1lzbfPDn2sOpuXGTfEsynjGT3TrFQoz9+GeM4bT4lEz+Ke9wsielbr+RiI6Fkfz1fU3wRYApaBFWAVWAPWgQ1gE9hC9U1WgqftZ5gAHc1EexpsXymexsWmq6HKOgI9sQt2voKB7iV0WVeQ5y6wB+xb/TfH1+B4k9BlOJvnyfks0vMYOAFOgSOCW3C8S+gynK2755lK78VzRb8vDjVUGc7W3fNCpffiZQFPnK27Zx7GM/T3vrJ+lzXFk8uDJvR1KZ95RM/qPH3+H4me9fUM2YfoGT2jpwxPnzV3SZ4+a9ESPYusRUvyxO2EbEOaJ/X8cp7nUJ4+80f0nMWeoz6Jc4v0NG185bQX2nNInCvDs8j7gFrP5s4B3HqhPZ/QMXdf08i6dhGUZ94Hl/H09awSrudYze6hbqty9jeXuWd72t4fArr+gw==
   </data>
  </layer>
  <layer name="Tile Layer 6" width="58" height="51">
@@ -413,29 +413,6 @@
   <object id="668" name="blocker" gid="120" x="320" y="416"/>
   <object id="669" name="blocker" gid="120" x="304" y="416"/>
   <object id="670" name="blocker" gid="120" x="288" y="416"/>
-  <object id="675" name="blocker" gid="120" x="672" y="432"/>
-  <object id="676" name="blocker" gid="120" x="672" y="448"/>
-  <object id="677" name="blocker" gid="120" x="672" y="400"/>
-  <object id="678" name="blocker" gid="120" x="672" y="416"/>
-  <object id="679" name="blocker" gid="120" x="800" y="448"/>
-  <object id="680" name="blocker" gid="120" x="800" y="416"/>
-  <object id="681" name="blocker" gid="120" x="800" y="400"/>
-  <object id="682" name="blocker" gid="120" x="800" y="432"/>
-  <object id="683" name="blocker" gid="120" x="720" y="400"/>
-  <object id="684" name="blocker" gid="120" x="688" y="400"/>
-  <object id="685" name="blocker" gid="120" x="736" y="400"/>
-  <object id="686" name="blocker" gid="120" x="752" y="400"/>
-  <object id="687" name="blocker" gid="120" x="704" y="400"/>
-  <object id="688" name="blocker" gid="120" x="768" y="400"/>
-  <object id="690" name="blocker" gid="120" x="784" y="400"/>
-  <object id="693" name="blocker" gid="120" x="800" y="400"/>
-  <object id="695" name="blocker" gid="120" x="720" y="448"/>
-  <object id="696" name="blocker" gid="120" x="688" y="448"/>
-  <object id="698" name="blocker" gid="120" x="752" y="448"/>
-  <object id="699" name="blocker" gid="120" x="704" y="448"/>
-  <object id="700" name="blocker" gid="120" x="768" y="448"/>
-  <object id="702" name="blocker" gid="120" x="784" y="448"/>
-  <object id="705" name="blocker" gid="120" x="800" y="448"/>
   <object id="707" name="blocker" gid="120" x="816" y="128"/>
   <object id="709" name="blocker" gid="120" x="816" y="112"/>
   <object id="710" name="blocker" gid="120" x="816" y="64"/>
@@ -609,12 +586,6 @@
   <object id="887" name="blocker" gid="120" x="512" y="176"/>
   <object id="888" name="blocker" gid="120" x="512" y="160"/>
   <object id="889" name="portal" type="house" gid="139" x="64" y="672"/>
-  <object id="890" name="portal" type="Scriptorium" gid="139" x="704" y="768"/>
-  <object id="891" name="portal" type="Inn" gid="139" x="736" y="448"/>
-  <object id="892" name="portal" type="Sundries" gid="139" x="784" y="128"/>
-  <object id="893" name="portal" type="Luthier" gid="139" x="576" y="128"/>
-  <object id="894" name="portal" type="Tambourier" gid="139" x="336" y="128"/>
-  <object id="895" name="portal" type="Auloficer" gid="139" x="96" y="128"/>
   <object id="896" name="blocker" gid="120" x="400" y="416"/>
   <object id="897" name="blocker" gid="120" x="384" y="416"/>
   <object id="898" name="start point" gid="123" x="64" y="704">
@@ -629,10 +600,10 @@
     <property name="state" value="Scriptorium"/>
    </properties>
   </object>
-  <object id="900" name="start point" gid="123" x="736" y="480">
+  <object id="900" name="start point" gid="123" x="224" y="784">
    <properties>
     <property name="direction" value="down"/>
-    <property name="state" value="Inn"/>
+    <property name="state" value="load game"/>
    </properties>
   </object>
   <object id="901" name="start point" gid="123" x="784" y="160">
@@ -657,6 +628,41 @@
    <properties>
     <property name="direction" value="down"/>
     <property name="state" value="Auloficer"/>
+   </properties>
+  </object>
+  <object id="906" name="blocker" gid="120" x="704" y="768"/>
+  <object id="908" name="blocker" gid="120" x="784" y="128"/>
+  <object id="909" name="blocker" gid="120" x="576" y="128"/>
+  <object id="910" name="blocker" gid="120" x="336" y="128"/>
+  <object id="911" name="blocker" gid="120" x="96" y="128"/>
+  <object id="913" name="blocker" gid="120" x="288" y="720"/>
+  <object id="914" name="blocker" gid="120" x="160" y="704"/>
+  <object id="915" name="blocker" gid="120" x="288" y="752"/>
+  <object id="916" name="blocker" gid="120" x="160" y="752"/>
+  <object id="917" name="blocker" gid="120" x="256" y="704"/>
+  <object id="918" name="blocker" gid="120" x="240" y="752"/>
+  <object id="919" name="blocker" gid="120" x="288" y="704"/>
+  <object id="920" name="blocker" gid="120" x="256" y="752"/>
+  <object id="921" name="blocker" gid="120" x="192" y="752"/>
+  <object id="922" name="blocker" gid="120" x="272" y="704"/>
+  <object id="923" name="portal" type="Inn" gid="139" x="224" y="752"/>
+  <object id="924" name="blocker" gid="120" x="176" y="752"/>
+  <object id="925" name="blocker" gid="120" x="160" y="720"/>
+  <object id="926" name="blocker" gid="120" x="192" y="704"/>
+  <object id="927" name="blocker" gid="120" x="224" y="704"/>
+  <object id="928" name="blocker" gid="120" x="160" y="736"/>
+  <object id="929" name="blocker" gid="120" x="240" y="704"/>
+  <object id="930" name="blocker" gid="120" x="288" y="736"/>
+  <object id="931" name="blocker" gid="120" x="272" y="752"/>
+  <object id="932" name="blocker" gid="120" x="288" y="704"/>
+  <object id="933" name="blocker" gid="120" x="176" y="704"/>
+  <object id="934" name="blocker" gid="120" x="208" y="704"/>
+  <object id="935" name="blocker" gid="120" x="208" y="752"/>
+  <object id="936" name="blocker" gid="120" x="288" y="752"/>
+  <object id="937" name="start point" gid="123" x="16" y="480">
+   <properties>
+    <property name="direction" value="down"/>
+    <property name="state" value="Inn"/>
    </properties>
   </object>
  </objectgroup>
