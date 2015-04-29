@@ -616,7 +616,16 @@ class Battle(tools._State):
         Transition battle into the select item state.
         """
         self.state = self.info_box.state = c.SELECT_ITEM
-        self.arrow.become_select_item_state()
+        inventory = self.monsterentities[self.currentmonster].master.inventory
+        temparr = []
+        for x in range(inventory.getSize()):
+            if inventory.getItem(x).itemType is "Consumable":
+                temparr.append(x)
+        if temparr:
+            self.arrow.become_select_item_state()
+        else:
+            self.state = self.arrow.state = c.SELECT_ACTION
+            self.info_box.state = c.ITEM
 
     def enter_select_magic_state(self):
         """
@@ -750,7 +759,6 @@ class Battle(tools._State):
         for x in range(inventory.getSize()):
             if inventory.getItem(x).itemType is "Consumable":
                 temparr.append(x)
-        print temparr
         item = temparr[self.useditemindex]
         healed = self.monsterentities[self.currentmonster].useItem(item, self.monsterentities[self.currentmonster])
         self.damage_points.add(

@@ -438,7 +438,8 @@ class SelectArrow(object):
         """
         self.pos_list = self.make_select_item_pos_list()
         self.image = setup.GFX['arrowright']
-
+        print self.pos_list
+        print self.index
         pos = self.pos_list[self.index]
         self.rect.x = pos[0]
         self.rect.y = pos[1]
