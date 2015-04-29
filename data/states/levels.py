@@ -72,11 +72,11 @@ class LevelState(tools._State):
         """
         Set music based on name.
         """
-        music_dict = {c.FAESLANDING: ('faes_landing', .8),
+        music_dict = {c.FAESLANDING: ('faeslanding', .8),
                       c.OVERWORLD: ('nikko', .8),
                       c.SOUTHFIELD: ('nikko', .8),
                       c.WESTFIELD: ('nikko', .8),
-                      c.CASTLE: ('faes_landing', .8),
+                      c.CASTLE: ('faeslanding', .8),
                       c.DUNGEON: ('dungeon_theme', .4),
                       c.DUNGEON2: ('dungeon_theme', .4),
                       c.DUNGEON3: ('dungeon_theme', .4),

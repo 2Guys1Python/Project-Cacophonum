@@ -33,6 +33,7 @@ class InfoBox(object):
         self.enemyentities = enemyentities
         self.currentmonster = 0
         self.enemyindex = 0
+        self.playerindex = 0
         self.state_dict = self.make_state_dict()
         self.noteoff = [setup.GFX['8thnoteempty'], setup.GFX['wholenoteempty'], setup.GFX['gclefempty']]
         self.noteon = [setup.GFX['8thnotefilled'], setup.GFX['wholenotefilled'], setup.GFX['gcleffilled']]
@@ -102,7 +103,7 @@ class InfoBox(object):
         """
         Return text of enemy being hit using calculated damage.
         """
-        return "{} hit with {} damage.".format(self.enemyentities[self.enemyindex].name,self.enemy_damage)
+        return "{} hit with {} damage. {}/{}".format(self.enemyentities[self.enemyindex].name,self.enemy_damage, self.enemyentities[self.enemyindex].stats['curr']['HP'], self.enemyentities[self.enemyindex].stats['base']['HP'] + self.enemyentities[self.enemyindex].stats['bonus']['bonusHP'] - self.enemyentities[self.enemyindex].stats['penalty']['penaltyHP'])
 
     def make_item_text(self):
         """
@@ -244,10 +245,13 @@ class InfoBox(object):
         """
         self.player_damage = player_damage
         self.state_dict[c.PLAYER_DAMAGED] = self.player_hit()
+    
+    def set_player_index(self, player_index):
+        self.playerindex = player_index
 
     def player_hit(self):
         if self.player_damage:
-            return "Player hit with {} damage".format(self.player_damage)
+            return "{} hit with {} damage. {}/{}".format(self.monsterentities[self.playerindex].name, self.player_damage, self.monsterentities[self.playerindex].stats['curr']['HP'], self.monsterentities[self.playerindex].stats['base']['HP'] + self.monsterentities[self.playerindex].stats['bonus']['bonusHP'] - self.monsterentities[self.playerindex].stats['penalty']['penaltyHP'])
 
     def update(self, keys, currentmonster):
         """Updates info box"""

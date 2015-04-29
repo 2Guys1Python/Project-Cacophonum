@@ -842,6 +842,7 @@ class Battle(tools._State):
             attackitems.HealthPoints(player_damage,
                                      target.rect.topright))
         self.info_box.set_player_damage(player_damage)
+        self.info_box.set_player_index(targetindex)
         self.set_timer_to_current_time()
         self.player_damaged(self.monsterentities[targetindex], player_damage)
         if player_damage:
