@@ -42,11 +42,11 @@ Wild Monster masterlist format:
 '''
 
 masterlist_wm = {
-	'Kedama': [1600, 700, 800, 300, 300, 300, 300,
+	'Kedama': [1300, 450, 700, 300, 300, 300, 300,
 					4, 0.85, 25,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],
-	'Slime': [1400, 750, 850, 420, 400, 420, 400,
+	'Slime': [1400, 500, 750, 420, 400, 420, 400,
 					4, 0.85, 25,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],

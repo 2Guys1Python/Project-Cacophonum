@@ -28,11 +28,11 @@ class WildMonster(Monster):
 			self.stats['curr']['HP'] -= int(num)
 		else:
 			self.stats['curr']['HP'] = 0
-		print "%d dealt! %d HP left." %(num, self.stats['curr']['HP'])
+		#print "%d dealt! %d HP left." %(num, self.stats['curr']['HP'])
 		if self.stats['curr']['HP'] == 0:
 			self.isDead = True
 			self.canMove = False
-			print "%s died" %self.name
+			#print "%s died" %self.name
 	
 	def heal(self, num):
 		self.stats['curr']['HP'] += int(num)
@@ -233,7 +233,7 @@ class TamedMonster(Monster):
 			enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1200))
 			currentDamage = atk * equipmentmultiplier * enemydefmod * (self.equipment['instrument'].stats['base']['proration'] ** currhits)
 			if self.equipment['instrument'].stats['base']['critchance'] > random.randint(0, 100):
-				print "Critical!"
+				#print "Critical!"
 				enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1200))
 				return (atk*equipmentmultiplier*enemydefmod*self.equipment['instrument'].stats['base']['critmult'])
 			else:
@@ -242,7 +242,7 @@ class TamedMonster(Monster):
 		elif self.equipment['instrument'].stats['base']['type'] == 'string':
 			currentDamage = atk * equipmentmultiplier * enemydefmod * (self.equipment['instrument'].stats['base']['proration'] ** currhits)
 			if self.equipment['instrument'].stats['base']['critchance'] > random.randint(0, 100):
-				print "Critical!"
+				#print "Critical!"
 				return (currentDamage*self.equipment['instrument'].stats['base']['critmult'])
 			else:
 				return (currentDamage)
@@ -278,7 +278,7 @@ class TamedMonster(Monster):
 class Conductor:
 	def __init__(self, name):
 		self.name = name
-		self.monsterLimit = 1
+		self.monsterLimit = 3
 		self.monsters = []
 		self.inventory = compositeclasses.Inventory()
 		self.conductorskill = None
@@ -287,6 +287,10 @@ class Conductor:
 	def addMonster(self, monster):
 		if self.monsterLimit > len(self.monsters):
 			self.monsters.append(monster)
+			monster.setMaster(self)
+			return True
+		else:
+			return False
 		
 	def addMonsterLimit(self):
 		if self.monsterLimit < 3:
@@ -320,10 +324,9 @@ class Conductor:
 
 	def inventorySize(self):
 		return self.inventory.getSize()
-	'''	
+		
 	def useItem(self, itemIndex, target):
 		self.items[itemIndex].use(target)
-	'''
 	
 
 	def trainMonster(self, monsterindex, statindex):

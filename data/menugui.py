@@ -841,7 +841,6 @@ class MenuGui(object):
             for j, m in enumerate(conduc.monsters):
                 monster_list[i].append(m.name)
                 self.monposlist.append(j + (i*3))
-
         return monster_list
         
 
@@ -859,8 +858,8 @@ class MenuGui(object):
 
 
                     elif self.arrow.state in ('monsterselect', 'trainselect'):
-                        if len(self.monposlist) > self.arrow_index+1:
-                            self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) + 1]
+                        if self.arrow_index+1 in self.monposlist:
+                            self.arrow_index +=1
                             self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
                             self.notify(c.CLICK)
 
@@ -909,9 +908,10 @@ class MenuGui(object):
                         self.bottom_box.compstate -= 1
 
                     elif self.arrow.state in ('monsterselect', 'trainselect'):
-                        self.notify(c.CLICK)
-                        self.arrow_index = self.monposlist[self.monposlist.index(self.arrow_index) - 1]
-                        self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
+                        if self.arrow_index-1 in self.monposlist:
+                            self.notify(c.CLICK)
+                            self.arrow_index -= 1
+                            self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
 
                     elif self.arrow.state == 'itemsubmenu':
                         if self.left_box.itemindex >= 0:
@@ -950,7 +950,7 @@ class MenuGui(object):
                         if (self.arrow_index-3) in self.monposlist:
                             self.arrow_index -= 3
                             self.notify(c.CLICK)
-                        self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
+                            self.bottom_box.compstate = ((self.arrow_index/3), self.arrow_index%3)
                 self.allow_input = False
 
             elif keys[pg.K_RIGHT]:
@@ -1046,6 +1046,16 @@ class MenuGui(object):
                         self.acctoggle = self.arrow_index
                         self.arrow_index = 0
                         self.arrow.state = 'itemsubmenu'
+                    elif self.arrow_index == 3:
+                        tempmon = self.left_box.selectedmonster.master.monsters.pop(self.bottom_box.compstate[1])
+                        if not self.game_data['conductors'][self.bottom_box.conductorstate].addMonster(tempmon):
+                            self.left_box.selectedmonster.master.addMonster(tempmon)
+                        self.monsters = self.make_monster_list()
+                        self.arrow_index = self.monposlist[0]
+                        self.bottom_box.state = 'monstats'
+                        self.bottom_box.compstate = (self.monposlist[0]/3,0)
+                        self.left_box.state = 'monsters'
+                        self.arrow.state = 'monsterselect'
                 
                 elif self.left_box.state == 'instruments':
                     self.notify(c.CLICK2)
@@ -1125,6 +1135,7 @@ class MenuGui(object):
                 self.allow_input = False
 
             elif keys[pg.K_RETURN]:
+                self.notify(c.CLOSE)
                 self.level.state = 'normal'
                 self.left_box.state = 'invisible'
                 self.bottom_box.state = 'invisible'

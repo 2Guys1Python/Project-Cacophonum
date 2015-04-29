@@ -163,7 +163,7 @@ class Battle(tools._State):
                     ent_list.append(copy.deepcopy(entityclasses.WildMonster(self.monlist[ran], 1)))
                 self.game_data['start of game'] = False
             else:
-                for enemy in range(random.randint(1, 6)):
+                for enemy in range(random.randint(1, 4)):
                     ran = random.randint(0,len(self.monlist)-1)
                     enemy_list.append(person.Enemy(self.monlist[ran], 0, 0,
                                                  'down', 'battle resting'))
@@ -259,8 +259,6 @@ class Battle(tools._State):
 
                 elif self.state == c.SELECT_ENEMY_ATTACK:
                     self.notify(c.CLICK2)
-                    print self.currentmonster
-                    print self.monsterentities[self.currentmonster].stats['curr']['notes']
                     if self.monsterentities[self.currentmonster].stats['curr']['notes'] > 1:
                         if self.monsterentities[self.currentmonster].equipment['instrument']:
                             self.maxhits = self.monsterentities[self.currentmonster].equipment['instrument'].stats['base']['hits']
@@ -650,13 +648,11 @@ class Battle(tools._State):
         self.monsterentities[self.currentmonster].stats['curr']['notes'] += self.monsterentities[self.currentmonster].stats['curr']['notegain'] + self.monsterentities[self.currentmonster].stats['bonus']['bonusnotegain'] - self.monsterentities[self.currentmonster].stats['penalty']['penaltynotegain']
         self.action_selected = False
         if self.currentmonster < len(self.monsters)-1:
-            print "case1"
             self.enter_select_action_state()
             self.currhits = 0
             self.currentmonster+=1
             self.info_box.currentmonster+=1
         elif len(self.enemy_list):
-            print "case2"
             self.arrow.index = 0
             self.currhits = 0
             self.enemy_index = 0
@@ -740,13 +736,13 @@ class Battle(tools._State):
 
         '''
         if act[0] == 'attack':
-            self.maxhits = random.randint(1,5)
+            self.maxhits = random.randint(1,3)
             for x in range(self.maxhits):
                 self.enemy_actions.append(c.ENEMY_ATTACK)
                 self.monsters_to_attack.append(self.monsters[self.monsterentities.index(act[1])])
             self.enemy_action_dict[self.enemy_actions.pop(0)]()
         '''
-        self.maxhits = random.randint(1,5)
+        self.maxhits = random.randint(1,3)
         for x in range(self.maxhits):
             self.enemy_actions.append(c.ENEMY_ATTACK)
             self.monsters_to_attack.append(self.monsters[self.monsterentities.index(act[1])])
@@ -769,10 +765,8 @@ class Battle(tools._State):
         self.state = self.info_box.state = c.PLAYER_ATTACK
         enemy_to_attack = self.enemies_to_attack.pop(0)
         if enemy_to_attack in self.enemy_list:
-            print "case1"
             self.monsters[self.currentmonster].enter_attack_state(enemy_to_attack)
         else:
-            print "case2"
             if self.enemy_list:
                 self.monsters[self.currentmonster].enter_attack_state(self.enemy_list[0])
             else:
