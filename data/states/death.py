@@ -48,7 +48,7 @@ class Arrow(pg.sprite.Sprite):
                 self.allow_input = False
                 self.notify(c.CLICK)
 
-            self.rect = self.image.get_rect(x=pos_list[self.index][0], y=pos_list[self.index][1])
+            self.rect = self.pos_list[self.index]
 
         if not keys[pg.K_DOWN] and not keys[pg.K_UP]:
             self.allow_input = True
@@ -99,7 +99,7 @@ class DeathScene(tools._State):
         """
         Make the text box informing of death.
         """
-        box_image = setup.GFX['dialoguebox']
+        box_image = setup.GFX['battlebox']
         box_rect = box_image.get_rect()
         text = 'You have died. Restart from last save point?'
         text_render = self.font.render(text, True, c.NEAR_BLACK) 
@@ -174,7 +174,7 @@ class DeathScene(tools._State):
         Check if player wants to restart from last save point
         or just start from the beginning of the game.
         """
-        if keys[pg.K_SPACE]:
+        if keys[pg.K_z]:
             if self.arrow.index == 0:
                 self.next = c.FAESLANDING
                 self.game_data = pickle.load(open("save.p", "rb"))

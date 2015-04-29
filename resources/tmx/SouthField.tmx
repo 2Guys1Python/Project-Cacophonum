@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="37" tilewidth="16" tileheight="16" nextobjectid="197">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="37" tilewidth="16" tileheight="16" nextobjectid="198">
  <tileset firstgid="1" name="tileset1" tilewidth="16" tileheight="16">
   <image source="../graphics/tileset1.png" width="160" height="80"/>
  </tileset>
@@ -195,6 +195,15 @@
   <object id="196" name="monster" gid="80" x="176" y="144">
    <properties>
     <property name="monname" value="Wolf"/>
+   </properties>
+  </object>
+  <object id="197" name="sprite" type="Orthrus" gid="123" x="368" y="128">
+   <properties>
+    <property name="battle" value="Orthrus"/>
+    <property name="dialogue length" value="3"/>
+    <property name="dialogue0" value="Do you really think you've grinded enough to face me?"/>
+    <property name="dialogue1" value="I'm strong enough to even break the fourth wall!"/>
+    <property name="dialogue2" value="You will know the taste of utter defeat!"/>
    </properties>
   </object>
  </objectgroup>

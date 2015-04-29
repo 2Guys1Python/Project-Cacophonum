@@ -16,10 +16,10 @@ class NextArrow(pg.sprite.Sprite):
 
 class DialogueBox(object):
     """Text box used for dialogue"""
-    def __init__(self, dialogue, index=0, image_key='dialoguebox', item=None):
+    def __init__(self, dialogue, index=0, image_key='battlebox', item=None):
         self.item = item
         self.bground = setup.GFX[image_key]
-        self.rect = self.bground.get_rect(centerx=400)
+        self.rect = self.bground.get_rect(x=0)
         self.arrow_timer = 0.0
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
         self.dialogue_list = dialogue
@@ -44,7 +44,7 @@ class DialogueBox(object):
 
         dialogue_image = self.font.render(self.dialogue_list[self.index],
                                           True,
-                                          c.NEAR_BLACK)
+                                          c.WHITE)
         dialogue_rect = dialogue_image.get_rect(left=50, top=50)
         image.blit(dialogue_image, dialogue_rect)
 
@@ -63,10 +63,10 @@ class DialogueBox(object):
 
     def terminate_check(self, keys):
         """Remove textbox from sprite group after 2 seconds"""
-        if keys[pg.K_SPACE] and self.allow_input:
+        if keys[pg.K_z] and self.allow_input:
             self.done = True
 
-        if not keys[pg.K_SPACE]:
+        if not keys[pg.K_z]:
             self.allow_input = True
 
     def check_to_draw_arrow(self):
@@ -94,7 +94,7 @@ class TextHandler(object):
 
     def update(self, keys, current_time):
         """Checks for the creation of Dialogue boxes"""
-        if keys[pg.K_SPACE] and not self.textbox and self.allow_input:
+        if keys[pg.K_z] and not self.textbox and self.allow_input:
             for sprite in self.sprites:
                 if (current_time - self.last_textbox_timer) > 300:
                     if self.player.state == 'resting':
@@ -112,7 +112,7 @@ class TextHandler(object):
                 if self.textbox.index < (len(self.textbox.dialogue_list) - 1):
                     index = self.textbox.index + 1
                     dialogue = self.textbox.dialogue_list
-                    if self.textbox.name == 'dialoguebox':
+                    if self.textbox.name == 'battlebox':
                         self.textbox = DialogueBox(dialogue, index)
                     elif self.textbox.name == 'infobox':
                         self.textbox = ItemBox(dialogue, index)
@@ -164,7 +164,7 @@ class TextHandler(object):
                     self.end_dialogue(current_time)
 
 
-        if not keys[pg.K_SPACE]:
+        if not keys[pg.K_z]:
             self.allow_input = True
 
     def end_dialogue(self, current_time):
@@ -267,7 +267,7 @@ class TextHandler(object):
         """Make textbox on demand"""
         if name == 'itembox':
             textbox = ItemBox(dialogue, item)
-        elif name == 'dialoguebox':
+        elif name == 'battlebox':
             textbox = DialogueBox(dialogue)
         else:
             textbox = None

@@ -53,17 +53,17 @@ masterlist_wm = {
 	'Wolf': [2100, 800, 975, 150, 150, 250, 250,
 					4, 0.85, 75,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
-					['Healing Howl', 'ally','lowestHP' ,None, 95],
+					#['Healing Howl', 'ally','lowestHP' ,None, 95],
 					['attack', 'enemy', None, None, 100]]],
 	'Husk': [3000, 1250, 1050, 500, 500, 500, 500,
 					4, 0.85, 250,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
 					['attack', 'enemy', None, None, 100]]],
 	'Orthrus': [5000, 5000, 5000, 5000, 5000, 5000, 5000,
-					4, 0.85,
+					4, 0.85, 9001,
 					[['offspell', 'enemy', 'enemyHP>', 500, 60],
-					['Healing Howl', 'self','HP<' ,2500, 60],
-					['suicide', 'enemy', 'selfHP<', '20', 100],
+					#['Healing Howl', 'self','HP<' ,2500, 60],
+					#['suicide', 'enemy', 'selfHP<', '20', 100],
 					['attack', 'enemy', None, None, 100]]]
 }
 

@@ -1146,7 +1146,7 @@ class MenuGui(object):
         if (not keys[pg.K_DOWN]
                 and not keys[pg.K_UP]
                 and not keys[pg.K_RETURN]
-                and not keys[pg.K_SPACE]
+                and not keys[pg.K_z]
                 and not keys[pg.K_RIGHT]
                 and not keys[pg.K_LEFT]
                 and not keys[pg.K_z]

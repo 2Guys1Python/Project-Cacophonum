@@ -228,7 +228,8 @@ class LevelState(tools._State):
                                                         'resting', index),
                                'king': person.Person('king', x, y, direction),
                                'evilwizard': person.Person('evilwizard', x, y, direction),
-                               'treasurechest': person.Chest(x, y, id)}
+                               'treasurechest': person.Chest(x, y, id),
+                               'Orthrus': person.Person('Orthrus', x, y, direction)}
 
                 sprite = sprite_dict[properties['type']]
                 if sprite_state:

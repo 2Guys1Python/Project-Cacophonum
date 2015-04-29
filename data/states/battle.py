@@ -621,11 +621,13 @@ class Battle(tools._State):
         self.monsterentities[self.currentmonster].regenNotes()
         self.action_selected = False
         if self.currentmonster < len(self.monsters)-1:
+            print "case1"
             self.enter_select_action_state()
             self.currhits = 0
             self.currentmonster+=1
             self.info_box.currentmonster+=1
         elif len(self.enemy_list):
+            print "case2"
             self.arrow.index = 0
             self.currhits = 0
             self.enemy_index = 0
@@ -653,7 +655,6 @@ class Battle(tools._State):
         self.run_away = True
         self.arrow.state = 'invisible'
         self.enemy_index = 0
-        self.currentmonster = len(self.monsterentities)
         self.enter_enemy_AI_state()
 
     def enter_enemy_AI_state(self):
