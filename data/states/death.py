@@ -86,7 +86,9 @@ class DeathScene(tools._State):
         self.transition_surface.set_alpha(self.alpha)
         if not os.path.isfile("save.p"):
             game_data = tools.create_game_data_dict()
-            pickle.dump(game_data, open("save.p", "wb"))
+            f = open("save.p", "wb")
+            pickle.dump(game_data, f)
+            f.close()
         self.observers = [observer.SoundEffects()]
 
     def notify(self, event):

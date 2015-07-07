@@ -227,7 +227,8 @@ class TamedMonster(Monster):
 	
 	def calculate_attack_damage(self, target, currhits):
 		atk = (self.stats['base']['atk'] + self.stats['bonus']['bonusatk'] - self.stats['penalty']['penaltyatk'])
-		enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1000))
+		tdef = (target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])
+		enemydefmod = 1 - (tdef/(atk+tdef))
 		
 		if self.equipment['instrument'] == None:
 			return (atk*0.1*enemydefmod)
@@ -235,11 +236,10 @@ class TamedMonster(Monster):
 		elif self.equipment['instrument'].stats['base']['type'] == 'wind':
 		#Wind instruments ignore proration and some defense when critting
 			equipmentmultiplier = self.equipment['instrument'].stats['base']['atkmult']
-			enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1200))
 			currentDamage = atk * equipmentmultiplier * enemydefmod * (self.equipment['instrument'].stats['base']['proration'] ** currhits)
 			if self.equipment['instrument'].stats['base']['critchance'] > random.randint(0, 100):
 				#print "Critical!"
-				enemydefmod = (1.0-(0.30*(target.stats['base']['def'] + target.stats['bonus']['bonusdef'] - target.stats['penalty']['penaltydef'])/1200))
+				
 				return (atk*equipmentmultiplier*enemydefmod*self.equipment['instrument'].stats['base']['critmult'])
 			else:
 				return (currentDamage)

@@ -313,7 +313,9 @@ class Gui(object):
                 for m in c.monsters:
                     m.stats['curr']['HP'] = m.stats['base']['HP'] + m.stats['bonus']['bonusHP'] - m.stats['penalty']['penaltyHP']
                     m.status = []
-            pickle.dump(self.game_data, open( "save.p", "wb"))
+            f = open("save.p", "wb")
+            pickle.dump(self.game_data, f)
+            f.close()
 
     def confirm_sell(self, keys, current_time):
         """
