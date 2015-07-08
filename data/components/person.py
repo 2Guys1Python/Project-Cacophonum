@@ -9,6 +9,32 @@ from .. import constants as c
 if sys.version_info[0] == 2:
     range = xrange
 
+class Trigger(pg.sprite.Sprite):
+    def __init__(self, left, top):
+        super(Trigger, self).__init__()
+        self.rect = pg.Rect(left, top, 32, 32)
+        self.dialogue = None
+        self.location = self.get_tile_location()
+
+    def get_tile_location(self):
+        """
+        Convert pygame coordinates into tile coordinates.
+        """
+        if self.rect.x == 0:
+            tile_x = 0
+        elif self.rect.x % 32 == 0:
+            tile_x = (self.rect.x / 32)
+        else:
+            tile_x = 0
+
+        if self.rect.y == 0:
+            tile_y = 0
+        elif self.rect.y % 32 == 0:
+            tile_y = (self.rect.y / 32)
+        else:
+            tile_y = 0
+
+        return [tile_x, tile_y]
 
 class Person(pg.sprite.Sprite):
     """Base class for all world characters

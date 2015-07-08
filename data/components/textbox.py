@@ -83,6 +83,7 @@ class TextHandler(object):
     def __init__(self, level):
         self.player = level.player
         self.sprites = level.sprites
+        self.triggers = level.triggers
         self.talking_sprite = None
         self.textbox = None
         self.allow_input = False
@@ -91,6 +92,7 @@ class TextHandler(object):
         self.game_data = level.game_data
         self.observers = [observer.SoundEffects()]
         self.notify = tools.notify_observers
+        self.type = None
 
     def update(self, keys, current_time):
         """Checks for the creation of Dialogue boxes"""
@@ -101,9 +103,17 @@ class TextHandler(object):
                         self.allow_input = False
                         self.check_for_dialogue(sprite)
 
+        elif not keys[pg.K_z] and not self.textbox and self.allow_input:
+            for trigger in self.triggers:
+                if (current_time - self.last_textbox_timer) > 300:
+                    #if self.player.state == 'resting':
+                    self.allow_input = False
+                    self.check_for_trigger(trigger)
+        
         if self.textbox:
-            if self.talking_sprite.name == 'treasurechest':
-                self.open_chest(self.talking_sprite)
+            if self.type == "sprite":
+                if self.talking_sprite.name == 'treasurechest':
+                    self.open_chest(self.talking_sprite)
 
             self.textbox.update(keys, current_time)
 
@@ -116,48 +126,51 @@ class TextHandler(object):
                         self.textbox = DialogueBox(dialogue, index)
                     elif self.textbox.name == 'infobox':
                         self.textbox = ItemBox(dialogue, index)
-                elif self.talking_sprite.item:
-                    self.check_for_item()
-                elif self.talking_sprite.battle:
-                    self.game_data['battle type'] = self.talking_sprite.battle
-                    self.end_dialogue(current_time)
-                    self.level.switch_to_battle = True
-                elif self.talking_sprite.name == 'oldmanbrother' and \
-                        self.game_data['talked to sick brother'] and \
-                        not self.game_data['has brother elixir']:
-                    self.talking_sprite.item = 'ELIXIR'
-                    self.game_data['has brother elixir'] = True
-                    self.check_for_item()
-                    dialogue = ['Hurry! There is precious little time.']
-                    self.talking_sprite.dialogue = dialogue
-                elif self.talking_sprite.name == 'oldman':
-                    if self.game_data['has brother elixir'] and \
-                            not self.game_data['elixir received']:
-                        del self.game_data['player inventory']['ELIXIR']
-                        self.game_data['elixir received'] = True
-                        dialogue = ['My good health is thanks to you.',
-                                    'I will be forever in your debt.']
+                elif self.type is "sprite":
+                    if self.talking_sprite.item:
+                        self.check_for_item()
+                    elif self.talking_sprite.battle:
+                        self.game_data['battle type'] = self.talking_sprite.battle
+                        self.end_dialogue(current_time)
+                        self.level.switch_to_battle = True
+                    elif self.talking_sprite.name == 'oldmanbrother' and \
+                            self.game_data['talked to sick brother'] and \
+                            not self.game_data['has brother elixir']:
+                        self.talking_sprite.item = 'ELIXIR'
+                        self.game_data['has brother elixir'] = True
+                        self.check_for_item()
+                        dialogue = ['Hurry! There is precious little time.']
                         self.talking_sprite.dialogue = dialogue
-                    elif not self.game_data['talked to sick brother']:
-                        self.game_data['talked to sick brother'] = True
+                    elif self.talking_sprite.name == 'oldman':
+                        if self.game_data['has brother elixir'] and \
+                                not self.game_data['elixir received']:
+                            del self.game_data['player inventory']['ELIXIR']
+                            self.game_data['elixir received'] = True
+                            dialogue = ['My good health is thanks to you.',
+                                        'I will be forever in your debt.']
+                            self.talking_sprite.dialogue = dialogue
+                        elif not self.game_data['talked to sick brother']:
+                            self.game_data['talked to sick brother'] = True
+                             
+                            dialogue = ['Hurry to the NorthEast Shores!',
+                                        'I do not have much time left.']
+                            self.talking_sprite.dialogue = dialogue
+                        else:
+                            self.end_dialogue(current_time)
+                    elif self.talking_sprite.name == 'king':
                          
-                        dialogue = ['Hurry to the NorthEast Shores!',
-                                    'I do not have much time left.']
-                        self.talking_sprite.dialogue = dialogue
-                    else:
-                        self.end_dialogue(current_time)
-                elif self.talking_sprite.name == 'king':
-                     
-                    if not self.game_data['talked to king']:
-                        self.game_data['talked to king'] = True
-                        new_dialogue = ['Hurry to the castle in the NorthWest!',
-                                        'The sorceror who lives there has my crown.',
-                                        'Please retrieve it for me.']
-                        self.talking_sprite.dialogue = new_dialogue
-                        self.end_dialogue(current_time)
-                    elif self.game_data['crown quest']:
-                        self.game_data['delivered crown'] = True
-                        self.end_dialogue(current_time)
+                        if not self.game_data['talked to king']:
+                            self.game_data['talked to king'] = True
+                            new_dialogue = ['Hurry to the castle in the NorthWest!',
+                                            'The sorceror who lives there has my crown.',
+                                            'Please retrieve it for me.']
+                            self.talking_sprite.dialogue = new_dialogue
+                            self.end_dialogue(current_time)
+                        elif self.game_data['crown quest']:
+                            self.game_data['delivered crown'] = True
+                            self.end_dialogue(current_time)
+                        else:
+                            self.end_dialogue(current_time)
                     else:
                         self.end_dialogue(current_time)
                 else:
@@ -188,21 +201,35 @@ class TextHandler(object):
                 self.textbox = DialogueBox(sprite.dialogue)
                 sprite.direction = 'down'
                 self.talking_sprite = sprite
+                self.type = "sprite"
         elif player.direction == 'down':
             if sprite.location == [tile_x, tile_y + 1]:
                 self.textbox = DialogueBox(sprite.dialogue)
                 sprite.direction = 'up'
                 self.talking_sprite = sprite
+                self.type = "sprite"
         elif player.direction == 'left':
             if sprite.location == [tile_x - 1, tile_y]:
                 self.textbox = DialogueBox(sprite.dialogue)
                 sprite.direction = 'right'
                 self.talking_sprite = sprite
+                self.type = "sprite"
         elif player.direction == 'right':
             if sprite.location == [tile_x + 1, tile_y]:
                 self.textbox = DialogueBox(sprite.dialogue)
                 sprite.direction = 'left'
                 self.talking_sprite = sprite
+                self.type = "sprite"
+    
+    def check_for_trigger(self, trigger):
+        """Checks if player is standing on a cutscene space"""
+        player = self.player
+        tile_x, tile_y = player.location
+        
+        if trigger.location == [tile_x, tile_y]:
+            self.textbox = DialogueBox(trigger.dialogue)
+            self.type = "trigger"
+            
 
     def check_for_item(self):
         """Checks if sprite has an item to give to the player"""

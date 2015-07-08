@@ -55,6 +55,7 @@ class LevelState(tools._State):
         self.player = self.make_player()
         self.blockers = self.make_blockers()
         self.sprites = self.make_sprites()
+        self.triggers = self.make_triggers()
         self.encounters = self.make_encounterlist()
 
         self.collision_handler = collision.CollisionHandler(self.player,
@@ -167,6 +168,26 @@ class LevelState(tools._State):
                 blockers.append(blocker)
 
         return blockers
+    
+    def make_triggers(self):
+        """
+        Make the cutscene triggers for the level.
+        """
+        triggers = pg.sprite.Group()
+        
+        for object in self.renderer.tmx_data.getObjects():
+            properties = object.__dict__
+            if properties['name'] == 'trigger':
+                left = properties['x'] * 2
+                top = ((properties['y']) * 2) - 32
+                trigger = person.Trigger(left,top)
+                dialogue_list = []
+                for i in range(int(properties['dialogue length'])):
+                    dialogue_list.append(properties['dialogue'+str(i)])
+                    trigger.dialogue = dialogue_list
+                    print("added dialogue")
+                triggers.add(trigger)
+        return triggers
 
     def make_sprites(self):
         """
