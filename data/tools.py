@@ -241,29 +241,13 @@ def create_game_data_dict():
     data_dict = {'last location': None,
                  'last state': None,
                  'last direction': 'down',
-                 'king item': 'GOLD',
-                 'old man item': {'ELIXIR': dict([('value',1000),
-                                                  ('quantity',1)])},
                  'player inventory': player_items,
                  'conductors': players,
                  'gold': 400,
                  'battle counter': 50,
-                 'treasure1': True,
-                 'treasure2': True,
-                 'treasure3': True,
-                 'treasure4': True,
-                 'treasure5': True,
                  'start of game': True,
-                 'talked to king': False,
-                 'brother quest complete': False,
-                 'talked to sick brother': False,
-                 'has brother elixir': False,
-                 'elixir received': False,
-                 'old man gift': '',
-                 'battle type': '',
-                 'crown quest': False,
-                 'delivered crown': False,
-                 'brother item': 'ELIXIR'
+                 'treasure flags': treasure_flags,
+                 'event flags': event_flags
     }
 
     return data_dict

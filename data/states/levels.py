@@ -85,11 +85,13 @@ class LevelState(tools._State):
                       c.DUNGEON5: ('dungeon_theme', .4),
                       c.HOUSE: ('pleasant_creek', .1),
                       c.BROTHER_HOUSE: ('pleasant_creek', .1)}
-
+        
+        """
         if self.game_data['crown quest'] and (self.name == c.TOWN or self.name == c.CASTLE):
             self.music_title = 'kings_theme'
             return setup.MUSIC['kings_theme'], .4
-        elif self.name in music_dict:
+        """
+        if self.name in music_dict:
             music = music_dict[self.name][0]
             volume = music_dict[self.name][1]
             self.music_title = music
@@ -185,7 +187,6 @@ class LevelState(tools._State):
                 for i in range(int(properties['dialogue length'])):
                     dialogue_list.append(properties['dialogue'+str(i)])
                     trigger.dialogue = dialogue_list
-                    print("added dialogue")
                 triggers.add(trigger)
         return triggers
 
@@ -281,55 +282,60 @@ class LevelState(tools._State):
         Assign dialogue from object property dictionaries in tmx maps to sprites.
         """
         dialogue_list = []
-        for i in range(int(property_dict['dialogue length'])):
-            dialogue_list.append(property_dict['dialogue'+str(i)])
+        item_list = []
+        monster_list = []
+        diaindex = 0
+        
+        #check each event flag set to pick which dialogue index to use
+        
+        for i in range(int(property_dict['dialogue_indices'])):
+            bool = True
+            diaindex = i
+            for j in range(int(property_dict.get(('dialogue_'+str(i)+'_numflags'), 0))):
+                temp = property_dict['dialogue_'+str(i)+'_flags_'+str(j)]
+                if temp.startswith('not '):
+                    temp = temp[4:]
+                    bool &= not self.game_data['event flags'].get(temp, False)
+                else:
+                    bool &= self.game_data['event flags'].get(temp, False)
+            if bool is True:
+                break
+                
+        for i in range(int(property_dict.get(('dialogue_'+str(diaindex)+'_numitems'), 0))):
+            item_list.append(property_dict['dialogue_'+str(diaindex)+'_item_'+str(i)])
+            sprite.item = item_list
+            
+        for i in range(int(property_dict.get(('dialogue_'+str(diaindex)+'_battlemonnum'), 0))):
+            monster_list.append(property_dict['dialogue_'+str(diaindex)+'_battle_'+str(i)])
+            sprite.battle = monster_list
+            
+        for i in range(int(property_dict.get(('dialogue_'+str(diaindex)+'_numaddflags'), 0))):
+            temp = property_dict['dialogue_'+str(diaindex)+'_addflags_'+str(i)]
+            if temp in self.game_data['event flags']:
+                if temp.startswith("false_"):
+                    temp = temp[6:]
+                    self.game_data['event flags'][temp] = False
+                else:
+                    self.game_data['event flags'][temp] = True
+
+        for i in range(int(property_dict['dialogue_'+str(diaindex)+'_length'])):
+            dialogue_list.append(property_dict['dialogue_'+str(diaindex)+'_'+str(i)])
             sprite.dialogue = dialogue_list
-
-        if sprite.name == 'oldman':
-            quest_in_process_dialogue = ['Hurry to the NorthEast Shores!',
-                                         'I do not have much time left.']
-
-            if self.game_data['has brother elixir']:
-                if self.game_data['elixir received']:
-                    sprite.dialogue = ['My good health is thanks to you.',
-                                       'I will be forever in your debt.']
-                else:
-                    sprite.dialogue = ['Thank you for reaching my brother.',
-                                       'This ELIXIR will cure my ailment.',
-                                       'As a reward, I will teach you a magic spell.',
-                                       'Use it wisely.',
-                                       'You learned FIRE BLAST.']
-
-            elif self.game_data['talked to sick brother']:
-                sprite.dialogue = quest_in_process_dialogue
-
-            elif not self.game_data['talked to sick brother']:
-                self.reset_dialogue = (sprite, quest_in_process_dialogue)
-        elif sprite.name == 'oldmanbrother':
-            if self.game_data['has brother elixir']:
-                if self.game_data['elixir received']:
-                    sprite.dialogue = ['I am glad my brother is doing well.',
-                                       'You have a wise and generous spirit.']
-                else:
-                    sprite.dialogue = ['Hurry! There is precious little time.']
-            elif self.game_data['talked to sick brother']:
-                sprite.dialogue = ['My brother is sick?!?',
-                                   'I have not seen him in years.  I had no idea he was not well.',
-                                   'Quick, take this ELIXIR to him immediately.']
-        elif sprite.name == 'king':
-            retrieved_crown_dialogue = ['My crown! You recovered my stolen crown!!!',
-                                        'I can not believe what I see before my eyes.',
-                                        'You are truly a brave and noble warrior.',
-                                        'Henceforth, I name thee Grand Protector of this Town!',
-                                        'You are the greatest warrior this world has ever known.']
-            thank_you_dialogue = ['Thank you for retrieving my crown.',
-                                  'My kingdom is forever in your debt.']
-
-            if self.game_data['crown quest'] and not self.game_data['delivered crown']:
-                sprite.dialogue = retrieved_crown_dialogue
-                self.reset_dialogue = (sprite, thank_you_dialogue)
-            elif self.game_data['delivered crown']:
-                sprite.dialogue = thank_you_dialogue
+        
+        """
+        TODO: add code to read the ff:
+        [x] dialogue_indices = how many dialogue options there are
+        [x] dialogue_#_numflags = how many flags there are to activate this dialogue branch (add "not " prefix to check for falseness)
+        [x] dialogue_#_flags_# = name of each event flag to check, e.g. "killed the boss"
+        [x] dialogue_#_length = length of dialogue branch
+        [x] dialogue_#_numitems = how many items the NPC/event trigger will give you when the dialogue is finished
+        [x] dialogue_#_item_# = name of each item, e.g. "Potion"
+        [x] dialogue_#_numaddflags = how many event flags will be tripped at the end of the dialogue
+        [x] dialogue_#_addflags_# = name of each event (add "false_" prefix to make it false instead)
+        [x] dialogue_#_battlemonnum = number of monsters to be battled at the end of this dialogue
+        [x] dialogue_#_battle_# = name of each monster, e.g. "Slime"
+        [x] dialogue_#_# = each line in the dialogue branch
+        """
 
 
     def check_for_opened_chest(self, sprite):
@@ -432,9 +438,12 @@ class LevelState(tools._State):
         """
         Switch scene to credits if main quest is complete.
         """
+        """
         if self.game_data['delivered crown']:
             self.next = c.CREDITS
             self.state = 'slow transition out'
+        """
+        pass
 
     def set_new_start_pos(self):
         """

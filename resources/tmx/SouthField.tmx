@@ -199,11 +199,13 @@
   </object>
   <object id="197" name="sprite" type="Orthrus" gid="123" x="368" y="128">
    <properties>
-    <property name="battle" value="Orthrus"/>
-    <property name="dialogue length" value="3"/>
-    <property name="dialogue0" value="Do you really think you've grinded enough to face me?"/>
-    <property name="dialogue1" value="I'm strong enough to even break the fourth wall!"/>
-    <property name="dialogue2" value="You will know the taste of utter defeat!"/>
+    <property name="dialogue_0_0" value="Do you really think you've grinded enough to face me?"/>
+    <property name="dialogue_0_1" value="I'm strong enough to even break the fourth wall!"/>
+    <property name="dialogue_0_2" value="You will know the taste of utter defeat!"/>
+    <property name="dialogue_0_battle_0" value="Orthrus"/>
+    <property name="dialogue_0_battlemonnum" value="1"/>
+    <property name="dialogue_0_length" value="3"/>
+    <property name="dialogue_indices" value="1"/>
    </properties>
   </object>
  </objectgroup>

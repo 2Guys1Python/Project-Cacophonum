@@ -226,10 +226,10 @@ class TextHandler(object):
         player = self.player
         tile_x, tile_y = player.location
         
-        if trigger.location == [tile_x, tile_y]:
+        if trigger.location == [tile_x, tile_y] and player.last != trigger.location:
             self.textbox = DialogueBox(trigger.dialogue)
             self.type = "trigger"
-            
+        player.last = player.location    
 
     def check_for_item(self):
         """Checks if sprite has an item to give to the player"""

@@ -150,10 +150,11 @@ class Battle(tools._State):
 
         enemy_group = pg.sprite.OrderedUpdates()
 
-        if self.game_data['battle type']:
-            enemy_list.append(person.Enemy('Orthrus', 0, 0,
-                                  'down', 'battle resting'))
-            ent_list.append(copy.deepcopy(entityclasses.WildMonster('Orthrus', 1)))
+        if self.game_data.get('battle type', False):
+            for m in self.game_data['battle type']:
+                enemy_list.append(person.Enemy(m, 0, 0,
+                                    'down', 'battle resting'))
+                ent_list.append(copy.deepcopy(entityclasses.WildMonster(m, 1)))
         else:
             if self.game_data['start of game']:
                 for enemy in range(3):
@@ -446,7 +447,7 @@ class Battle(tools._State):
         """
         End battle and flip back to previous state.
         """
-        if self.game_data['battle type'] == 'evilwizard':
+        if self.game_data.get('battle type', False) == 'evilwizard':
             self.game_data['crown quest'] = True
             self.game_data['talked to king'] = True
         self.game_data['last state'] = self.name
