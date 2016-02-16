@@ -15,6 +15,7 @@ GAME = 'BEGIN GAME'
 ORIGINAL_CAPTION = 'Project Cacophonum'
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
+pg.mixer.pre_init(44100, -16, 2, 1024)
 pg.init()
 pg.event.set_allowed([pg.KEYDOWN, pg.KEYUP, pg.QUIT])
 pg.display.set_caption(ORIGINAL_CAPTION)

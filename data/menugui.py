@@ -194,8 +194,8 @@ class BottomBox(pg.sprite.Sprite):
         self.state = 'invisible'
         self.state_dict = self.make_state_dict()
         self.image, self.rect = self.make_blank_bottom_box()
-        self.compstate = None
-        self.conductorstate = None
+        self.compstate = None #is an integer by default to avoid errors, but is an ordered pair in all states EXCEPT for Conductor menu
+        self.conductorstate = None #index of which conductor is selected
 
     def make_state_dict(self):
         """Make the dictionary of state methods"""
@@ -890,8 +890,8 @@ class MenuGui(object):
                                 self.notify(c.CLICK)
 
                     else:
-                        self.arrow_index += 1
                         self.notify(c.CLICK)
+                        self.arrow_index += 1
 
                 else:
                     if self.arrow.state == 'itemsubmenu':
